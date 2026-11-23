@@ -76,8 +76,6 @@ export const REPOSITORY_GROUPS: RepositoryGroup[] = [
       r("bmo-arbiter", "Shares GPU cards among engines", "엔진 사이의 GPU 카드 중재", "エンジン間で GPU カードを調停", "在各引擎之间调度 GPU 显卡"),
       r("bmo-explorer", "Web search, pages, previews and pictures", "웹 검색, 페이지, 미리보기, 그림", "Web 検索、ページ、プレビュー、画像", "网页搜索、页面、预览与图片"),
       r("bmo-eye", "Vision: one request shape over three modes", "비전: 세 가지 모드의 하나의 요청", "ビジョン：3 つのモードに共通のリクエスト", "视觉：三种模式共用一种请求"),
-      r("bmo-paint", "Images drawn on a local image engine", "로컬 이미지 엔진으로 그리기", "ローカルの画像エンジンで描く", "用本地图像引擎绘图"),
-      r("bmo-song", "Songs made in a named voice", "지정한 목소리로 만드는 노래", "指定した声で作る歌", "用指定声音生成歌曲"),
     ],
   },
   {

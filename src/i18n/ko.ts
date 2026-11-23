@@ -21,7 +21,7 @@ export const ko: Messages = {
     language: "언어",
   },
   hero: {
-    eyebrow: "오픈소스 · MIT 라이선스",
+    eyebrow: "오픈소스 · 대부분 MIT 라이선스",
     titleLines: ["나만의 AI 팀을,", "이미 쓰는 대화방 안에."],
     sub: "BMO(비모)는 직접 운영하는 에이전트 플랫폼입니다. 챗 감독관이 Telegram, Discord, 웹 콘솔, 음성으로 대화하고, 중요한 것을 기억하고, 실제 작업은 코딩 에이전트에게 맡겨 테스트와 배포까지 끝냅니다.",
     download: "데스크톱 앱 다운로드",
@@ -60,7 +60,7 @@ export const ko: Messages = {
       { icon: "archive", title: "아카이브와 리서치", body: "기록, 리서치 보고서, 저장한 웹 페이지를 보관하고 찾고 공유합니다. 리서치 러너는 arXiv, Hugging Face, GitHub 릴리스, 피드를 지켜봅니다." },
       { icon: "desk", title: "콘솔 하나에 담긴 책상", body: "노트, 캘린더, 드라이브, 메일, 원격 터미널과 데스크톱, 영상 극장까지. 각각 자기 화면을 가진 서비스입니다." },
       { icon: "voice", title: "목소리와 얼굴", body: "학습된 목소리가 답변과 브리핑을 읽어 주고, 작은 화면의 얼굴이 BMO의 상태를 보여 줍니다." },
-      { icon: "gpu", title: "함께 쓰는 내 GPU", body: "카드 중재자가 GPU 노드에서 엔진들이 차례로 카드를 쓰게 해, 텍스트·비전·그림·노래를 로컬에서 돌립니다." },
+      { icon: "gpu", title: "함께 쓰는 내 GPU", body: "카드 중재자가 GPU 노드에서 엔진들이 차례로 카드를 쓰게 해, 텍스트·비전·음성을 로컬에서 돌립니다." },
     ],
   },
   screens: {
@@ -92,7 +92,7 @@ export const ko: Messages = {
   },
   repositories: {
     title: "모든 유닛이 저마다의 저장소",
-    sub: "모두 MIT 라이선스입니다. 하나만 읽어도, 포크해도, 전부 돌려도 됩니다.",
+    sub: "모두 MIT 라이선스이고, 예외는 bmo-note 하나입니다. AFFiNE를 포크한 bmo-note는 대부분 MIT 라이선스지만, 서버와 네이티브 패키지는 AFFiNE Enterprise Edition 라이선스를 따릅니다. 하나만 읽어도, 포크해도, 전부 돌려도 됩니다.",
     retired: "운영 종료",
   },
   closing: {

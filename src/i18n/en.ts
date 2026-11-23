@@ -19,7 +19,7 @@ export const en = {
     language: "Language",
   },
   hero: {
-    eyebrow: "Open source · MIT licensed",
+    eyebrow: "Open source · Mostly MIT licensed",
     titleLines: ["Your own AI crew,", "in the rooms you already use."],
     sub: "BMO is a self-hosted agent platform. A chat supervisor talks with you in Telegram, Discord, the web console and by voice, remembers what matters, and hands real work to coding agents that test it and ship it.",
     download: "Download the desktop app",
@@ -58,7 +58,7 @@ export const en = {
       { icon: "archive", title: "Archive and research", body: "Records, research write-ups and saved pages are kept, searched and shared. The research runner watches arXiv, Hugging Face, GitHub releases and feeds." },
       { icon: "desk", title: "Your desk in one console", body: "Notes, calendar, drive, mail, remote terminals and desktops, and a video theater — each its own service with its own screen." },
       { icon: "voice", title: "A voice and a face", body: "Trained voices read answers and briefings aloud, and a face on a small screen shows how BMO is doing." },
-      { icon: "gpu", title: "Your GPUs, shared", body: "The card arbiter lets engines take turns on your GPU nodes, for local text, vision, pictures and songs." },
+      { icon: "gpu", title: "Your GPUs, shared", body: "The card arbiter lets engines take turns on your GPU nodes, for local text, vision and speech." },
     ],
   },
   screens: {
@@ -90,7 +90,7 @@ export const en = {
   },
   repositories: {
     title: "Every unit is its own repository",
-    sub: "All MIT licensed. Read one, fork one, or run the whole set.",
+    sub: "All MIT licensed, with one exception: bmo-note, a fork of AFFiNE, is MIT apart from its server and native packages, which stay under the AFFiNE Enterprise Edition licence. Read one, fork one, or run the whole set.",
     retired: "retired",
   },
   closing: {

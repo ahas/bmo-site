@@ -21,7 +21,7 @@ export const zh: Messages = {
     language: "语言",
   },
   hero: {
-    eyebrow: "开源 · MIT 许可",
+    eyebrow: "开源 · 大部分采用 MIT 许可",
     titleLines: ["你的专属 AI 团队，", "就在你常用的聊天室里。"],
     sub: "BMO 是一个可自托管的智能体平台。主管智能体通过 Telegram、Discord、网页控制台和语音与你对话，记住重要的事，并把真正的工作交给编程智能体，从测试一路做到上线。",
     download: "下载桌面应用",
@@ -59,7 +59,7 @@ export const zh: Messages = {
       { icon: "archive", title: "资料库与调研", body: "记录、调研报告和保存的网页都能存档、搜索和分享。调研执行器会持续关注 arXiv、Hugging Face、GitHub 发布和各类订阅源。" },
       { icon: "desk", title: "一个控制台装下整张办公桌", body: "笔记、日历、云盘、邮件、远程终端和桌面，还有视频影院——每一个都是拥有自己界面的服务。" },
       { icon: "voice", title: "声音与面孔", body: "训练好的声音为你朗读回答和简报，小屏幕上的面孔展示 BMO 此刻的状态。" },
-      { icon: "gpu", title: "共享你自己的 GPU", body: "显卡仲裁器让各个引擎轮流使用你 GPU 节点上的显卡，在本地运行文本、视觉、绘图和歌曲生成。" },
+      { icon: "gpu", title: "共享你自己的 GPU", body: "显卡仲裁器让各个引擎轮流使用你 GPU 节点上的显卡，在本地运行文本、视觉和语音。" },
     ],
   },
   screens: {
@@ -91,7 +91,7 @@ export const zh: Messages = {
   },
   repositories: {
     title: "每个单元都是独立的仓库",
-    sub: "全部采用 MIT 许可。只读一个、fork 一个，或者整套运行起来都可以。",
+    sub: "全部采用 MIT 许可，只有 bmo-note 一个例外：它是 AFFiNE 的 fork，大部分采用 MIT 许可，但服务端和原生模块的包仍采用 AFFiNE Enterprise Edition 许可。只读一个、fork 一个，或者整套运行起来都可以。",
     retired: "已停用",
   },
   closing: {
