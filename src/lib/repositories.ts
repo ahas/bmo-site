@@ -39,6 +39,8 @@ export const REPOSITORY_GROUPS: RepositoryGroup[] = [
       r("bmo-face", "The face on the case's screen and its editor", "케이스 화면의 얼굴과 편집기"),
       r("bmo-word-chain", "The word-chain game a room plays with its agent", "방에서 에이전트와 하는 끝말잇기"),
       r("bmo-tui", "The terminal screen an agent session stands in", "에이전트 세션의 터미널 화면"),
+      r("bmo-persona", "BMO's persona: its voice, manner and lore", "BMO의 페르소나: 말투, 성격, 이야기"),
+      r("bmo-script", "The script studio for BMO's spoken lines", "BMO 대사를 다듬는 대사 작업실"),
     ],
   },
   {
@@ -48,6 +50,7 @@ export const REPOSITORY_GROUPS: RepositoryGroup[] = [
       r("bmo-testbed", "The build queue, checks, suite and deployment", "빌드 대기열, 검사, 테스트, 배포"),
       r("bmo-review", "Code review over registered checkouts", "등록된 체크아웃의 코드 리뷰"),
       r("bmo-research", "Research runs filed as documents", "문서로 남는 리서치"),
+      r("bmo-skills", "The skills every worker is handed", "모든 워커가 받는 스킬 모음"),
       r("bmo-voc", "Bug reports and suggestions from users", "사용자의 버그 신고와 제안"),
       r("bmo-cache-siren", "A live watch of prompt-cache hits", "프롬프트 캐시 적중 실시간 감시"),
       r("bmo-cache-warmer", "Keeps prompt caches warm", "프롬프트 캐시 유지"),
