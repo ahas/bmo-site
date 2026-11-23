@@ -9,7 +9,8 @@ import { DIST, serveDist } from "./serve";
 import type { Browser, Page } from "playwright-core";
 
 // The built pages opened in a real browser at a desktop's width, a tablet's and a phone's, in the dark colour scheme
-// and the light one: every key section stands on the page with its heading, every picture has its words and is a
+// and the light one: every key section stands on the page with its heading, what's new holds its ten items and the
+// download section its two desktop apps, every picture has its words and is a
 // capture in the page's own capture language (Korean on /ko/, English on every other page) and in the scheme the
 // page stands in, both read from the picture's file name, the comparison stands whole, the language menu reaches
 // every version, and nothing is wider than the window. Run `bun run build` first; the test reads dist/ as a static host serves it, and is
@@ -38,7 +39,7 @@ const PAGES = [
 
 const SCHEMES = ["dark", "light"] as const;
 
-const SECTIONS = ["#hero-title", "#how-title", "#features-title", "#screens-title", "#compare-title", "#start-title", "#download-title", "#repositories-title", "#closing-title"];
+const SECTIONS = ["#hero-title", "#new-title", "#how-title", "#features-title", "#screens-title", "#compare-title", "#start-title", "#download-title", "#repositories-title", "#closing-title"];
 
 // The comparison's capabilities and the kinds of tool BMO is set beside, as src/lib/comparison.ts holds them.
 const CAPABILITIES = 8;
@@ -96,7 +97,14 @@ describe.skipIf(!ready)("the built pages", () => {
           expect(((await heading.textContent()) ?? "").trim().length).toBeGreaterThan(0);
         }
 
-        expect(await page.locator(".feature").count()).toBe(9);
+        expect(await page.locator("#features .feature").count()).toBe(9);
+        // What the release adds, every item with its words, and the two desktop apps, each with its words.
+        expect(await page.locator("#new .feature").count()).toBe(10);
+        for (const text of await page.locator("#new .feature p").allTextContents()) expect(text.trim().length).toBeGreaterThan(20);
+        expect(await page.locator("#download .desktop-app").count()).toBe(2);
+        // The release's version line where a release is published, the words saying none is yet where none is.
+        expect(await page.locator("#download .release-line, #download .release-missing").count()).toBe(1);
+        for (const text of await page.locator("#download .desktop-app p").allTextContents()) expect(text.trim().length).toBeGreaterThan(20);
         expect(await page.locator("#start pre").textContent()).toContain("https://bmo.ahas.io/install.md");
         expect(await page.locator("a.repo").count()).toBeGreaterThan(30);
 

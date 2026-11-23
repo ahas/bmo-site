@@ -4,10 +4,9 @@
 
 The BMO project's website, served at https://bmo.ahas.io: one landing page in English at `/`, Korean at `/ko/`,
 Japanese at `/ja/` and Simplified Chinese at `/zh/`, with the product's story, the console's screens, how BMO compares with the kinds of tool it is weighed against, the
-desktop app's downloads and the list of public repositories. The pages stand dark, and light where the reader's
+what the release adds, the two desktop apps' downloads and the list of public repositories. The pages stand dark, and light where the reader's
 system asks for light. It is a static site built with [Astro](https://astro.build); nothing runs on a server and the pages
-ship no framework to the browser, only one small inline script that points the download button at the visitor's
-system.
+ship no framework and no script to the browser.
 
 ## Build and preview
 
@@ -18,9 +17,11 @@ bun run preview    # serves dist/ at http://localhost:4321
 bun run dev        # the development server with reload
 ```
 
-The download section lists the desktop app's public release, read at build time from the `release.json` of jake's latest GitHub release, the address `src/lib/release.ts` names. The public build asks for the person's own BMO server's address on its first run and opens that server's console, so the same installers serve every deployment. Until that release is published the address answers 404, and the section says no public build is published and links to the release documentation. Deploying is copying `dist/` to the host that serves the domain.
+The download section offers the two desktop apps, the Remote Controller, which opens a BMO server the person already runs, and the All-in-One, which installs and runs BMO itself on their PC. Both are read at build time from the `release.json` of jake's latest GitHub release, the address `src/lib/release.ts` names: the Remote Controller's files under `files`, the All-in-One's under `allInOne.files`, and a nightly build's, where one is published, under `nightly`. The Remote Controller asks for the person's own BMO server's address on its first run, so the same installers serve every deployment. Until a release is published the address answers 404, and the section says no release is available yet and links to the release documentation. Deploying is copying `dist/` to the host that serves the domain.
 
-The get-started section hands a person the one line they give their coding agent, which installs BMO by the index's runbook. `/install.md` serves that runbook, the index's `INSTALL.md`, read at build time from the index's main branch, the address `src/lib/runbook.ts` names; where the build is offline or the index cannot be read, it serves a short pointer to the runbook instead. The section's words in each language stand in `src/i18n/start.ts`.
+The what's-new section states in plain words what the release adds, each item backed by the public repositories, with the new screens beside it; its words stand in `src/i18n/` under `whatsNew`.
+
+The get-started section hands a person the one line they give their coding agent, which installs BMO by the index's runbook, never by hand, and says where else the agent installs it: a machine without systemd, under the testbed's supervisor, and the All-in-One desktop app. `/install.md` serves that runbook, the index's `INSTALL.md`, read at build time from the index's main branch, the address `src/lib/runbook.ts` names; where the build is offline or the index cannot be read, it serves a short pointer to the runbook instead. The section's words in each language stand in `src/i18n/start.ts`.
 
 ## Checks
 
@@ -56,8 +57,8 @@ English captures on `/`, `/ja/` and `/zh/`, since the platform's screens speak E
 capture where the page stands dark, the light one where it stands light, as the reader's system decides
 (`prefers-color-scheme`, which the stylesheet follows as well). A source's file name ends in its language and its
 scheme, `<name>-<en|ko>-<dark|light>.webp`; `src/lib/shots.ts` names which pictures each language shows and
-`src/components/Shot.astro` offers both schemes of one. The console's own screens, and the brain's, speak Korean
-alone, so they are shown on `/ko/` only.
+`src/components/Shot.astro` offers both schemes of one. The console's organisation and app screens are captured in
+both languages; its other screens, and the brain's, are captured in Korean alone, so they are shown on `/ko/` only.
 
 Every screen is captured at one size: a desktop screen at 1440 by 900 CSS pixels and a phone at 390 by 844,
 both at twice the pixels; a test holds every source to it.
@@ -70,10 +71,14 @@ they show, with demo answers in place of the harnesses' own, each in both scheme
   `BMO_CONSOLE_TEST_URL`); `room /rooms/42` and, with `SKIP=2`, `room-phone /rooms/42 390 844`.
 - `scripts/shots/console-screens-shot.ts [agents|cards|job]`: on the same console, the agency's roles, the GPU cards
   of the monitor's services tab and a running TODO item's job log.
+- `scripts/shots/console-apps-shot.ts <en|ko> [org|catalogue|personal-apps|language]`: on the same console, with a
+  demo company, the organisation screen's agents tab for a team, the app catalogue, the reader's personal apps and
+  the language menu of the display settings.
 - `scripts/shots/brain-shot.ts`: a person's memories and sheet on `bmo-brain`'s browser host.
 - `scripts/shots/calendar-shot.ts <en|ko>`: the calendar's week, on `bmo-calendar`'s harness page.
 - `scripts/shots/artifact-shot.ts <en|ko>`: an archive document, on `bmo-artifact`'s browser host.
-- `scripts/shots/note-shot.ts`: a note in both languages, on `bmo-note`'s browser stack.
+- `scripts/shots/note-shot.ts`: a note in both languages, its notes filed in folders and bookmarked, on `bmo-note`'s
+  browser stack.
 - `scripts/shots/drive-shot.ts <en|ko>`: the Files screen, on `bmo-drive`'s browser host.
 - `scripts/shots/theater-shot.ts <en|ko>`: the theater's library, on `bmo-theater`'s generated browser host, with
   posters drawn as abstract art.

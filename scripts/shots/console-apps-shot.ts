@@ -1,0 +1,240 @@
+// The console's organisation and app screens on the console bmo-web stands up for its browser tests (its
+// tests/support/browser-console.ts), in the language given and in both colour schemes, each answered with a demo
+// company: the organisation screen's agents tab for a team three links down the delegation chain, the company's app
+// catalogue, the reader's own personal apps in the settings, and the language picker of the display settings. Usage:
+// `bun scripts/shots/console-apps-shot.ts <en|ko> [org|catalogue|personal-apps|language ...]`, every screen where
+// none is named.
+import { chromium } from "playwright-core";
+
+import { OUT, ORIGIN, demoContext, signedIn, swapTexts } from "./console";
+import { NOW } from "./demo";
+import { THEMES, localeOf } from "./locale";
+
+import type { BrowserContext, Page } from "playwright-core";
+import type { Locale } from "./locale";
+
+const DAY = 86_400;
+
+// --- The words of the demo company, in each capture language ---
+
+const WORDS = {
+  ko: {
+    company: "한빛 스튜디오",
+    units: ["제품개발본부", "앱개발팀", "디자인팀", "경영지원팀"],
+    instructions: "코드 리뷰 의견은 한국어로 쓰고, 커밋 메시지와 브랜치 이름은 영어로 씁니다.",
+    above: ["고객의 개인 정보는 회사 밖의 서비스로 보내지 않습니다.", "모든 변경은 테스트를 통과한 뒤에 배포합니다."],
+    roles: ["워커", "탐색", "빌더", "스카우트", "프로듀서", "보이저"],
+    repositories: ["한빛 모바일 앱", "한빛 API 서버"],
+    people: ["Alex", "김하늘", "박서준", "이도윤", "최지우"],
+    review: "읽는 파일과 보내는 주소가 설명과 맞습니다.",
+    apps: {
+      weekly: ["주간 보고 정리", "한 주의 TODO와 커밋을 모아 주간 보고 초안을 씁니다"],
+      rates: ["환율 알림", "아침마다 환율을 확인해 정한 값을 넘으면 알려 줍니다"],
+      rooms: ["회의실 빈 시간 찾기", "사내 예약 시스템에서 오늘 비어 있는 회의실을 찾아 줍니다"],
+      receipts: ["영수증 정리", "드라이브에 올린 영수증 사진을 월별 지출 표로 정리합니다"],
+      trip: ["출장 일정표", "출장 메일과 캘린더를 읽어 하루 단위 일정표를 만듭니다"],
+      sheet: ["지출 시트 올리기", "정리한 지출 표를 팀 스프레드시트에 올립니다"],
+    },
+  },
+  en: {
+    company: "Northwind Studio",
+    units: ["Product", "App team", "Design", "Operations"],
+    instructions: "Write review comments in plain English, and keep commit messages to one line of what changed.",
+    above: ["Never send a customer's personal data to a service outside the company.", "Every change ships only after its tests pass."],
+    roles: ["Worker", "Seeker", "Builder", "Scout", "Producer", "Voyager"],
+    repositories: ["Northwind mobile app", "Northwind API server"],
+    people: ["Alex", "Sam Lee", "Priya Shah", "Jonas Berg", "Mia Chen"],
+    review: "The files it reads and the addresses it calls match its description.",
+    apps: {
+      weekly: ["Weekly report", "Drafts the weekly report from the week's TODO items and commits"],
+      rates: ["Exchange rate alert", "Checks the exchange rate each morning and tells you when it passes your mark"],
+      rooms: ["Free meeting rooms", "Finds the meeting rooms still free today in the office booking system"],
+      receipts: ["Receipt sorter", "Sorts receipt photos from your drive into a monthly expense table"],
+      trip: ["Trip planner", "Reads trip mails and your calendar into a day-by-day schedule"],
+      sheet: ["Expense sheet upload", "Uploads the sorted expense table to the team's spreadsheet"],
+    },
+  },
+} as const;
+
+type Words = (typeof WORDS)[Locale];
+
+// --- The organisation: a company, units under it and a team under the first ---
+
+const TEAM = 4;
+const chain = <Value>(own: Value | null, stands: Value, delegation: "allow" | "lock" | "inherit" = "inherit") => ({ own, stands, delegation, writable: true, lockedBy: null });
+
+async function answerOrganization(context: BrowserContext, words: Words): Promise<void> {
+  const company = { id: 1, name: words.company };
+  const row = (id: number, name: string, parent: number | null, members: number) => ({
+    id, name, ...(parent === null ? {} : { parent }), heads: [], members: Array.from({ length: members }, (_, index) => String(index + 1)), left: [], concurrent: [], acting: [],
+  });
+  const units = [row(1, company.name, null, 42), row(3, words.units[0], 1, 18), row(TEAM, words.units[1], 3, 7), row(5, words.units[2], 1, 6), row(6, words.units[3], 1, 5)];
+  const team = {
+    id: TEAM, name: words.units[1], parent: 3, company, path: [company, { id: 3, name: words.units[0] }, { id: TEAM, name: words.units[1] }], children: [], heads: ["1"],
+    members: ["1", "2", "3", "4", "5", "6", "7"], left: [], roles: [], concurrent: [], acting: null,
+  };
+  const settings = {
+    unit: TEAM,
+    instructions: { own: words.instructions, above: words.above, delegation: "allow", writable: true, lockedBy: null },
+    persona: chain(null, "own"),
+    repositories: chain(true, true, "allow"),
+  };
+  const supply = {
+    unit: TEAM,
+    sources: [
+      { source: "personal", stands: true, closedHere: false, delegation: "inherit", writable: true, lockedBy: null },
+      { source: "organisation", stands: true, closedHere: false, delegation: "allow", writable: true, lockedBy: null },
+      { source: "platform", stands: false, closedHere: true, delegation: "lock", writable: true, lockedBy: null },
+    ],
+    companyOpened: null,
+    items: [{ id: "team-key-1", road: "claude-code", secret: "team-claude-account", enabled: true, refused: false }],
+  };
+  const keys = ["worker", "seeker", "builder", "scout", "producer", "voyager"];
+  const composition = {
+    unit: TEAM,
+    roles: keys.map((role, index) => ({ role, label: words.roles[index], off: index >= 4, agents: role === "worker" ? 2 : role === "builder" ? 1 : null, own: role === "worker" ? 2 : role === "builder" ? 1 : null })),
+    delegation: "allow", writable: true, lockedBy: null,
+  };
+  const repositories = [
+    { name: "team-app", label: words.repositories[0], path: "~/repos/team-app" },
+    { name: "team-api", label: words.repositories[1], path: "~/repos/team-api" },
+  ];
+  const listed = units.map((unit) => ({ id: unit.id, name: unit.name, parent: unit.parent ?? null, company, policy: true, plan: true, head: true }));
+
+  await context.route(/\/api\/organization\/people\/companies$/, (route) => route.fulfill({ json: [company] }));
+  await context.route(/\/api\/organization\/units(\?|$)/, (route) => (route.request().method() === "GET" ? route.fulfill({ json: units }) : route.continue()));
+  await context.route(/\/api\/(supply|invites)\/units$/, (route) => route.fulfill({ json: listed }));
+  await context.route(/\/api\/organization\/memory\/units$/, (route) => route.fulfill({ json: listed }));
+  await context.route(/\/api\/organization\/units\/\d+$/, (route) => route.fulfill({ json: team }));
+  await context.route(/\/api\/organization\/units\/\d+\/agent-settings$/, (route) => route.fulfill({ json: settings }));
+  await context.route(/\/api\/organization\/units\/\d+\/supply/, (route) => route.fulfill({ json: supply }));
+  await context.route(/\/api\/organization\/units\/\d+\/composition$/, (route) => route.fulfill({ json: composition }));
+  await context.route(/\/api\/organization\/units\/\d+\/repositories$/, (route) => route.fulfill({ json: repositories }));
+}
+
+// --- The company's app catalogue: personal apps its people shared ---
+
+function catalogueOf(words: Words) {
+  const review = { state: "written", report: words.review, at: NOW - 3 * DAY };
+  const may = { install: true, update: false, uninstall: false, clone: true, withdraw: false, approve: false, promote: false, recall: [], turnOn: [] };
+  const app = (id: string, [title, description]: readonly [string, string], maker: string, installs: number, over: Record<string, unknown> = {}) => {
+    const permissions = (over.permissions as { network: string[]; secrets: string[] } | undefined) ?? { network: [], secrets: [] };
+
+    return {
+      id, key: `shared-1-${id}`, name: id.replace(/-/g, "_"), title, description, maker, owner: maker, targets: [{ company: true }], version: "1.0.0",
+      versions: [{ version: "1.0.0", sharedAt: NOW - 5 * DAY, sourceHash: "demo", permissions, review }], permissions, review,
+      approval: { required: false, approved: true }, installs, withdrawn: null, promotion: null, installed: null, updateWaiting: false, permissionsGrown: false, may,
+      ...over,
+    };
+  };
+
+  return {
+    company: words.company,
+    ceiling: ["team", "heads", "company"],
+    apps: [
+      app("weekly-report", words.apps.weekly, "2", 23, { installed: { version: "1.0.0", how: "unit" } }),
+      app("exchange-alert", words.apps.rates, "3", 8, { permissions: { network: ["rates.example.com"], secrets: [] }, updateWaiting: true, installed: { version: "0.9.0", how: "self" } }),
+      app("meeting-rooms", words.apps.rooms, "4", 0, { permissions: { network: ["rooms.example.com"], secrets: ["ROOMS_TOKEN"] }, approval: { required: true, approved: false } }),
+      app("receipt-table", words.apps.receipts, "1", 12, { installed: { version: "1.0.0", how: "self" } }),
+      app("trip-plan", words.apps.trip, "5", 5),
+    ],
+    notices: [{ kind: "shared", app: "trip-plan", at: NOW - 3600 }],
+    seenAt: NOW - 2 * DAY,
+    reach: { network: true, secrets: true, held: ["ROOMS_TOKEN"] },
+    people: Object.fromEntries(words.people.map((name, index) => [String(index + 1), name])),
+    units: { [String(TEAM)]: words.units[1] },
+  };
+}
+
+// --- The reader's own personal apps, made by their BMO on their PC ---
+
+function personalAppsOf(words: Words) {
+  const app = (name: string, [title, description]: readonly [string, string], version: string, ago: number, permissions: { network: string[]; secrets: string[] }, kept: string[]) => ({
+    name, version, putAt: (NOW - ago) * 1000, entries: [{ name: `my/${name}`, title, description: `${description}.` }], permissions, kept,
+  });
+
+  return {
+    items: [
+      app("receipt_table", words.apps.receipts, "1.2.0", 2 * DAY, { network: [], secrets: [] }, ["1.1.0", "1.0.0"]),
+      app("exchange_alert", words.apps.rates, "0.9.0", 6 * DAY, { network: ["rates.example.com"], secrets: [] }, ["0.8.0"]),
+      app("expense_sheet", words.apps.sheet, "0.3.1", 9 * DAY, { network: ["sheets.example.com"], secrets: ["SHEETS_TOKEN"] }, []),
+    ],
+    reached: true,
+    reach: { network: true, secrets: true, held: ["SHEETS_TOKEN"] },
+  };
+}
+
+// --- Driving ---
+
+async function settle(page: Page, wait: number, locale: Locale): Promise<void> {
+  await page.waitForTimeout(wait);
+  await swapTexts(page, [], locale);
+  await page.waitForTimeout(500);
+}
+
+const SCREENS: Record<string, (context: BrowserContext, locale: Locale) => Promise<Page>> = {
+  async org(context, locale) {
+    await answerOrganization(context, WORDS[locale]);
+
+    const page = await context.newPage();
+
+    await page.goto(`${ORIGIN}/organization?company=1&unit=${TEAM}&tab=agents`);
+    await settle(page, 12000, locale);
+
+    return page;
+  },
+  async catalogue(context, locale) {
+    await context.route(/\/api\/account\/app-catalogue$/, (route) => route.fulfill({ json: catalogueOf(WORDS[locale]) }));
+
+    const page = await context.newPage();
+
+    await page.goto(`${ORIGIN}/app-catalogue`);
+    await settle(page, 12000, locale);
+
+    return page;
+  },
+  async "personal-apps"(context, locale) {
+    await context.route(/\/api\/account\/personal-apps$/, (route) => route.fulfill({ json: personalAppsOf(WORDS[locale]) }));
+
+    const page = await context.newPage();
+
+    await page.goto(`${ORIGIN}/?settings=personal-apps`);
+    await settle(page, 12000, locale);
+
+    return page;
+  },
+  async language(context, locale) {
+    const page = await context.newPage();
+
+    await page.goto(`${ORIGIN}/?settings=theme`);
+    await page.waitForTimeout(12000);
+    await page.locator("[data-language-choice]").first().click();
+    await settle(page, 1500, locale);
+
+    return page;
+  },
+};
+
+const [language, ...asked] = process.argv.slice(2);
+const locale = localeOf(language);
+const session = await signedIn();
+const browser = await chromium.launch();
+
+try {
+  for (const name of asked.length > 0 ? asked : Object.keys(SCREENS)) {
+    const screen = SCREENS[name];
+
+    if (!screen) throw new Error(`no console screen named ${name}`);
+
+    for (const theme of THEMES) {
+      const context = await demoContext(browser, session, theme, 1440, 900, locale);
+      const page = await screen(context, locale);
+
+      await page.screenshot({ path: `${OUT}${name}.${locale}.${theme}.png` });
+      console.log("saved", `${name}.${locale}.${theme}`);
+      await context.close();
+    }
+  }
+} finally {
+  await browser.close();
+}

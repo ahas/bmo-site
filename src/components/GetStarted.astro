@@ -9,7 +9,8 @@ interface Props {
 }
 
 // The get-started section: the one line a person hands their coding agent, which reads the install runbook at
-// /install.md and carries the install out, and the three kinds of install the agent offers.
+// /install.md and carries the install out, the three kinds of install the agent offers, and where else it installs:
+// a machine without systemd, and the All-in-One desktop app.
 const { locale } = Astro.props;
 const words = START[locale];
 ---
@@ -35,6 +36,7 @@ const words = START[locale];
         ))
       }
     </ul>
+    <p class="start-elsewhere">{words.elsewhere}</p>
     <a class="text-link" href={RUNBOOK_PAGE_URL}>{words.runbook} →</a>
   </div>
 </section>
@@ -89,6 +91,13 @@ const words = START[locale];
   .start-presets span {
     color: var(--muted);
     font-size: 14.5px;
+  }
+
+  .start-elsewhere {
+    max-width: 720px;
+    margin: 0 0 20px;
+    color: var(--muted);
+    font-size: 15px;
   }
 
   @media (min-width: 900px) {

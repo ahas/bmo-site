@@ -658,6 +658,14 @@ main:focus {
   }
 }
 
+/* What's new: the feature cards, two to a row so the ten stand in even rows */
+
+@media (min-width: 1024px) {
+  .news {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 /* Screens */
 
 .screens {
@@ -1076,22 +1084,16 @@ main:focus {
   font-size: 16.5px;
 }
 
-.release-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 28px;
-  margin: 24px 0 0;
-}
-
-.release-meta dt {
-  color: var(--faint);
-  font-size: 13px;
-}
-
-.release-meta dd {
-  margin: 2px 0 0;
+.release-line,
+.release-nightly {
+  margin-top: 20px;
   font-family: var(--mono);
-  font-size: 16px;
+  font-size: 15px;
+}
+
+.release-nightly {
+  margin-top: 6px;
+  color: var(--muted);
 }
 
 .release-missing {
@@ -1110,16 +1112,26 @@ main:focus {
   gap: 20px;
 }
 
-.platform h3 {
-  font-size: 15px;
-  color: var(--muted);
-  font-weight: 600;
-  letter-spacing: 0;
+.desktop-app {
+  padding: 20px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--bg);
 }
 
-.platform ul {
+.desktop-app h3 {
+  font-size: 18px;
+}
+
+.desktop-app p {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 14.5px;
+}
+
+.desktop-app ul {
   list-style: none;
-  margin: 10px 0 0;
+  margin: 14px 0 0;
   padding: 0;
   display: grid;
   gap: 10px;
@@ -1131,7 +1143,7 @@ main:focus {
   padding: 14px 16px;
   border: 1px solid var(--border-strong);
   border-radius: 12px;
-  background: var(--bg);
+  background: var(--bg-raised);
   text-decoration: none;
   transition: border-color 0.15s;
 }
@@ -1150,12 +1162,6 @@ main:focus {
   font-size: 13px;
   font-family: var(--mono);
   overflow-wrap: anywhere;
-}
-
-.platform-source p {
-  margin-top: 8px;
-  color: var(--muted);
-  font-size: 14.5px;
 }
 
 @media (min-width: 900px) {

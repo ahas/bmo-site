@@ -1,4 +1,5 @@
-// Demo data for product shots: fictional rooms, a fictional user "Alex", the agent BMO.
+// Demo data for product shots: fictional rooms, a fictional user "Alex", the agent BMO, in Korean and, for the rooms'
+// titles, the TODO board and the console's own labels, in English as well.
 export const NOW = Math.floor(Date.now() / 1000);
 
 export const ROOM_TITLES: Record<string, string> = {
@@ -49,11 +50,33 @@ export const QUEUE = [
   item(1287, "드라이브 공유 링크 만료일 선택", { worker: "drive", createdAt: NOW - 4000 }),
   item(1286, "음성 브리핑 재생 속도 조절", { worker: "voice", createdAt: NOW - 5000 }),
 ];
+export const QUEUE_EN = [
+  item(1290, "Research write-up on embedding model papers", { worker: "research", status: "running", running: true, liveState: "running", createdAt: NOW - 560 }),
+  item(1288, "Show public holidays in the calendar's week view", { worker: "calendar", createdAt: NOW - 3000 }),
+  item(1287, "Choose an expiry date for drive share links", { worker: "drive", createdAt: NOW - 4000 }),
+  item(1286, "Playback speed for voice briefings", { worker: "voice", createdAt: NOW - 5000 }),
+];
 export const DONE = [
   item(1284, "노트 붙여넣기 줄바꿈 유지", { worker: "note", done: true, status: "done", doneAt: NOW - 1500, createdAt: NOW - 7200 }),
   item(1281, "문서 뷰어 각주 이동", { worker: "artifact", done: true, status: "done", doneAt: NOW - 20000, createdAt: NOW - 40000 }),
   item(1279, "메일 보낸 편지 되돌리기", { worker: "mail", done: true, status: "done", doneAt: NOW - 50000, createdAt: NOW - 90000 }),
 ];
+
+export const DONE_EN = [
+  item(1284, "Keep line breaks when pasting into notes", { worker: "note", done: true, status: "done", doneAt: NOW - 1500, createdAt: NOW - 7200 }),
+  item(1281, "Footnote jumps in the document viewer", { worker: "artifact", done: true, status: "done", doneAt: NOW - 20000, createdAt: NOW - 40000 }),
+  item(1279, "Undo a sent mail", { worker: "mail", done: true, status: "done", doneAt: NOW - 50000, createdAt: NOW - 90000 }),
+];
+
+export const ROOM_TITLES_EN: Record<string, string> = {
+  "42": "BMO",
+  "43": "Family chat",
+  "-9000000000099": "Weekly sync notes",
+  "44": "Trip planning",
+  "45": "Study group",
+  "46": "Photo album",
+  [String(-9_002_000_000_001)]: "Side project",
+};
 
 // Visible labels the server renders itself, swapped in the page for demo names.
 export const TEXT_SWAPS: [string, string][] = [
@@ -68,6 +91,22 @@ export const TEXT_SWAPS: [string, string][] = [
   ["sticker-room", "스터디 모임"],
   ["pictures-room", "사진첩"],
   ["high-room", "사이드 프로젝트"],
+  ["Repository A", "bmo-note"],
+  ["claude-02", "account 1"],
+];
+
+export const TEXT_SWAPS_EN: [string, string][] = [
+  ["Agent A", "BMO"],
+  ["agent-topbar", "Alex"],
+  ["screen-a", "Notes"],
+  ["screen-b", "Calendar"],
+  ["screen-released", "Documents"],
+  ["unread-room", "Family chat"],
+  ["record-room", "Weekly sync notes"],
+  ["media-room", "Trip planning"],
+  ["sticker-room", "Study group"],
+  ["pictures-room", "Photo album"],
+  ["high-room", "Side project"],
   ["Repository A", "bmo-note"],
   ["claude-02", "account 1"],
 ];

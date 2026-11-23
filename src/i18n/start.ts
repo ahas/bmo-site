@@ -10,6 +10,8 @@ export interface StartWords {
   lineLabel: string;
   presetsTitle: string;
   presets: { name: string; body: string }[];
+  // Where the agent installs it besides a server of its own: a machine without systemd, and the All-in-One app.
+  elsewhere: string;
   runbook: string;
 }
 
@@ -23,10 +25,11 @@ export const START: Record<Locale, StartWords> = {
     lineLabel: "Hand this line to your agent",
     presetsTitle: "Three kinds of install",
     presets: [
-      { name: "Personal", body: "One person and their own BMO: the console, memory, coding agents, one chat service, documents, notes, calendar, files and mail." },
+      { name: "Personal", body: "One person and their own BMO: the console, memory, coding agents, one chat service, documents, notes, calendar, files, mail and remote desktop." },
       { name: "Team", body: "Personal, plus companies, organisation units, members and room permissions, code review and research." },
-      { name: "Operator", body: "Everything: the customers' voice, BMO's face, voice and vision, GPU card sharing, the node monitor and the remote machine hub." },
+      { name: "Operator", body: "Everything public: the customers' voice, BMO's face, voice and vision on GPU nodes, GPU card sharing, the node monitor, the video store and the remote machine hub. Needs GPU machines, a domain and a reverse proxy." },
     ],
+    elsewhere: "On a machine without systemd, such as a container or WSL, the agent runs BMO under the testbed's own supervisor with the same steps. To keep no server at all, the All-in-One desktop app below installs the personal kind on your own PC and runs it there.",
     runbook: "Read the runbook",
   },
   ko: {
@@ -36,10 +39,11 @@ export const START: Record<Locale, StartWords> = {
     lineLabel: "에이전트에게 건넬 한 줄",
     presetsTitle: "세 가지 설치",
     presets: [
-      { name: "개인", body: "한 사람과 그 사람의 BMO: 콘솔, 기억, 코딩 에이전트, 채팅 서비스 하나, 문서, 노트, 캘린더, 파일, 메일." },
+      { name: "개인", body: "한 사람과 그 사람의 BMO: 콘솔, 기억, 코딩 에이전트, 채팅 서비스 하나, 문서, 노트, 캘린더, 파일, 메일, 원격 데스크톱." },
       { name: "팀", body: "개인에 더해 회사와 조직 단위, 구성원과 방 권한, 코드 리뷰, 리서치." },
-      { name: "운영자", body: "전부: 고객의 소리, 비모 얼굴, 음성과 시각, GPU 카드 공유, 노드 모니터, 원격 기기 허브." },
+      { name: "운영자", body: "공개된 전부: 고객의 소리, 비모 얼굴, GPU 노드의 음성과 시각, GPU 카드 공유, 노드 모니터, 영상 보관함, 원격 기기 허브. GPU 머신, 도메인, 리버스 프록시가 필요합니다." },
     ],
+    elsewhere: "systemd가 없는 컴퓨터(컨테이너, WSL 등)에서는 에이전트가 테스트베드의 감독 프로세스 아래에서 같은 순서로 BMO를 돌립니다. 서버를 따로 두고 싶지 않다면 아래의 All-in-One 데스크톱 앱이 개인용 BMO를 내 PC에 설치해 그 자리에서 실행합니다.",
     runbook: "설치 런북 읽기",
   },
   ja: {
@@ -49,10 +53,11 @@ export const START: Record<Locale, StartWords> = {
     lineLabel: "エージェントに渡す一行",
     presetsTitle: "三つのインストール",
     presets: [
-      { name: "個人", body: "一人とその人の BMO：コンソール、記憶、コーディングエージェント、チャットサービス一つ、文書、ノート、カレンダー、ファイル、メール。" },
+      { name: "個人", body: "一人とその人の BMO：コンソール、記憶、コーディングエージェント、チャットサービス一つ、文書、ノート、カレンダー、ファイル、メール、リモートデスクトップ。" },
       { name: "チーム", body: "個人に加えて、会社と組織単位、メンバーとルームの権限、コードレビュー、リサーチ。" },
-      { name: "運用者", body: "すべて：顧客の声、BMO の顔、音声と視覚、GPU カードの共有、ノードモニター、リモートマシンのハブ。" },
+      { name: "運用者", body: "公開されているすべて：顧客の声、BMO の顔、GPU ノードでの音声と視覚、GPU カードの共有、ノードモニター、動画庫、リモートマシンのハブ。GPU マシン、ドメイン、リバースプロキシが必要です。" },
     ],
+    elsewhere: "systemd のないマシン（コンテナや WSL など）では、エージェントがテストベッド自身の監督プロセスのもとで、同じ手順で BMO を動かします。サーバーを置きたくない場合は、下の All-in-One デスクトップアプリが個人向けの BMO を自分の PC にインストールし、その場で動かします。",
     runbook: "ランブックを読む",
   },
   zh: {
@@ -62,10 +67,11 @@ export const START: Record<Locale, StartWords> = {
     lineLabel: "交给智能体的一行",
     presetsTitle: "三种安装",
     presets: [
-      { name: "个人", body: "一个人和他自己的 BMO：控制台、记忆、编程智能体、一个聊天服务、文档、笔记、日历、文件和邮件。" },
+      { name: "个人", body: "一个人和他自己的 BMO：控制台、记忆、编程智能体、一个聊天服务、文档、笔记、日历、文件、邮件和远程桌面。" },
       { name: "团队", body: "在个人之上，加上公司与组织单元、成员与聊天室权限、代码审查和调研。" },
-      { name: "运营者", body: "全部：客户之声、BMO 的脸、语音与视觉、GPU 卡共享、节点监控和远程机器中枢。" },
+      { name: "运营者", body: "所有公开部分：客户之声、BMO 的脸、GPU 节点上的语音与视觉、GPU 卡共享、节点监控、视频库和远程机器中枢。需要 GPU 机器、域名和反向代理。" },
     ],
+    elsewhere: "在没有 systemd 的机器上（例如容器或 WSL），智能体会在测试台自己的监管进程下按同样的步骤运行 BMO。如果完全不想维护服务器，下面的 All-in-One 桌面应用会把个人版 BMO 安装到你自己的电脑上并在本机运行。",
     runbook: "阅读安装手册",
   },
 };

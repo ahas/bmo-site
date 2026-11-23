@@ -1,8 +1,8 @@
 // The screenshots each capture language shows. Every picture on a page is captured in that page's capture language
 // (`captureLocale`) and in both colour schemes, and its file name ends in both, `<name>-<language>-<scheme>.webp`,
 // which the browser test reads: the page shows the dark capture where it stands dark and the light one where it
-// stands light. The console's own screens speak Korean alone, so the English pages lead with the notes screen and
-// show only the screens that speak English.
+// stands light. Several of the console's screens are captured in Korean alone, so the English pages lead with the
+// notes screen and show only the screens captured in English.
 
 type Capture = "en" | "ko";
 
@@ -52,5 +52,27 @@ export const TOUR_SHOTS: Record<Capture, { key: TourKey; shot: Themed }[]> = {
     { key: "cards", shot: themed("cards", "ko") },
     { key: "drive", shot: themed("drive", "ko") },
     { key: "theater", shot: themed("theater", "ko") },
+  ],
+};
+
+export type NewKey = "org" | "catalogue" | "personalApps" | "language" | "note";
+
+/**
+ * The new screens the what's-new section shows, by the key of their words. The English pages already lead with the
+ * notes screen, so only the Korean page shows it here.
+ */
+export const NEW_SHOTS: Record<Capture, { key: NewKey; shot: Themed }[]> = {
+  en: [
+    { key: "org", shot: themed("org", "en") },
+    { key: "catalogue", shot: themed("catalogue", "en") },
+    { key: "personalApps", shot: themed("personal-apps", "en") },
+    { key: "language", shot: themed("language", "en") },
+  ],
+  ko: [
+    { key: "org", shot: themed("org", "ko") },
+    { key: "catalogue", shot: themed("catalogue", "ko") },
+    { key: "personalApps", shot: themed("personal-apps", "ko") },
+    { key: "language", shot: themed("language", "ko") },
+    { key: "note", shot: themed("note", "ko") },
   ],
 };
