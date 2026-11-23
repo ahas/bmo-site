@@ -38,7 +38,6 @@ export const REPOSITORY_GROUPS: RepositoryGroup[] = [
       r("bmo-voice", "Trained voices and speech synthesis", "학습된 목소리와 음성 합성", "学習した声と音声合成", "训练好的声音与语音合成"),
       r("bmo-face", "The face on the case's screen and its editor", "케이스 화면의 얼굴과 편집기", "本体画面の顔とそのエディター", "机身屏幕上的面孔及其编辑器"),
       r("bmo-persona", "BMO's persona: its voice, manner and lore", "BMO의 페르소나: 말투, 성격, 이야기", "BMO のペルソナ：話し方、性格、物語", "BMO 的人设：语气、性格与故事"),
-      r("bmo-script", "The script studio for BMO's spoken lines", "BMO 대사를 다듬는 대사 작업실", "BMO のセリフを磨くスクリプト工房", "打磨 BMO 台词的剧本工作室"),
     ],
   },
   {
