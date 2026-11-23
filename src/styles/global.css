@@ -1,4 +1,5 @@
-/* The site's one stylesheet: dark first, system fonts, no runtime framework. */
+/* The site's one stylesheet: dark first, a light scheme where the reader's system asks for one, system fonts, no
+   runtime framework. Every colour is a token here; the light scheme sets the same tokens again. */
 
 :root {
   --bg: #0b0e0d;
@@ -16,7 +17,52 @@
   --container: 1168px;
   --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
   --mono: ui-monospace, "SF Mono", "Cascadia Code", "JetBrains Mono", Menlo, Consolas, monospace;
+  --nav-bg: rgb(11 14 13 / 0.82);
+  --nav-border: rgb(37 48 44 / 0.7);
+  --glass: rgb(21 27 25 / 0.6);
+  --shadow: rgb(0 0 0 / 0.8);
+  --glow: rgb(95 187 156 / 0.35);
+  --tint: rgb(95 187 156 / 0.12);
+  --window-bar: #121816;
+  --window-dot: #2d3935;
+  --bezel: #1d2522;
+  --headline-from: #8be3c4;
+  --headline-to: #6dcdf7;
+  --glow-a: rgb(95 187 156 / 0.22);
+  --glow-b: rgb(109 205 247 / 0.1);
+  --glow-c: rgb(249 224 0 / 0.06);
   color-scheme: dark;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f6f9f8;
+    --bg-raised: #ffffff;
+    --surface: #edf3f0;
+    --border: #d9e3df;
+    --border-strong: #bfcdc8;
+    --text: #0e1513;
+    --muted: #44514c;
+    --faint: #5b6863;
+    --accent: #0b7356;
+    --accent-strong: #0a6a4f;
+    --on-accent: #ffffff;
+    --nav-bg: rgb(246 249 248 / 0.86);
+    --nav-border: rgb(191 205 200 / 0.7);
+    --glass: rgb(255 255 255 / 0.7);
+    --shadow: rgb(20 40 33 / 0.28);
+    --glow: rgb(11 115 86 / 0.18);
+    --tint: rgb(11 115 86 / 0.08);
+    --window-bar: #eef3f1;
+    --window-dot: #c9d5d1;
+    --bezel: #2a3431;
+    --headline-from: #0b7356;
+    --headline-to: #0a6a92;
+    --glow-a: rgb(11 115 86 / 0.12);
+    --glow-b: rgb(10 106 146 / 0.07);
+    --glow-c: rgb(200 170 0 / 0.06);
+    color-scheme: light;
+  }
 }
 
 *,
@@ -127,10 +173,10 @@ main:focus {
   position: sticky;
   top: 0;
   z-index: 10;
-  background: rgb(11 14 13 / 0.82);
+  background: var(--nav-bg);
   backdrop-filter: saturate(140%) blur(12px);
   -webkit-backdrop-filter: saturate(140%) blur(12px);
-  border-bottom: 1px solid rgb(37 48 44 / 0.7);
+  border-bottom: 1px solid var(--nav-border);
 }
 
 .nav-inner {
@@ -235,7 +281,7 @@ main:focus {
   border: 1px solid var(--border-strong);
   border-radius: 12px;
   background: var(--bg-raised);
-  box-shadow: 0 20px 50px -20px rgb(0 0 0 / 0.8);
+  box-shadow: 0 20px 50px -20px var(--shadow);
 }
 
 .lang-list a {
@@ -286,7 +332,7 @@ main:focus {
 .button-ghost {
   border: 1px solid var(--border-strong);
   color: var(--text);
-  background: rgb(21 27 25 / 0.6);
+  background: var(--glass);
 }
 
 .button-ghost:hover {
@@ -324,9 +370,9 @@ main:focus {
   inset: -200px 0 auto;
   height: 900px;
   background:
-    radial-gradient(600px 320px at 50% 30%, rgb(95 187 156 / 0.22), transparent 70%),
-    radial-gradient(500px 260px at 80% 55%, rgb(109 205 247 / 0.1), transparent 70%),
-    radial-gradient(420px 240px at 18% 60%, rgb(249 224 0 / 0.06), transparent 70%);
+    radial-gradient(600px 320px at 50% 30%, var(--glow-a), transparent 70%),
+    radial-gradient(500px 260px at 80% 55%, var(--glow-b), transparent 70%),
+    radial-gradient(420px 240px at 18% 60%, var(--glow-c), transparent 70%);
   pointer-events: none;
 }
 
@@ -340,7 +386,7 @@ main:focus {
   padding: 5px 12px;
   border: 1px solid var(--border-strong);
   border-radius: 999px;
-  background: rgb(21 27 25 / 0.7);
+  background: var(--glass);
   color: var(--accent);
   font-size: 13.5px;
   font-weight: 600;
@@ -374,7 +420,7 @@ main:focus {
 }
 
 .hero-line-accent {
-  background: linear-gradient(90deg, #8be3c4, #6dcdf7);
+  background: linear-gradient(90deg, var(--headline-from), var(--headline-to));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -412,8 +458,8 @@ main:focus {
   overflow: hidden;
   background: var(--bg-raised);
   box-shadow:
-    0 40px 120px -40px rgb(95 187 156 / 0.35),
-    0 30px 80px -30px rgb(0 0 0 / 0.8);
+    0 40px 120px -40px var(--glow),
+    0 30px 80px -30px var(--shadow);
 }
 
 .window-bar {
@@ -421,14 +467,14 @@ main:focus {
   gap: 7px;
   padding: 11px 14px;
   border-bottom: 1px solid var(--border);
-  background: #121816;
+  background: var(--window-bar);
 }
 
 .window-bar span {
   width: 11px;
   height: 11px;
   border-radius: 50%;
-  background: #2d3935;
+  background: var(--window-dot);
 }
 
 .window img {
@@ -585,7 +631,7 @@ main:focus {
   width: 42px;
   height: 42px;
   border-radius: 11px;
-  background: rgb(95 187 156 / 0.12);
+  background: var(--tint);
   color: var(--accent);
 }
 
@@ -630,7 +676,7 @@ main:focus {
   border-radius: var(--radius);
   overflow: hidden;
   background: var(--bg-raised);
-  box-shadow: 0 30px 70px -40px rgb(0 0 0 / 0.9);
+  box-shadow: 0 30px 70px -40px var(--shadow);
 }
 
 .screen-frame img {
@@ -642,7 +688,7 @@ main:focus {
   margin: 0 auto;
   border-radius: 28px;
   border-width: 6px;
-  border-color: #1d2522;
+  border-color: var(--bezel);
 }
 
 .screen figcaption {
@@ -695,6 +741,305 @@ main:focus {
   }
 }
 
+/* The tour of more screens */
+
+.tour-title {
+  margin: 72px 0 6px;
+  font-size: clamp(22px, 3vw, 28px);
+  letter-spacing: -0.015em;
+}
+
+.tour-sub {
+  margin: 0 0 28px;
+  color: var(--muted);
+}
+
+.tour {
+  display: grid;
+  gap: 32px;
+  grid-template-columns: 1fr;
+  align-items: start;
+}
+
+.tour-shot {
+  margin: 0;
+}
+
+.tour-shot figcaption {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 14.5px;
+}
+
+.tour-shot figcaption strong {
+  color: var(--text);
+  font-weight: 650;
+}
+
+@media (min-width: 900px) {
+  .tour {
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+}
+
+/* What sets BMO apart */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.compare-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+  margin: 0 0 16px;
+  padding: 0;
+  list-style: none;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.compare-legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.compare {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-raised);
+  font-size: 14.5px;
+}
+
+.compare th,
+.compare td {
+  padding: 14px 12px;
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+  vertical-align: middle;
+}
+
+.compare tbody tr:last-child th,
+.compare tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.compare thead th {
+  color: var(--text);
+  font-size: 13.5px;
+  font-weight: 650;
+  vertical-align: bottom;
+}
+
+.compare-examples {
+  display: block;
+  margin-top: 4px;
+  color: var(--faint);
+  font-size: 12.5px;
+  font-weight: 500;
+}
+
+.compare tbody th {
+  text-align: left;
+  font-weight: 600;
+}
+
+.compare thead th:first-child {
+  text-align: left;
+}
+
+.compare .compare-bmo {
+  background: var(--tint);
+}
+
+.compare thead .compare-bmo {
+  color: var(--accent);
+  font-size: 15px;
+}
+
+.compare-how {
+  display: block;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.mark {
+  display: inline-block;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.mark-yes {
+  color: var(--accent);
+}
+
+/* Half a disc, drawn rather than set as a glyph, which not every font holds. */
+.mark-partial {
+  width: 13px;
+  height: 13px;
+  border: 2px solid var(--text);
+  border-radius: 50%;
+  background: linear-gradient(90deg, var(--text) 50%, transparent 50%);
+  vertical-align: -1px;
+}
+
+.mark-none {
+  color: var(--faint);
+}
+
+.mark-word {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.note-ref {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.compare-notes {
+  margin: 22px 0 0;
+  padding-left: 22px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.compare-notes li + li {
+  margin-top: 6px;
+}
+
+.compare-notes li:target {
+  color: var(--text);
+}
+
+.compare-method {
+  margin: 16px 0 0;
+  color: var(--faint);
+  font-size: 13.5px;
+}
+
+/* Below a tablet's width each capability stands as a card of its own: BMO's answer, then each kind's mark. */
+@media (max-width: 899px) {
+  .compare,
+  .compare tbody,
+  .compare tr,
+  .compare th,
+  .compare td {
+    display: block;
+  }
+
+  .compare {
+    border: 0;
+    background: none;
+  }
+
+  .compare thead {
+    display: none;
+  }
+
+  .compare tbody {
+    display: grid;
+    gap: 14px;
+  }
+
+  .compare tbody tr {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg-raised);
+    overflow: hidden;
+  }
+
+  .compare tbody th {
+    padding: 14px 16px 10px;
+    border-bottom: 0;
+    font-size: 16px;
+  }
+
+  .compare td {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 6px 16px;
+    border-bottom: 0;
+    border-top: 1px solid var(--border);
+    text-align: left;
+  }
+
+  .compare td::before {
+    content: attr(data-kind);
+    flex: 1;
+    color: var(--muted);
+  }
+
+  .compare td.compare-bmo {
+    flex-wrap: wrap;
+    padding: 10px 16px 12px;
+  }
+
+  .compare td.compare-bmo::before {
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .compare-how {
+    flex-basis: 100%;
+    margin-top: 2px;
+    color: var(--text);
+    font-size: 14.5px;
+  }
+
+  .compare .mark-word {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip-path: none;
+    color: var(--text);
+    font-size: 13.5px;
+  }
+
+  .compare .note-ref {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    margin: -6px -12px -6px 0;
+  }
+}
+
+@media (min-width: 900px) {
+  .compare tbody th {
+    width: 17%;
+  }
+
+  .compare td.compare-bmo {
+    width: 25%;
+  }
+}
+
 /* Download */
 
 .download-inner {
@@ -706,7 +1051,7 @@ main:focus {
   border: 1px solid var(--border);
   border-radius: 22px;
   background:
-    radial-gradient(500px 260px at 0% 0%, rgb(95 187 156 / 0.12), transparent 70%),
+    radial-gradient(500px 260px at 0% 0%, var(--tint), transparent 70%),
     var(--bg-raised);
 }
 

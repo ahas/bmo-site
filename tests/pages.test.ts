@@ -8,10 +8,11 @@ import { DIST, serveDist } from "./serve";
 
 import type { Browser, Page } from "playwright-core";
 
-// The built pages opened in a real browser at a desktop's width, a tablet's and a phone's: every key section stands
-// on the page with its heading, every picture has its words and is a capture in the page's own capture language
-// (Korean on /ko/, English on every other page, read from the picture's file name), the language menu reaches every
-// version, and nothing is wider than the window. Run `bun run build` first; the test reads dist/ as a static host serves it, and is
+// The built pages opened in a real browser at a desktop's width, a tablet's and a phone's, in the dark colour scheme
+// and the light one: every key section stands on the page with its heading, every picture has its words and is a
+// capture in the page's own capture language (Korean on /ko/, English on every other page) and in the scheme the
+// page stands in, both read from the picture's file name, the comparison stands whole, the language menu reaches
+// every version, and nothing is wider than the window. Run `bun run build` first; the test reads dist/ as a static host serves it, and is
 // skipped where the browser build Playwright pins is not on the machine.
 
 const ready = (() => {
@@ -35,7 +36,13 @@ const PAGES = [
   { path: "/zh/", lang: "zh-Hans", capture: "en" },
 ];
 
-const SECTIONS = ["#hero-title", "#how-title", "#features-title", "#screens-title", "#download-title", "#repositories-title", "#closing-title"];
+const SCHEMES = ["dark", "light"] as const;
+
+const SECTIONS = ["#hero-title", "#how-title", "#features-title", "#screens-title", "#compare-title", "#download-title", "#repositories-title", "#closing-title"];
+
+// The comparison's capabilities and the kinds of tool BMO is set beside, as src/lib/comparison.ts holds them.
+const CAPABILITIES = 8;
+const KINDS = 5;
 
 let browser: Browser;
 let site: ReturnType<typeof serveDist>;
@@ -53,8 +60,8 @@ afterAll(async () => {
   site?.stop();
 });
 
-async function opened(width: (typeof WIDTHS)[number], path: string): Promise<Page> {
-  const context = await browser.newContext({ viewport: width.viewport, isMobile: width.mobile, hasTouch: width.mobile, reducedMotion: "reduce" });
+async function opened(width: (typeof WIDTHS)[number], path: string, scheme: (typeof SCHEMES)[number] = "dark"): Promise<Page> {
+  const context = await browser.newContext({ viewport: width.viewport, isMobile: width.mobile, hasTouch: width.mobile, reducedMotion: "reduce", colorScheme: scheme });
   const page = await context.newPage();
 
   await page.goto(`${site.origin}${path}`, { waitUntil: "load" });
@@ -65,8 +72,8 @@ async function opened(width: (typeof WIDTHS)[number], path: string): Promise<Pag
 describe.skipIf(!ready)("the built pages", () => {
   for (const width of WIDTHS) {
     for (const entry of PAGES) {
-      test(`${entry.path} at the ${width.name}'s width`, async () => {
-        const page = await opened(width, entry.path);
+      for (const scheme of SCHEMES) test(`${entry.path} at the ${width.name}'s width in the ${scheme} scheme`, async () => {
+        const page = await opened(width, entry.path, scheme);
 
         expect(await page.locator("html").getAttribute("lang")).toBe(entry.lang);
 
@@ -99,8 +106,31 @@ describe.skipIf(!ready)("the built pages", () => {
         for (const picture of pictures) {
           expect(picture.alt.length).toBeGreaterThan(10);
           expect(picture.loaded).toBe(true);
-          // Every file the picture may show is a capture in the page's capture language.
-          for (const file of [picture.file, ...picture.sources]) expect(file).toMatch(new RegExp(`-${entry.capture}\\.`));
+          // Every file the picture may show is a capture in the page's capture language, and the one it shows is the
+          // capture of the scheme the page stands in.
+          for (const file of picture.sources) expect(file).toMatch(new RegExp(`-${entry.capture}-(dark|light)\\.`));
+          expect(picture.file).toMatch(new RegExp(`-${entry.capture}-${scheme}\\.`));
+        }
+
+        // The page stands in the scheme asked for.
+        expect(await page.evaluate(() => getComputedStyle(document.documentElement).colorScheme)).toContain(scheme);
+
+        // The comparison holds a row for every capability, BMO's answer and a mark for every kind in each, and every
+        // footnote a mark points to stands under it.
+        const compare = page.locator("table.compare");
+
+        await compare.scrollIntoViewIfNeeded();
+        expect(await compare.locator("tbody tr").count()).toBe(CAPABILITIES);
+        expect(await compare.locator("tbody td.compare-bmo").count()).toBe(CAPABILITIES);
+        expect(await compare.locator("tbody td[data-mark]").count()).toBe(CAPABILITIES * KINDS);
+        for (const href of await compare.locator("a.note-ref").evaluateAll((links) => links.map((link) => link.getAttribute("href")!))) {
+          expect(((await page.locator(href).textContent()) ?? "").trim().length).toBeGreaterThan(10);
+        }
+        if (width.mobile) {
+          // Stacked at a phone's width, each footnote mark is a target a finger reaches.
+          for (const box of await compare.locator("a.note-ref").evaluateAll((links) => links.map((link) => link.getBoundingClientRect().toJSON()))) {
+            expect(box.height).toBeGreaterThanOrEqual(44);
+          }
         }
 
         // Nothing reaches past the window's right edge, at the top or after scrolling to the end.

@@ -2,32 +2,43 @@ import { existsSync, mkdirSync } from "node:fs";
 
 import sharp from "sharp";
 
+import { THEMES } from "./locale";
+
 // Turns the captures in shots-out/ into the WebP sources under src/assets/shots/ the pages are built from. A
-// capture's language is the last part of its name, `<capture>.<locale>.png`, and stays the last part of the
-// source's, `<source>-<locale>.webp`, which the browser test reads to hold each page to its own language's
-// screens. The console's own room is captured in Korean alone, the one language its screens speak.
+// capture's language and colour scheme are the last parts of its name, `<capture>.<locale>.<scheme>.png`, and stay
+// the last parts of the source's, `<source>-<locale>-<scheme>.webp`, which the browser test reads to hold each page
+// to its own language's screens in its own scheme. The console's own screens are captured in Korean alone, the one
+// language they speak.
 const from = new URL("../../shots-out/", import.meta.url).pathname;
 const to = new URL("../../src/assets/shots/", import.meta.url).pathname;
+// Each capture by the name of the source it becomes.
 const NAMES: [string, string][] = [
-  ["room.ko", "console-room-ko"],
-  ["room-phone.ko", "console-room-phone-ko"],
-  ...(["en", "ko"] as const).flatMap((locale): [string, string][] => [
-    [`calendar.${locale}`, `calendar-week-${locale}`],
-    [`calendar-phone.${locale}`, `calendar-phone-${locale}`],
-    [`archive-doc.${locale}`, `archive-document-${locale}`],
-    [`note.${locale}`, `note-${locale}`],
-    [`note-phone.${locale}`, `note-phone-${locale}`],
-  ]),
+  ["room", "console-room"],
+  ["room-phone", "console-room-phone"],
+  ["calendar", "calendar-week"],
+  ["calendar-phone", "calendar-phone"],
+  ["archive-doc", "archive-document"],
+  ["note", "note"],
+  ["note-phone", "note-phone"],
+  ["brain", "brain"],
+  ["agents", "agents"],
+  ["job", "job"],
+  ["cards", "cards"],
+  ["drive", "drive"],
+  ["theater", "theater"],
 ];
 
 mkdirSync(to, { recursive: true });
 for (const [png, webp] of NAMES) {
-  if (!existsSync(`${from}${png}.png`)) {
-    console.log("no capture", png);
-    continue;
+  for (const locale of ["en", "ko"] as const) {
+    for (const theme of THEMES) {
+      const source = `${from}${png}.${locale}.${theme}.png`;
+
+      if (!existsSync(source)) continue;
+
+      const written = await sharp(source).webp({ quality: 92 }).toFile(`${to}${webp}-${locale}-${theme}.webp`);
+
+      console.log(`${webp}-${locale}-${theme}`, written.width, written.height, written.size);
+    }
   }
-
-  const written = await sharp(`${from}${png}.png`).webp({ quality: 92 }).toFile(`${to}${webp}.webp`);
-
-  console.log(webp, written.width, written.height, written.size);
 }

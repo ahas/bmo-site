@@ -1,0 +1,54 @@
+---
+import { getImage } from "astro:assets";
+
+import type { Themed } from "../lib/shots";
+
+// One screenshot in the colour scheme the page stands in: the dark capture by default, as the site is dark first,
+// and the light capture where the reader's system asks for light, the same way the stylesheet decides. Both are
+// offered as AVIF and WebP at the widths given; a `phone` capture takes the place of the wide one below 600 pixels.
+
+interface Props {
+  shot: Themed;
+  widths: number[];
+  sizes: string;
+  alt: string;
+  phone?: { shot: Themed; widths: number[]; sizes: string };
+  eager?: boolean;
+}
+
+const { shot, widths, sizes, alt, phone, eager = false } = Astro.props;
+const LIGHT = "(prefers-color-scheme: light)";
+const PHONE = "(max-width: 599px)";
+
+async function set(src: ImageMetadata, at: number[], format: "avif" | "webp"): Promise<string> {
+  return (await getImage({ src, widths: at, format, quality: 72 })).srcSet.attribute;
+}
+
+// Every source in the order the browser weighs them: the phone's light, the phone's dark, the light, the dark.
+const sources: { media?: string; type: string; srcset: string; sizes: string; width: number; height: number }[] = [];
+
+for (const [themed, at, size, media] of [
+  ...(phone ? ([[phone.shot.light, phone.widths, phone.sizes, `${PHONE} and ${LIGHT}`], [phone.shot.dark, phone.widths, phone.sizes, PHONE]] as const) : []),
+  [shot.light, widths, sizes, LIGHT],
+  [shot.dark, widths, sizes, undefined],
+] as const) {
+  for (const format of ["avif", "webp"] as const) {
+    sources.push({ media, type: `image/${format}`, srcset: await set(themed, [...at], format), sizes: size, width: themed.width, height: themed.height });
+  }
+}
+
+const fallback = await getImage({ src: shot.dark, width: Math.min(1440, shot.dark.width), format: "webp", quality: 72 });
+---
+
+<picture>
+  {sources.map((source) => <source media={source.media} type={source.type} srcset={source.srcset} sizes={source.sizes} width={source.width} height={source.height} />)}
+  <img
+    src={fallback.src}
+    width={shot.dark.width}
+    height={shot.dark.height}
+    alt={alt}
+    loading={eager ? "eager" : "lazy"}
+    fetchpriority={eager ? "high" : undefined}
+    decoding="async"
+  />
+</picture>

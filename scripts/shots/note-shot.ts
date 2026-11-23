@@ -7,6 +7,10 @@ import { chromium } from "playwright-core";
 import { FIXTURE, seeded } from "../../../note/client/tests/browser/fixture.ts";
 import { stoodUp } from "../../../note/client/tests/browser/stack.ts";
 
+import { THEMES } from "./locale";
+
+import type { Theme } from "./locale";
+
 import type { FixtureNote } from "../../../note/client/tests/browser/fixture.ts";
 import type { Browser, Page } from "playwright-core";
 
@@ -31,20 +35,20 @@ const inOrder = (note: FixtureNote): FixtureNote => {
 };
 const READERS = { en: "1", ko: "3" } as const;
 
-async function opened(browser: Browser, host: string, locale: "en" | "ko", path: string, phone: boolean): Promise<Page> {
+async function opened(browser: Browser, host: string, locale: "en" | "ko", path: string, phone: boolean, theme: Theme = "dark"): Promise<Page> {
   const context = await browser.newContext({
     viewport: phone ? { width: 390, height: 844 } : { width: 1280, height: 800 },
     deviceScaleFactor: 2,
     isMobile: phone,
     hasTouch: phone,
-    colorScheme: "dark",
+    colorScheme: theme,
     locale: locale === "ko" ? "ko-KR" : "en-US",
     reducedMotion: "reduce",
   });
 
   context.setDefaultTimeout(WAIT_MS);
   await context.addCookies([
-    { name: "nuxt-color-mode", value: "dark", url: host },
+    { name: "nuxt-color-mode", value: theme, url: host },
     { name: "bmo-dev-locale", value: locale, url: host },
     { name: "bmo-dev-reader", value: READERS[locale], url: host },
   ]);
@@ -80,8 +84,8 @@ try {
     }, notes[1]!.id);
     await page.context().close();
 
-    for (const phone of [false, true]) {
-      const shot = await opened(browser, stack.host, locale, `/note/${notes[0]!.id}`, phone);
+    for (const theme of THEMES) for (const phone of [false, true]) {
+      const shot = await opened(browser, stack.host, locale, `/note/${notes[0]!.id}`, phone, theme);
 
       await shot.evaluate(() => document.fonts.ready);
       await shot.waitForTimeout(4_000);
@@ -96,8 +100,8 @@ try {
         if (banner) banner.style.display = "none";
       });
       await shot.waitForTimeout(500);
-      await shot.screenshot({ path: `${OUT}${phone ? "note-phone" : "note"}.${locale}.png` });
-      console.log("saved", `${phone ? "note-phone" : "note"}.${locale}`);
+      await shot.screenshot({ path: `${OUT}${phone ? "note-phone" : "note"}.${locale}.${theme}.png` });
+      console.log("saved", `${phone ? "note-phone" : "note"}.${locale}.${theme}`);
       await shot.context().close();
     }
   }

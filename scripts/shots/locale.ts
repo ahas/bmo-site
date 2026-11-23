@@ -5,6 +5,11 @@
 
 export type Locale = "en" | "ko";
 
+/** The colour schemes every screen is captured in, one capture each, as the site shows the one matching its own. */
+export const THEMES = ["dark", "light"] as const;
+
+export type Theme = (typeof THEMES)[number];
+
 export function localeOf(argument: string | undefined): Locale {
   if (argument === "en" || argument === "ko") return argument;
 
@@ -14,6 +19,16 @@ export function localeOf(argument: string | undefined): Locale {
 const ENGLISH_COMMON = {
   status: { loading: "Loading", no_match: "No match", no_choices: "No items" },
   title: { discard_changes: "Discard unsaved changes?" },
+  label: {
+    forever: "No end",
+    hours: "{h} h",
+    hours_minutes: "{h} h {m} min",
+    minutes: "{m} min",
+    left_days: "{n} days left",
+    left_hours: "{n} h left",
+    left_minutes: "{n} min left",
+    left_under_minute: "Under a minute left",
+  },
   action: {
     cancel: "Cancel",
     close: "Close",

@@ -7,13 +7,14 @@ import { extname, join } from "node:path";
 import { chromium } from "playwright-core";
 
 import { buildHarness } from "../../../calendar/client/tests/browser/harness.ts";
-import { REMOUNT_ROUTE, SWITCH_LOCALE, commonWords, localeOf } from "./locale";
+import { REMOUNT_ROUTE, SWITCH_LOCALE, THEMES, commonWords, localeOf } from "./locale";
 
 const locale = localeOf(process.argv[2]);
 const OUT = new URL("../../shots-out/", import.meta.url).pathname;
 const ORIGIN = "http://page.test";
 const RELAY = "/relay/calendar";
-const PAGE = `<!doctype html><html lang="${locale}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+// The harness page, its root carrying the colour scheme as a console's root does: the class `dark` in the dark one.
+const PAGE = (theme: string) => `<!doctype html><html lang="${locale}" class="${theme}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <script src="/screens-harness.js" defer></script></head><body><div id="page"></div></body></html>`;
 const TYPES: Record<string, string> = { ".js": "text/javascript", ".css": "text/css", ".woff2": "font/woff2" };
 const BUNDLE_WORDS = JSON.parse(readFileSync(new URL(`../../../calendar/client/i18n/${locale}.json`, import.meta.url), "utf8")) as Record<string, unknown>;
@@ -74,11 +75,13 @@ const built = buildHarness();
 const browser = await chromium.launch();
 
 try {
-  for (const [name, options] of [
+  for (const theme of THEMES) for (const [name, options] of [
     ["calendar", { viewport: { width: 1280, height: 800 }, deviceScaleFactor: 2 }],
     ["calendar-phone", { viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true }],
   ] as const) {
-    const context = await browser.newContext({ ...options, locale: locale === "ko" ? "ko-KR" : "en-US", timezoneId: "UTC", reducedMotion: "reduce" });
+    const context = await browser.newContext({ ...options, locale: locale === "ko" ? "ko-KR" : "en-US", timezoneId: "UTC", colorScheme: theme, reducedMotion: "reduce" });
+
+    await context.addCookies([{ name: "nuxt-color-mode", value: theme, url: ORIGIN }]);
     const page = await context.newPage();
     const files = new Set(readdirSync(built.folder));
 
@@ -96,7 +99,7 @@ try {
       const file = path.slice(1);
 
       if (files.has(file)) return route.fulfill({ contentType: TYPES[extname(file)] ?? "application/octet-stream", body: readFileSync(join(built.folder, file)) });
-      if (path.startsWith("/calendar")) return route.fulfill({ contentType: "text/html; charset=utf-8", body: PAGE });
+      if (path.startsWith("/calendar")) return route.fulfill({ contentType: "text/html; charset=utf-8", body: PAGE(theme) });
 
       return route.fulfill({ status: 404, body: "" });
     });
@@ -105,8 +108,8 @@ try {
     if (!(await page.evaluate(SWITCH_LOCALE, { selector: "#page", locale, words }))) throw new Error("the page's vue-i18n was not found");
     if (!(await page.evaluate(REMOUNT_ROUTE, { selector: "#page", away: "/calendar/bookings" }))) throw new Error("the page's router was not found");
     await page.waitForTimeout(3000);
-    await page.screenshot({ path: `${OUT}${name}.${locale}.png` });
-    console.log("saved", `${name}.${locale}`);
+    await page.screenshot({ path: `${OUT}${name}.${locale}.${theme}.png` });
+    console.log("saved", `${name}.${locale}.${theme}`);
     await context.close();
   }
 } finally {

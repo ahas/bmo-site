@@ -3,8 +3,9 @@
 # bmo-site
 
 The BMO project's website, served at https://bmo.ahas.io: one landing page in English at `/`, Korean at `/ko/`,
-Japanese at `/ja/` and Simplified Chinese at `/zh/`, with the product's story, the console's screens, the desktop app's downloads and the list of public
-repositories. It is a static site built with [Astro](https://astro.build); nothing runs on a server and the pages
+Japanese at `/ja/` and Simplified Chinese at `/zh/`, with the product's story, the console's screens, how BMO compares with the kinds of tool it is weighed against, the
+desktop app's downloads and the list of public repositories. The pages stand dark, and light where the reader's
+system asks for light. It is a static site built with [Astro](https://astro.build); nothing runs on a server and the pages
 ship no framework to the browser, only one small inline script that points the download button at the visitor's
 system.
 
@@ -27,8 +28,9 @@ bun run build && bun run test
 ```
 
 `bun run test` serves the built `dist/` as a static host does and opens all four pages in Chromium at 1440, 1024
-and 390 pixels wide: every key section stands with its heading, every picture loads, carries alternative text and
-is a capture in the page's own capture language, the language menu reaches every version, nothing reaches past the window's right edge, and an unknown address
+and 390 pixels wide, in the dark colour scheme and the light one: every key section stands with its heading, every
+picture loads, carries alternative text and is a capture in the page's own capture language and colour scheme, the
+comparison holds a row for every capability with every mark and footnote, the language menu reaches every version, nothing reaches past the window's right edge, and an unknown address
 answers with the not-found page. It needs the Chromium build `playwright-core` pins, and skips where it is missing.
 
 ## Layout
@@ -47,23 +49,40 @@ answers with the not-found page. It needs the Chromium build `playwright-core` p
 
 ## Screenshots
 
-Every picture on a page is captured in that page's language: Korean captures on `/ko/`, English captures on `/`,
-`/ja/` and `/zh/`, since the platform's screens speak English and Korean. A source's file name ends in its
-language, `<name>-en.webp` or `<name>-ko.webp`, and `src/lib/shots.ts` names which picture each language shows.
-The console's own room speaks Korean alone, so it is shown on `/ko/` only.
+Every picture on a page is captured in that page's language and in both colour schemes: Korean captures on `/ko/`,
+English captures on `/`, `/ja/` and `/zh/`, since the platform's screens speak English and Korean, and the dark
+capture where the page stands dark, the light one where it stands light, as the reader's system decides
+(`prefers-color-scheme`, which the stylesheet follows as well). A source's file name ends in its language and its
+scheme, `<name>-<en|ko>-<dark|light>.webp`; `src/lib/shots.ts` names which pictures each language shows and
+`src/components/Shot.astro` offers both schemes of one. The console's own screens, and the brain's, speak Korean
+alone, so they are shown on `/ko/` only.
 
 The screenshots show demo data only. They are taken from the browser-test harnesses of the units whose screens
-they show, with demo answers in place of the harnesses' own:
+they show, with demo answers in place of the harnesses' own, each in both schemes:
 
-- `scripts/shots/console-shot.ts`: the console room and its TODO panel, against the console `bmo-web` stands up
-  for its browser tests (`client/tests/support/browser-console.ts`, address in `BMO_CONSOLE_TEST_URL`).
+- `scripts/shots/console-shot.ts <name> <path> [width] [height]`: the console room and its TODO panel, against the
+  console `bmo-web` stands up for its browser tests (`client/tests/support/browser-console.ts`, address in
+  `BMO_CONSOLE_TEST_URL`); `room /rooms/42` and, with `SKIP=2`, `room-phone /rooms/42 390 844`.
+- `scripts/shots/console-screens-shot.ts [agents|cards|job]`: on the same console, the agency's roles, the GPU cards
+  of the monitor's services tab and a running TODO item's job log.
+- `scripts/shots/brain-shot.ts`: a person's memories and sheet on `bmo-brain`'s browser host.
 - `scripts/shots/calendar-shot.ts <en|ko>`: the calendar's week, on `bmo-calendar`'s harness page.
 - `scripts/shots/artifact-shot.ts <en|ko>`: an archive document, on `bmo-artifact`'s browser host.
 - `scripts/shots/note-shot.ts`: a note in both languages, on `bmo-note`'s browser stack.
+- `scripts/shots/drive-shot.ts <en|ko>`: the Files screen, on `bmo-drive`'s browser host.
+- `scripts/shots/theater-shot.ts <en|ko>`: the theater's library, on `bmo-theater`'s generated browser host, with
+  posters drawn as abstract art.
 - `scripts/shots/webp.ts`: turns the captures in `shots-out/` into the sources under `src/assets/shots/`.
 
 They expect the units checked out beside this one, as the `bmo` folder places them. Every new image is checked by
 eye for personal data before it is committed.
+
+## The comparison
+
+The section "What sets BMO apart" sets BMO beside five kinds of tool, each judged by two named examples.
+`src/lib/comparison.ts` holds the marks and, beside each row, the official page every mark of another tool rests
+on; a mark says only what those pages describe, and the page says so. The words of the rows, the kinds and the
+footnotes are in `src/i18n/`, under `compare`.
 
 ## License
 

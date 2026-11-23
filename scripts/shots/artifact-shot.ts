@@ -4,7 +4,7 @@
 import { standScreen } from "../../../artifact/client/tests/browser/screen.ts";
 import type { Route } from "playwright-core";
 
-import { REMOUNT_ROUTE, SWITCH_LOCALE, commonWords, localeOf } from "./locale";
+import { REMOUNT_ROUTE, SWITCH_LOCALE, THEMES, commonWords, localeOf } from "./locale";
 
 const locale = localeOf(process.argv[2]);
 
@@ -104,11 +104,12 @@ async function answer(route: Route) {
 const words = { common: await commonWords(locale) };
 const screen = await standScreen();
 try {
-  for (const [name, path, options] of [
+  for (const theme of THEMES) for (const [name, path, options] of [
     ["archive-doc", "/artifact/31", { viewport: { width: 1280, height: 800 }, deviceScaleFactor: 2 }],
     ["archive-doc-phone", "/artifact/31", { viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true }],
   ] as const) {
-    const context = await screen.browser.newContext({ ...options, locale: locale === "ko" ? "ko-KR" : "en-US", colorScheme: "dark", reducedMotion: "reduce" });
+    const context = await screen.browser.newContext({ ...options, locale: locale === "ko" ? "ko-KR" : "en-US", colorScheme: theme, reducedMotion: "reduce" });
+    await context.addCookies([{ name: "nuxt-color-mode", value: theme, url: screen.origin }]);
     const page = await context.newPage();
     await page.route((u) => u.pathname.startsWith(`${RELAY}/`), answer);
     await page.goto(`${screen.origin}${path}`, { waitUntil: "load", timeout: 180_000 });
@@ -116,8 +117,8 @@ try {
     if (!(await page.evaluate(SWITCH_LOCALE, { selector: "#__nuxt", locale, words }))) throw new Error("the page's vue-i18n was not found");
     if (!(await page.evaluate(REMOUNT_ROUTE, { selector: "#__nuxt", away: "/artifact" }))) throw new Error("the page's router was not found");
     await page.waitForTimeout(3000);
-    await page.screenshot({ path: `${OUT}${name}.${locale}.png` });
-    console.log("saved", `${name}.${locale}`);
+    await page.screenshot({ path: `${OUT}${name}.${locale}.${theme}.png` });
+    console.log("saved", `${name}.${locale}.${theme}`);
     await context.close();
   }
 } finally {

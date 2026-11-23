@@ -1,12 +1,12 @@
 ---
-import { Picture, getImage } from "astro:assets";
-
 import Icon from "./Icon.astro";
+import Shot from "./Shot.astro";
 import { captureLocale, messagesFor } from "../i18n";
 import { currentRelease, megabytes } from "../lib/release";
 import { REPOSITORY_GROUPS } from "../lib/repositories";
 import { DESKTOP_DOC_URL, STRUCTURE_URL, UMBRELLA_URL, repositoryUrl } from "../lib/site";
-import { HERO_SHOTS, SCREEN_SHOTS } from "../lib/shots";
+import { EXAMPLES, KINDS, ROWS } from "../lib/comparison";
+import { HERO_SHOTS, SCREEN_SHOTS, TOUR_SHOTS } from "../lib/shots";
 
 import type { Locale } from "../i18n";
 import type { ReleaseFile } from "../lib/release";
@@ -27,21 +27,14 @@ const platforms = [
   { name: t.download.windows, files: files.filter((file) => file.platform === "windows") },
   { name: t.download.linux, files: files.filter((file) => file.platform === "linux") },
 ].filter((platform) => platform.files.length > 0);
-// The hero's shot: the console on a desktop, and the same room on a phone's screen below 600 pixels.
-async function sources(src: ImageMetadata, widths: number[]) {
-  const set = async (format: "avif" | "webp") => (await getImage({ src, widths, format, quality: 72 })).srcSet.attribute;
-
-  return { avif: await set("avif"), webp: await set("webp") };
-}
-
 const capture = captureLocale(locale);
-const roomShot = HERO_SHOTS[capture].wide;
-const phoneShot = HERO_SHOTS[capture].phone;
-const heroWide = await sources(roomShot, [720, 1080, 1440, 2160, 2880]);
-const heroPhone = await sources(phoneShot, [390, 780]);
-const heroFallback = await getImage({ src: roomShot, width: 1440, format: "webp", quality: 72 });
-const PHONE_MEDIA = "(max-width: 599px)";
 const SHOTS = SCREEN_SHOTS[capture];
+const TOUR = TOUR_SHOTS[capture];
+// The comparison's footnotes, numbered in the order their marks stand in the table.
+const notes = ROWS.flatMap((row) => KINDS.filter((kind) => row.others[kind] === "partial").map((kind) => ({ key: `${row.capability}.${kind}` as keyof typeof t.compare.notes })));
+const noteNumber = (key: string): number => notes.findIndex((note) => note.key === key) + 1;
+// The marks as they are drawn: a partial mark is a shape of the stylesheet's, with no sign of its own.
+const MARK_SIGN = { yes: "✓", partial: "", none: "–" } as const;
 ---
 
 <section class="hero" aria-labelledby="hero-title">
@@ -74,13 +67,14 @@ const SHOTS = SCREEN_SHOTS[capture];
     <figure class="hero-shot">
       <div class="window">
         <div class="window-bar" aria-hidden="true"><span></span><span></span><span></span></div>
-        <picture>
-          <source media={PHONE_MEDIA} type="image/avif" srcset={heroPhone.avif} sizes="calc(100vw - 32px)" width={phoneShot.width} height={phoneShot.height} />
-          <source media={PHONE_MEDIA} type="image/webp" srcset={heroPhone.webp} sizes="calc(100vw - 32px)" width={phoneShot.width} height={phoneShot.height} />
-          <source type="image/avif" srcset={heroWide.avif} sizes="(max-width: 1200px) calc(100vw - 48px), 1168px" />
-          <source type="image/webp" srcset={heroWide.webp} sizes="(max-width: 1200px) calc(100vw - 48px), 1168px" />
-          <img src={heroFallback.src} width={roomShot.width} height={roomShot.height} alt={t.hero.shotAlt} loading="eager" fetchpriority="high" decoding="async" />
-        </picture>
+        <Shot
+          shot={HERO_SHOTS[capture].wide}
+          widths={[720, 1080, 1440, 2160, 2880]}
+          sizes="(max-width: 1200px) calc(100vw - 48px), 1168px"
+          phone={{ shot: HERO_SHOTS[capture].phone, widths: [390, 780], sizes: "calc(100vw - 32px)" }}
+          alt={t.hero.shotAlt}
+          eager
+        />
       </div>
       <figcaption>{t.hero.shotNote}</figcaption>
     </figure>
@@ -151,15 +145,11 @@ const SHOTS = SCREEN_SHOTS[capture];
         t.screens.items.map((item) => (
           <figure class:list={["screen", `screen-${item.key}`]}>
             <div class="screen-frame">
-              <Picture
-                src={SHOTS[item.key as keyof typeof SHOTS]}
-                formats={["avif", "webp"]}
+              <Shot
+                shot={SHOTS[item.key as keyof typeof SHOTS]}
                 widths={item.key === "phone" ? [390, 780] : [640, 960, 1280, 1920]}
                 sizes={item.key === "phone" ? "(max-width: 760px) 70vw, 300px" : "(max-width: 760px) calc(100vw - 32px), 560px"}
                 alt={item.alt}
-                loading="lazy"
-                quality={72}
-          fallbackFormat="webp"
               />
             </div>
             <figcaption>{item.caption}</figcaption>
@@ -167,6 +157,95 @@ const SHOTS = SCREEN_SHOTS[capture];
         ))
       }
     </div>
+    <h3 class="tour-title">{t.tour.title}</h3>
+    <p class="tour-sub">{t.tour.sub}</p>
+    <div class="tour">
+      {
+        TOUR.map((entry) => (
+          <figure class="tour-shot">
+            <div class="screen-frame">
+              <Shot shot={entry.shot} widths={[640, 960, 1280, 1920]} sizes="(max-width: 899px) calc(100vw - 32px), 564px" alt={t.tour.items[entry.key].alt} />
+            </div>
+            <figcaption>
+              <strong>{t.tour.items[entry.key].title}</strong> {t.tour.items[entry.key].caption}
+            </figcaption>
+          </figure>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<section id="compare" class="section" aria-labelledby="compare-title">
+  <div class="container">
+    <div class="section-head">
+      <h2 id="compare-title">{t.compare.title}</h2>
+      <p>{t.compare.lead}</p>
+    </div>
+    <ul class="compare-legend">
+      {
+        (["yes", "partial", "none"] as const).map((mark) => (
+          <li>
+            <span class:list={["mark", `mark-${mark}`]} aria-hidden="true">{MARK_SIGN[mark]}</span>
+            {t.compare.marks[mark]}
+          </li>
+        ))
+      }
+    </ul>
+    <table class="compare">
+      <thead>
+        <tr>
+          <th scope="col">{t.compare.capability}</th>
+          <th scope="col" class="compare-bmo">{t.compare.bmo}</th>
+          {
+            KINDS.map((kind) => (
+              <th scope="col">
+                {t.compare.kinds[kind]}
+                <span class="compare-examples">{EXAMPLES[kind]}</span>
+              </th>
+            ))
+          }
+        </tr>
+      </thead>
+      <tbody>
+        {
+          ROWS.map((row) => (
+            <tr>
+              <th scope="row">{t.compare.rows[row.capability].title}</th>
+              <td class="compare-bmo" data-kind={t.compare.bmo}>
+                <span class="mark mark-yes" aria-hidden="true">✓</span>
+                <span class="sr-only">{t.compare.marks.yes}: </span>
+                <span class="compare-how">{t.compare.rows[row.capability].bmo}</span>
+              </td>
+              {KINDS.map((kind) => {
+                const mark = row.others[kind];
+                const number = mark === "partial" ? noteNumber(`${row.capability}.${kind}`) : 0;
+
+                return (
+                  <td data-kind={t.compare.kinds[kind]} data-mark={mark}>
+                    <span class:list={["mark", `mark-${mark}`]} aria-hidden="true">{MARK_SIGN[mark]}</span>
+                    <span class="mark-word">{t.compare.marks[mark]}</span>
+                    {number > 0 && (
+                      <a class="note-ref" href={`#compare-note-${number}`}>
+                        <sup>{number}</sup>
+                      </a>
+                    )}
+                  </td>
+                );
+              })}
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+    <ol class="compare-notes">
+      {
+        notes.map((note, index) => (
+          <li id={`compare-note-${index + 1}`}>{t.compare.notes[note.key]}</li>
+        ))
+      }
+    </ol>
+    <p class="compare-method">{t.compare.method}</p>
   </div>
 </section>
 
