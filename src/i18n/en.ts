@@ -81,7 +81,7 @@ export const en = {
     appimage: "AppImage",
     deb: "Debian package (.deb)",
     checksum: "SHA-256",
-    note: "Each person's app opens the console of the BMO they run. A public build that asks for that server's address is being prepared; until it is published, the app is built from jake's source. macOS is not built yet.",
+    note: "On its first run the app asks for your BMO server's address and opens that server's console, so one download serves every BMO. macOS is not built yet.",
     unavailable: "No public build is published yet.",
     docs: "Release documentation",
     installTitle: "Install from source",

@@ -13,7 +13,7 @@ bun run preview    # serves dist/ at http://localhost:4321
 bun run dev        # the development server with reload
 ```
 
-下载区展示桌面应用的公开版本，构建时从 `src/lib/release.ts` 指定的地址读取。目前还没有公开版本：各部署自己构建的版本会打开该部署的控制台，因此不会放在这里；在首次启动时询问各自服务器地址的版本发布之前，该区会链接到发布说明。部署就是把 `dist/` 复制到为该域名提供服务的主机。
+下载区展示桌面应用的公开版本，构建时从 jake 最新 GitHub 发布中的 `release.json`，即 `src/lib/release.ts` 指定的地址读取。公开版本会在首次启动时询问各自 BMO 服务器的地址，并打开该服务器的控制台，因此同一套安装程序适用于所有部署。在该发布上线之前，这个地址返回 404，下载区会说明尚无公开版本，并链接到发布说明。部署就是把 `dist/` 复制到为该域名提供服务的主机。
 
 ## 检查
 

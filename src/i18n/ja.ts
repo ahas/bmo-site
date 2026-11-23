@@ -82,7 +82,7 @@ export const ja: Messages = {
     appimage: "AppImage",
     deb: "Debian パッケージ (.deb)",
     checksum: "SHA-256",
-    note: "アプリは、それぞれが運用する BMO のコンソールを開きます。初回起動時にサーバーのアドレスを尋ねる公開ビルドを準備中です。公開までは jake リポジトリのソースからビルドしてください。macOS 版はまだありません。",
+    note: "アプリは初回起動時に自分の BMO サーバーのアドレスを尋ね、そのサーバーのコンソールを開きます。どの BMO でも同じダウンロードを使えます。macOS 版はまだありません。",
     unavailable: "公開ビルドはまだ公開されていません。",
     docs: "リリースドキュメント",
     installTitle: "ソースからインストール",

@@ -82,7 +82,7 @@ export const zh: Messages = {
     appimage: "AppImage",
     deb: "Debian 软件包 (.deb)",
     checksum: "SHA-256",
-    note: "应用会打开你自己运行的 BMO 的控制台。首次启动时询问服务器地址的公开版本正在准备中；在发布之前，请从 jake 仓库的源码自行构建。暂时还没有 macOS 版本。",
+    note: "应用首次启动时会询问你的 BMO 服务器地址，并打开该服务器的控制台，因此任何 BMO 都使用同一个下载。暂时还没有 macOS 版本。",
     unavailable: "公开版本尚未发布。",
     docs: "发布文档",
     installTitle: "从源代码安装",

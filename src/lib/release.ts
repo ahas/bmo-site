@@ -1,10 +1,13 @@
-// The desktop app's public release, read once at build time from the address its public release folder
-// publishes. No public build stands yet: the builds a deployment publishes for itself open that deployment's own
-// console, so they are never offered here, and the download section links to the release documentation until a
-// build that asks each person for their own server's address is published. The address sends no CORS header, so
-// the page cannot read it in the browser.
+// The desktop app's public release, read once at build time from the `release.json` of jake's latest GitHub release
+// (jake's docs/desktop.md, 「The read the console uses」). The public build asks each person for their own BMO server's
+// address on its first run, so one release serves every deployment. Until a release is published the address
+// answers 404 and the download section says no public build is published. The address sends no CORS header, so the
+// page cannot read it in the browser.
 
-export const RELEASE_URL: string | null = null;
+export const RELEASE_URL = "https://github.com/ahas/jake/releases/latest/download/release.json";
+
+/** How long the build waits for the release read before it goes on with none. */
+const READ_TIMEOUT_MS = 15_000;
 
 export interface ReleaseFile {
   platform: string;
@@ -32,9 +35,9 @@ let cached: Promise<Release | null> | null = null;
 
 /** The current release, or null where the build is offline or no release is published yet. */
 export function currentRelease(): Promise<Release | null> {
-  if (process.env.BMO_SITE_OFFLINE === "1" || RELEASE_URL === null) return Promise.resolve(null);
+  if (process.env.BMO_SITE_OFFLINE === "1") return Promise.resolve(null);
 
-  cached ??= fetch(RELEASE_URL)
+  cached ??= fetch(RELEASE_URL, { signal: AbortSignal.timeout(READ_TIMEOUT_MS) })
     .then(async (answer) => (answer.ok ? ((await answer.json()) as unknown) : null))
     .then((read) => (isRelease(read) ? read : null))
     .catch(() => null);

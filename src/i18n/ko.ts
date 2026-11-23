@@ -83,7 +83,7 @@ export const ko: Messages = {
     appimage: "AppImage",
     deb: "Debian 패키지 (.deb)",
     checksum: "SHA-256",
-    note: "앱은 각자 운영하는 BMO의 콘솔을 엽니다. 처음 실행할 때 내 서버 주소를 묻는 공개 빌드를 준비하고 있습니다. 공개 전까지는 jake 저장소의 소스로 직접 빌드해 주세요. macOS 빌드는 아직 없습니다.",
+    note: "앱을 처음 실행하면 내 BMO 서버 주소를 묻고 그 서버의 콘솔을 엽니다. 그래서 어느 BMO든 같은 설치 파일을 씁니다. macOS 빌드는 아직 없습니다.",
     unavailable: "공개 빌드는 아직 게시되지 않았습니다.",
     docs: "릴리스 문서",
     installTitle: "소스로 설치하기",

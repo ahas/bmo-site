@@ -17,7 +17,7 @@ bun run preview    # serves dist/ at http://localhost:4321
 bun run dev        # the development server with reload
 ```
 
-The download section lists the desktop app's public release, read at build time from the address `src/lib/release.ts` names. No public build stands yet: a deployment's own builds open that deployment's console, so they are never offered here, and until a build that asks each person for their own server's address is published, the section links to the release documentation. Deploying is copying `dist/` to the host that serves the domain.
+The download section lists the desktop app's public release, read at build time from the `release.json` of jake's latest GitHub release, the address `src/lib/release.ts` names. The public build asks for the person's own BMO server's address on its first run and opens that server's console, so the same installers serve every deployment. Until that release is published the address answers 404, and the section says no public build is published and links to the release documentation. Deploying is copying `dist/` to the host that serves the domain.
 
 ## Checks
 
