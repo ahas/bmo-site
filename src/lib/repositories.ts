@@ -52,6 +52,7 @@ export const REPOSITORY_GROUPS: RepositoryGroup[] = [
       r("bmo-research", "Research runs filed as documents", "문서로 남는 리서치", "ドキュメントとして残るリサーチ", "以文档形式存档的调研"),
       r("bmo-skills", "The skills every worker is handed", "모든 워커가 받는 스킬 모음", "すべてのワーカーに渡されるスキル集", "每个工作者都会拿到的技能集"),
       r("bmo-voc", "Bug reports and suggestions from users", "사용자의 버그 신고와 제안", "ユーザーからの不具合報告と提案", "用户的问题反馈与建议"),
+      r("bmo-cache-siren", "A live watch of prompt-cache hits and new tokens", "프롬프트 캐시 적중과 새 토큰 실시간 감시", "プロンプトキャッシュのヒットと新規トークンをリアルタイムで監視", "实时监看提示缓存命中与新增 token"),
       r("bmo-cache-warmer", "Keeps prompt caches warm", "프롬프트 캐시 유지", "プロンプトキャッシュを温めておく", "让提示词缓存保持有效"),
     ],
   },
