@@ -15,6 +15,8 @@ bun run dev        # the development server with reload
 
 下载区展示桌面应用的公开版本，构建时从 jake 最新 GitHub 发布中的 `release.json`，即 `src/lib/release.ts` 指定的地址读取。公开版本会在首次启动时询问各自 BMO 服务器的地址，并打开该服务器的控制台，因此同一套安装程序适用于所有部署。在该发布上线之前，这个地址返回 404，下载区会说明尚无公开版本，并链接到发布说明。部署就是把 `dist/` 复制到为该域名提供服务的主机。
 
+“开始使用”区给出一个人交给自己编程智能体的那一行，智能体按索引的安装手册安装 BMO。`/install.md` 提供这份手册，即索引的 `INSTALL.md`，在构建时从索引的 main 分支、`src/lib/runbook.ts` 指定的地址读取；构建离线或读不到索引时，改为提供一段指向手册的简短说明。该区各语言的文字在 `src/i18n/start.ts` 中。
+
 ## 检查
 
 ```sh

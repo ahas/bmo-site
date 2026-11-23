@@ -20,6 +20,8 @@ bun run dev        # the development server with reload
 
 The download section lists the desktop app's public release, read at build time from the `release.json` of jake's latest GitHub release, the address `src/lib/release.ts` names. The public build asks for the person's own BMO server's address on its first run and opens that server's console, so the same installers serve every deployment. Until that release is published the address answers 404, and the section says no public build is published and links to the release documentation. Deploying is copying `dist/` to the host that serves the domain.
 
+The get-started section hands a person the one line they give their coding agent, which installs BMO by the index's runbook. `/install.md` serves that runbook, the index's `INSTALL.md`, read at build time from the index's main branch, the address `src/lib/runbook.ts` names; where the build is offline or the index cannot be read, it serves a short pointer to the runbook instead. The section's words in each language stand in `src/i18n/start.ts`.
+
 ## Checks
 
 ```sh

@@ -38,7 +38,7 @@ const PAGES = [
 
 const SCHEMES = ["dark", "light"] as const;
 
-const SECTIONS = ["#hero-title", "#how-title", "#features-title", "#screens-title", "#compare-title", "#download-title", "#repositories-title", "#closing-title"];
+const SECTIONS = ["#hero-title", "#how-title", "#features-title", "#screens-title", "#compare-title", "#start-title", "#download-title", "#repositories-title", "#closing-title"];
 
 // The comparison's capabilities and the kinds of tool BMO is set beside, as src/lib/comparison.ts holds them.
 const CAPABILITIES = 8;
@@ -69,6 +69,17 @@ async function opened(width: (typeof WIDTHS)[number], path: string, scheme: (typ
   return page;
 }
 
+// The runbook a coding agent is handed reads at /install.md as Markdown, opening with its title, whether the build
+// read the index's runbook or wrote the pointer to it; every page's get-started section names that address.
+test("/install.md answers the install runbook as Markdown", async () => {
+  if (!existsSync(join(DIST, "install.md"))) throw new Error("dist/ holds no install.md: run `bun run build` first");
+
+  const text = await Bun.file(join(DIST, "install.md")).text();
+
+  expect(text.startsWith("# ")).toBe(true);
+  expect(text).toMatch(/install\.md/i);
+});
+
 describe.skipIf(!ready)("the built pages", () => {
   for (const width of WIDTHS) {
     for (const entry of PAGES) {
@@ -86,6 +97,7 @@ describe.skipIf(!ready)("the built pages", () => {
         }
 
         expect(await page.locator(".feature").count()).toBe(9);
+        expect(await page.locator("#start pre").textContent()).toContain("https://bmo.ahas.io/install.md");
         expect(await page.locator("a.repo").count()).toBeGreaterThan(30);
 
         // Every picture loads and carries words for a reader who cannot see it.
