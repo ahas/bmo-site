@@ -76,7 +76,7 @@ const browser = await chromium.launch();
 
 try {
   for (const theme of THEMES) for (const [name, options] of [
-    ["calendar", { viewport: { width: 1280, height: 800 }, deviceScaleFactor: 2 }],
+    ["calendar", { viewport: { width: 1440, height: 900 }, deviceScaleFactor: 2 }],
     ["calendar-phone", { viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true }],
   ] as const) {
     const context = await browser.newContext({ ...options, locale: locale === "ko" ? "ko-KR" : "en-US", timezoneId: "UTC", colorScheme: theme, reducedMotion: "reduce" });

@@ -89,7 +89,7 @@ const screen = await standScreen();
 
 try {
   for (const theme of THEMES) for (const [name, options] of [
-    ["drive", { viewport: { width: 1280, height: 800 }, deviceScaleFactor: 2 }],
+    ["drive", { viewport: { width: 1440, height: 900 }, deviceScaleFactor: 2 }],
   ] as const) {
     const context = await screen.browser.newContext({ ...options, locale: locale === "ko" ? "ko-KR" : "en-US", timezoneId: "UTC", colorScheme: theme, reducedMotion: "reduce" });
 
@@ -106,7 +106,7 @@ try {
     await page.locator(`[data-entry="${W.release}"]`).first().click();
     await page.waitForTimeout(3000);
     // The panes end below the longest list; the window under them is cut away.
-    await page.screenshot({ path: `${OUT}${name}.${locale}.${theme}.png`, clip: { x: 0, y: 0, width: 1280, height: 690 } });
+    await page.screenshot({ path: `${OUT}${name}.${locale}.${theme}.png`, clip: { x: 0, y: 0, width: 1440, height: 900 } });
     console.log("saved", `${name}.${locale}.${theme}`);
     await context.close();
   }

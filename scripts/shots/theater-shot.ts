@@ -193,7 +193,7 @@ const browser = await chromium.launch();
 
 try {
   for (const theme of THEMES) {
-    const context = await browser.newContext({ viewport: { width: 1280, height: 800 }, deviceScaleFactor: 2, locale: locale === "ko" ? "ko-KR" : "en-US", colorScheme: theme, reducedMotion: "reduce" });
+    const context = await browser.newContext({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 2, locale: locale === "ko" ? "ko-KR" : "en-US", colorScheme: theme, reducedMotion: "reduce" });
 
     await context.addCookies([{ name: "nuxt-color-mode", value: theme, url: origin }]);
     await context.route("**/relay/theater/**", answer);

@@ -105,7 +105,7 @@ const words = { common: await commonWords(locale) };
 const screen = await standScreen();
 try {
   for (const theme of THEMES) for (const [name, path, options] of [
-    ["archive-doc", "/artifact/31", { viewport: { width: 1280, height: 800 }, deviceScaleFactor: 2 }],
+    ["archive-doc", "/artifact/31", { viewport: { width: 1440, height: 900 }, deviceScaleFactor: 2 }],
     ["archive-doc-phone", "/artifact/31", { viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true }],
   ] as const) {
     const context = await screen.browser.newContext({ ...options, locale: locale === "ko" ? "ko-KR" : "en-US", colorScheme: theme, reducedMotion: "reduce" });

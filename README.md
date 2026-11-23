@@ -57,6 +57,9 @@ scheme, `<name>-<en|ko>-<dark|light>.webp`; `src/lib/shots.ts` names which pictu
 `src/components/Shot.astro` offers both schemes of one. The console's own screens, and the brain's, speak Korean
 alone, so they are shown on `/ko/` only.
 
+Every screen is captured at one size: a desktop screen at 1440 by 900 CSS pixels and a phone at 390 by 844,
+both at twice the pixels; a test holds every source to it.
+
 The screenshots show demo data only. They are taken from the browser-test harnesses of the units whose screens
 they show, with demo answers in place of the harnesses' own, each in both schemes:
 

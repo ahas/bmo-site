@@ -37,7 +37,7 @@ const READERS = { en: "1", ko: "3" } as const;
 
 async function opened(browser: Browser, host: string, locale: "en" | "ko", path: string, phone: boolean, theme: Theme = "dark"): Promise<Page> {
   const context = await browser.newContext({
-    viewport: phone ? { width: 390, height: 844 } : { width: 1280, height: 800 },
+    viewport: phone ? { width: 390, height: 844 } : { width: 1440, height: 900 },
     deviceScaleFactor: 2,
     isMobile: phone,
     hasTouch: phone,

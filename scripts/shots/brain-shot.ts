@@ -142,7 +142,7 @@ try {
   }
 
   for (const theme of THEMES) for (const [name, path, options] of [
-    ["brain", `/brain/1?subject=1&memory=${OPEN}`, { viewport: { width: 1440, height: 560 }, deviceScaleFactor: 2 }],
+    ["brain", `/brain/1?subject=1&memory=${OPEN}`, { viewport: { width: 1440, height: 900 }, deviceScaleFactor: 2 }],
   ] as const) {
     const context = await browser.newContext({ ...options, locale: "ko-KR", timezoneId: "Asia/Seoul", colorScheme: theme, reducedMotion: "reduce" });
 
