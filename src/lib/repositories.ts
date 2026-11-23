@@ -52,7 +52,6 @@ export const REPOSITORY_GROUPS: RepositoryGroup[] = [
       r("bmo-research", "Research runs filed as documents", "문서로 남는 리서치", "ドキュメントとして残るリサーチ", "以文档形式存档的调研"),
       r("bmo-skills", "The skills every worker is handed", "모든 워커가 받는 스킬 모음", "すべてのワーカーに渡されるスキル集", "每个工作者都会拿到的技能集"),
       r("bmo-voc", "Bug reports and suggestions from users", "사용자의 버그 신고와 제안", "ユーザーからの不具合報告と提案", "用户的问题反馈与建议"),
-      r("bmo-cache-siren", "A live watch of prompt-cache hits", "프롬프트 캐시 적중 실시간 감시", "プロンプトキャッシュのヒットをリアルタイム監視", "实时监看提示词缓存命中"),
       r("bmo-cache-warmer", "Keeps prompt caches warm", "프롬프트 캐시 유지", "プロンプトキャッシュを温めておく", "让提示词缓存保持有效"),
     ],
   },
@@ -87,7 +86,6 @@ export const REPOSITORY_GROUPS: RepositoryGroup[] = [
       r("bmo-text", "Markdown and text as rooms and the console read them", "방과 콘솔이 읽는 마크다운과 텍스트", "ルームとコンソールが読む Markdown とテキスト", "聊天室和控制台读取的 Markdown 与文本"),
       r("bmo-ui", "The console's Nuxt layer: tokens and components", "콘솔의 Nuxt 레이어: 토큰과 컴포넌트", "コンソールの Nuxt レイヤー：トークンとコンポーネント", "控制台的 Nuxt 层：设计令牌与组件"),
       r("bmo-site", "This website", "이 웹사이트", "この Web サイト", "本网站"),
-      r("bmo-graph", "The code dependency graph", "코드 의존성 그래프", "コードの依存関係グラフ", "代码依赖关系图", true),
     ],
   },
 ];
