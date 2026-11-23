@@ -144,9 +144,6 @@ export const ja: Messages = {
     note: "アプリは初回起動時に自分の BMO サーバーのアドレスを尋ね、そのサーバーのコンソールを開きます。どの BMO でも同じダウンロードを使えます。macOS 版はまだありません。",
     unavailable: "公開ビルドはまだ公開されていません。",
     docs: "リリースドキュメント",
-    installTitle: "ソースからインストール",
-    installBody: "どのユニットも自分のリポジトリからビルドできます。まず構成ドキュメントを読み、必要なユニットを並べてクローンしてください。",
-    installCta: "STRUCTURE.md を読む",
   },
   repositories: {
     title: "どのユニットも独立したリポジトリ",

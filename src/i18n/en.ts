@@ -143,9 +143,6 @@ export const en = {
     note: "On its first run the app asks for your BMO server's address and opens that server's console, so one download serves every BMO. macOS is not built yet.",
     unavailable: "No public build is published yet.",
     docs: "Release documentation",
-    installTitle: "Install from source",
-    installBody: "Every unit builds from its own repository. Start with the structure document, then clone the units you need beside each other.",
-    installCta: "Read STRUCTURE.md",
   },
   repositories: {
     title: "Every unit is its own repository",

@@ -144,9 +144,6 @@ export const zh: Messages = {
     note: "应用首次启动时会询问你的 BMO 服务器地址，并打开该服务器的控制台，因此任何 BMO 都使用同一个下载。暂时还没有 macOS 版本。",
     unavailable: "公开版本尚未发布。",
     docs: "发布文档",
-    installTitle: "从源代码安装",
-    installBody: "每个单元都能从自己的仓库构建。先阅读结构文档，再把需要的单元并排克隆下来。",
-    installCta: "阅读 STRUCTURE.md",
   },
   repositories: {
     title: "每个单元都是独立的仓库",
