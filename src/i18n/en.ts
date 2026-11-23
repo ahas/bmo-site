@@ -1,0 +1,116 @@
+// The English words of the site. ko.ts holds the same shape in Korean.
+export const en = {
+  htmlLang: "en",
+  path: "/",
+  meta: {
+    title: "BMO — a self-hosted AI agent platform",
+    description:
+      "BMO is an open-source, self-hosted AI agent platform: a chat supervisor in your rooms, long-term memory, and coding agents that test and ship their work.",
+  },
+  nav: {
+    features: "Features",
+    how: "How it works",
+    download: "Download",
+    repositories: "Repositories",
+    docs: "Docs",
+    github: "GitHub",
+    skip: "Skip to content",
+    home: "BMO home",
+    otherLanguage: "한국어",
+    otherLanguageLabel: "Read this page in Korean",
+  },
+  hero: {
+    eyebrow: "Open source · MIT licensed",
+    titleLines: ["Your own AI crew,", "in the rooms you already use."],
+    sub: "BMO is a self-hosted agent platform. A chat supervisor talks with you in Telegram, Discord, the web console and by voice, remembers what matters, and hands real work to coding agents that test it and ship it.",
+    download: "Download the desktop app",
+    downloadWindows: "Download for Windows",
+    downloadLinux: "Download for Linux",
+    source: "View the source",
+    shotAlt:
+      "The BMO console with demo data: a private room where BMO answers schedule and bug-fix requests, beside the TODO panel listing queued, running and finished work items.",
+    shotNote: "The console with demo data. Its screens speak Korean today.",
+  },
+  values: [
+    { title: "Runs on your machines", body: "Every service, memory and document stays on hardware you own. No account with us, no telemetry." },
+    { title: "One unit, one repository", body: "Each service builds, tests and deploys on its own and reaches the others only through its documented API." },
+    { title: "Work ends when it finishes", body: "No timeout cuts a run short. A wait waits for its event, and how much runs at once is bounded by count." },
+  ],
+  how: {
+    title: "From a sentence to a release",
+    sub: "Ask in any room. BMO turns the request into work, a worker does it in the repository, and the testbed decides whether it ships.",
+    steps: [
+      { title: "You ask", body: "In Telegram, Discord, the console or by voice: “fix the paste bug in notes.”" },
+      { title: "BMO files it", body: "The supervisor writes the request as a TODO item with a brief, and tells you its number." },
+      { title: "A worker takes it", body: "The agency starts a Claude Code or Codex session in that repository's own checkout." },
+      { title: "The testbed checks it", body: "Quick checks, the touched tests and the build run in one queue shared by every repository." },
+      { title: "It ships", body: "A release-based deployment goes live once its health check answers ready, and BMO tells the room." },
+    ],
+  },
+  features: {
+    title: "Everything an agent needs to live with you",
+    sub: "Each piece is a service of its own, in a repository of its own.",
+    items: [
+      { icon: "rooms", title: "Lives in your rooms", body: "Telegram, Discord and the console are all rooms to BMO. The console is a messenger of its own, and every room keeps its own rules and conversation windows." },
+      { icon: "brain", title: "Memory that lasts", body: "The brain keeps each agent's long-term memory as versioned rows: superseded, never deleted. Every turn recalls what it needs under a token budget." },
+      { icon: "gate", title: "A gate on every turn", body: "Between the room and the model, the gate sanitises what enters the context, hands the turn its reference and checks the answer on its way out." },
+      { icon: "code", title: "Workers that write code", body: "Jobs run as Claude Code or Codex sessions the agency places, each in its own checkout, on the provider and model its role names." },
+      { icon: "check", title: "A testbed that ships", body: "One queue for every heavy build and test, quick static checks, change-selected suites and release-based deployments with health checks." },
+      { icon: "archive", title: "Archive and research", body: "Records, research write-ups and saved pages are kept, searched and shared. The research runner watches arXiv, Hugging Face, GitHub releases and feeds." },
+      { icon: "desk", title: "Your desk in one console", body: "Notes, calendar, drive, mail, remote terminals and desktops, and a video theater — each its own service with its own screen." },
+      { icon: "voice", title: "A voice and a face", body: "Trained voices read answers and briefings aloud, and a face on a small screen shows how BMO is doing." },
+      { icon: "gpu", title: "Your GPUs, shared", body: "The card arbiter lets engines take turns on your GPU nodes, for local text, vision, pictures and songs." },
+    ],
+  },
+  screens: {
+    title: "One console for all of it",
+    sub: "Every unit brings its screen into the console, on a desktop or a phone.",
+    items: [
+      { key: "calendar", caption: "Calendar — your own calendars beside your organisation's, with alarms told through BMO.", alt: "The calendar's week view with demo events such as a design review, a weekly sync and a study group." },
+      { key: "archive", caption: "Archive — research and records filed as documents, with contents, sharing and read-aloud.", alt: "A research document in the archive comparing three small embedding models in a table, with its table of contents beside it." },
+      { key: "phone", caption: "On a phone — the same rooms, sized for one hand.", alt: "A private room with BMO on a phone, with demo messages about a filed bug fix and a research request." },
+    ],
+  },
+  download: {
+    title: "BMO Desktop",
+    sub: "The console in a window of its own, with an agent built in. While the app runs, your PC is joined to your hub — shells, file transfers and streams — approved from the console, with no secret to type.",
+    version: "Version",
+    released: "Released",
+    windows: "Windows",
+    linux: "Linux",
+    nsis: "Installer (.exe)",
+    appimage: "AppImage",
+    deb: "Debian package (.deb)",
+    checksum: "SHA-256",
+    note: "The app opens the console your deployment serves; its address is a setting. macOS is not built yet.",
+    unavailable: "No release could be read when this page was built. The release documentation says where installers are published.",
+    docs: "Release documentation",
+    installTitle: "Install from source",
+    installBody: "Every unit builds from its own repository. Start with the structure document, then clone the units you need beside each other.",
+    installCta: "Read STRUCTURE.md",
+  },
+  repositories: {
+    title: "Every unit is its own repository",
+    sub: "All MIT licensed. Read one, fork one, or run the whole set.",
+    retired: "retired",
+  },
+  closing: {
+    title: "Make BMO yours.",
+    sub: "Clone it, run it on your own machines, and teach it how you work.",
+    cta: "Start on GitHub",
+  },
+  footer: {
+    license: "MIT License",
+    copyright: "Copyright © 2026 the BMO authors",
+    structure: "Structure",
+    licenseLink: "License",
+    madeWith: "A static site, built with Astro.",
+  },
+  notFound: {
+    title: "Page not found",
+    body: "Nothing stands at this address.",
+    home: "Back to the home page",
+  },
+};
+
+export type Messages = typeof en;

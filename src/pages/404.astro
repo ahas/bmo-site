@@ -1,0 +1,18 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { messagesFor } from "../i18n";
+
+const en = messagesFor("en");
+const ko = messagesFor("ko");
+---
+
+<Layout locale="en" title={`${en.notFound.title} — BMO`} noindex>
+  <section class="section not-found">
+    <div class="container">
+      <h1>404</h1>
+      <p>{en.notFound.body}</p>
+      <p lang="ko">{ko.notFound.body}</p>
+      <p><a class="button button-primary" href="/">{en.notFound.home}</a></p>
+    </div>
+  </section>
+</Layout>

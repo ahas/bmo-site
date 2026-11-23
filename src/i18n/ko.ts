@@ -1,0 +1,116 @@
+import type { Messages } from "./en";
+
+// 사이트의 한국어 문구. en.ts와 같은 구조를 따른다.
+export const ko: Messages = {
+  htmlLang: "ko",
+  path: "/ko/",
+  meta: {
+    title: "BMO — 직접 운영하는 AI 에이전트 플랫폼",
+    description:
+      "BMO(비모)는 직접 운영하는 오픈소스 AI 에이전트 플랫폼입니다. 대화방에 사는 챗 감독관, 오래 남는 기억, 그리고 직접 테스트하고 배포하는 코딩 에이전트까지.",
+  },
+  nav: {
+    features: "기능",
+    how: "작동 방식",
+    download: "다운로드",
+    repositories: "저장소",
+    docs: "문서",
+    github: "GitHub",
+    skip: "본문으로 건너뛰기",
+    home: "BMO 홈",
+    otherLanguage: "English",
+    otherLanguageLabel: "이 페이지를 영어로 보기",
+  },
+  hero: {
+    eyebrow: "오픈소스 · MIT 라이선스",
+    titleLines: ["나만의 AI 팀을,", "이미 쓰는 대화방 안에."],
+    sub: "BMO(비모)는 직접 운영하는 에이전트 플랫폼입니다. 챗 감독관이 Telegram, Discord, 웹 콘솔, 음성으로 대화하고, 중요한 것을 기억하고, 실제 작업은 코딩 에이전트에게 맡겨 테스트와 배포까지 끝냅니다.",
+    download: "데스크톱 앱 다운로드",
+    downloadWindows: "Windows용 다운로드",
+    downloadLinux: "Linux용 다운로드",
+    source: "소스 코드 보기",
+    shotAlt:
+      "데모 데이터를 띄운 BMO 콘솔: BMO가 일정과 버그 수정 요청에 답하는 개인 대화방과, 대기 중·진행 중·완료된 작업이 보이는 TODO 패널.",
+    shotNote: "데모 데이터를 띄운 콘솔 화면입니다.",
+  },
+  values: [
+    { title: "내 머신에서 돌아갑니다", body: "모든 서비스와 기억, 문서가 내가 가진 하드웨어에 남습니다. 가입도, 원격 수집도 없습니다." },
+    { title: "유닛 하나, 저장소 하나", body: "각 서비스는 스스로 빌드하고 테스트하고 배포하며, 다른 서비스와는 문서로 정한 API로만 만납니다." },
+    { title: "일은 끝날 때 끝납니다", body: "시간 제한으로 작업을 끊지 않습니다. 기다림은 사건을 기다리고, 동시에 도는 양은 개수로만 제한합니다." },
+  ],
+  how: {
+    title: "한 문장이 배포가 되기까지",
+    sub: "어느 방에서든 말하면, BMO가 요청을 작업으로 만들고, 워커가 저장소에서 처리하고, 테스트베드가 배포 여부를 정합니다.",
+    steps: [
+      { title: "말합니다", body: "Telegram, Discord, 콘솔, 또는 음성으로: “노트 붙여넣기 버그 고쳐줘.”" },
+      { title: "BMO가 올립니다", body: "감독관이 요청을 지시문이 담긴 TODO 항목으로 만들고 번호를 알려 줍니다." },
+      { title: "워커가 맡습니다", body: "에이전시가 그 저장소의 체크아웃에서 Claude Code나 Codex 세션을 시작합니다." },
+      { title: "테스트베드가 검사합니다", body: "빠른 검사, 바뀐 부분의 테스트, 빌드가 모든 저장소가 함께 쓰는 하나의 대기열에서 돕니다." },
+      { title: "배포됩니다", body: "릴리스 단위 배포가 상태 검사에 준비 완료로 답하면 라이브가 되고, BMO가 방에 알려 줍니다." },
+    ],
+  },
+  features: {
+    title: "에이전트가 곁에서 살아가는 데 필요한 모든 것",
+    sub: "각 부분이 저마다의 서비스이고, 저마다의 저장소입니다.",
+    items: [
+      { icon: "rooms", title: "대화방에 삽니다", body: "Telegram, Discord, 콘솔 모두 BMO에게는 방입니다. 콘솔은 그 자체로 메신저이고, 방마다 규칙과 대화 창을 따로 가집니다." },
+      { icon: "brain", title: "오래 남는 기억", body: "브레인은 에이전트마다 장기 기억을 버전이 있는 행으로 보관합니다. 지우지 않고 대체할 뿐이며, 매 턴은 토큰 예산 안에서 필요한 기억을 불러옵니다." },
+      { icon: "gate", title: "모든 턴에 게이트", body: "방과 모델 사이에서 게이트가 컨텍스트에 들어갈 내용을 정화하고, 참고 자료를 건네고, 나가는 답변을 검사합니다." },
+      { icon: "code", title: "코드를 쓰는 워커", body: "작업은 에이전시가 배치하는 Claude Code나 Codex 세션으로 돌며, 각자 자기 체크아웃에서 역할이 정한 프로바이더와 모델로 일합니다." },
+      { icon: "check", title: "배포까지 하는 테스트베드", body: "무거운 빌드와 테스트를 위한 하나의 대기열, 빠른 정적 검사, 변경 기반 테스트 선택, 상태 검사가 있는 릴리스 배포." },
+      { icon: "archive", title: "아카이브와 리서치", body: "기록, 리서치 보고서, 저장한 웹 페이지를 보관하고 찾고 공유합니다. 리서치 러너는 arXiv, Hugging Face, GitHub 릴리스, 피드를 지켜봅니다." },
+      { icon: "desk", title: "콘솔 하나에 담긴 책상", body: "노트, 캘린더, 드라이브, 메일, 원격 터미널과 데스크톱, 영상 극장까지. 각각 자기 화면을 가진 서비스입니다." },
+      { icon: "voice", title: "목소리와 얼굴", body: "학습된 목소리가 답변과 브리핑을 읽어 주고, 작은 화면의 얼굴이 BMO의 상태를 보여 줍니다." },
+      { icon: "gpu", title: "함께 쓰는 내 GPU", body: "카드 중재자가 GPU 노드에서 엔진들이 차례로 카드를 쓰게 해, 텍스트·비전·그림·노래를 로컬에서 돌립니다." },
+    ],
+  },
+  screens: {
+    title: "이 모든 것을 콘솔 하나로",
+    sub: "모든 유닛이 자기 화면을 콘솔에 가져옵니다. 데스크톱에서도, 휴대폰에서도.",
+    items: [
+      { key: "calendar", caption: "캘린더 — 내 캘린더와 조직 캘린더를 나란히, 알림은 BMO가 전해 줍니다.", alt: "디자인 리뷰, 주간 회의, 스터디 모임 같은 데모 일정이 있는 캘린더 주간 보기." },
+      { key: "archive", caption: "아카이브 — 리서치와 기록이 목차, 공유, 읽어 주기가 있는 문서로 남습니다.", alt: "작은 임베딩 모델 세 개를 표로 비교한 아카이브의 리서치 문서와 옆의 목차." },
+      { key: "phone", caption: "휴대폰에서 — 같은 방을, 한 손에 맞게.", alt: "휴대폰으로 본 BMO와의 개인 대화방. 버그 수정 접수와 리서치 요청에 관한 데모 메시지." },
+    ],
+  },
+  download: {
+    title: "BMO 데스크톱",
+    sub: "콘솔을 독립된 창으로 띄우고, 에이전트를 내장했습니다. 앱이 실행되는 동안 내 PC가 허브에 연결되어 셸, 파일 전송, 스트림을 쓸 수 있고, 연결은 비밀값 입력 없이 콘솔에서 승인합니다.",
+    version: "버전",
+    released: "배포일",
+    windows: "Windows",
+    linux: "Linux",
+    nsis: "설치 프로그램 (.exe)",
+    appimage: "AppImage",
+    deb: "Debian 패키지 (.deb)",
+    checksum: "SHA-256",
+    note: "앱은 배포한 서버의 콘솔을 엽니다. 콘솔 주소는 설정에서 바꿀 수 있습니다. macOS 빌드는 아직 없습니다.",
+    unavailable: "이 페이지를 빌드할 때 릴리스 정보를 읽지 못했습니다. 설치 파일이 게시되는 위치는 릴리스 문서에 있습니다.",
+    docs: "릴리스 문서",
+    installTitle: "소스로 설치하기",
+    installBody: "모든 유닛은 자기 저장소에서 빌드됩니다. 구조 문서부터 읽고, 필요한 유닛을 나란히 클론하세요.",
+    installCta: "STRUCTURE.md 읽기",
+  },
+  repositories: {
+    title: "모든 유닛이 저마다의 저장소",
+    sub: "모두 MIT 라이선스입니다. 하나만 읽어도, 포크해도, 전부 돌려도 됩니다.",
+    retired: "운영 종료",
+  },
+  closing: {
+    title: "BMO를 내 것으로.",
+    sub: "클론해서 내 머신에서 돌리고, 내가 일하는 방식을 가르쳐 보세요.",
+    cta: "GitHub에서 시작하기",
+  },
+  footer: {
+    license: "MIT 라이선스",
+    copyright: "Copyright © 2026 the BMO authors",
+    structure: "구조 문서",
+    licenseLink: "라이선스",
+    madeWith: "Astro로 만든 정적 사이트입니다.",
+  },
+  notFound: {
+    title: "페이지를 찾을 수 없습니다",
+    body: "이 주소에는 아무것도 없습니다.",
+    home: "홈으로 돌아가기",
+  },
+};

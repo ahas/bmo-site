@@ -1,0 +1,18 @@
+---
+// The project's mark: the console's own icon, a mint square with the controller's pad and buttons.
+interface Props {
+  size?: number;
+}
+
+const { size = 28 } = Astro.props;
+---
+
+<svg class="logo" width={size} height={size} viewBox="0 0 32 32" aria-hidden="true">
+  <rect width="32" height="32" rx="7.2" fill="#5fbb9c" />
+  <g transform="translate(-15.950769230769232 -36.92307692307692) scale(0.19692307692307692)">
+    <polygon points="110.5,220.25 128.5,220.25 128.5,238.25 146.5,238.25 146.5,256.25 128.5,256.25 128.5,274.25 110.5,274.25 110.5,256.25 92.5,256.25 92.5,238.25 110.5,238.25" fill="#f9e000" stroke="#a68800" stroke-width="3.5" stroke-linejoin="round" />
+    <polygon points="181,240.25 164,266.25 198,266.25" fill="#6dcdf7" stroke="#086791" stroke-width="3.5" stroke-linejoin="round" />
+    <circle cx="222" cy="268.25" r="10" fill="#5db851" stroke="#346d2c" stroke-width="3.5" />
+    <circle cx="187" cy="298.25" r="19" fill="#ef3538" stroke="#a50d10" stroke-width="3.5" />
+  </g>
+</svg>
