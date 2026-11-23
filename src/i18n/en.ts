@@ -16,8 +16,7 @@ export const en = {
     github: "GitHub",
     skip: "Skip to content",
     home: "BMO home",
-    otherLanguage: "한국어",
-    otherLanguageLabel: "Read this page in Korean",
+    language: "Language",
   },
   hero: {
     eyebrow: "Open source · MIT licensed",
@@ -28,8 +27,8 @@ export const en = {
     downloadLinux: "Download for Linux",
     source: "View the source",
     shotAlt:
-      "The BMO console with demo data: a private room where BMO answers schedule and bug-fix requests, beside the TODO panel listing queued, running and finished work items.",
-    shotNote: "The console with demo data. Its screens speak Korean today.",
+      "The notes screen of the BMO console with demo data: a list of notes beside an open mobile app launch checklist.",
+    shotNote: "Every screen on this page shows demo data.",
   },
   values: [
     { title: "Runs on your machines", body: "Every service, memory and document stays on hardware you own. No account with us, no telemetry." },
@@ -68,7 +67,7 @@ export const en = {
     items: [
       { key: "calendar", caption: "Calendar — your own calendars beside your organisation's, with alarms told through BMO.", alt: "The calendar's week view with demo events such as a design review, a weekly sync and a study group." },
       { key: "archive", caption: "Archive — research and records filed as documents, with contents, sharing and read-aloud.", alt: "A research document in the archive comparing three small embedding models in a table, with its table of contents beside it." },
-      { key: "phone", caption: "On a phone — the same rooms, sized for one hand.", alt: "A private room with BMO on a phone, with demo messages about a filed bug fix and a research request." },
+      { key: "phone", caption: "On a phone — the same screens, sized for one hand.", alt: "The calendar on a phone, showing three days of demo events." },
     ],
   },
   download: {

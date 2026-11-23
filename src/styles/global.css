@@ -204,6 +204,59 @@ main:focus {
   }
 }
 
+.lang-menu {
+  position: relative;
+}
+
+.lang-menu summary {
+  gap: 6px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.lang-menu summary::-webkit-details-marker {
+  display: none;
+}
+
+.lang-menu[open] summary {
+  color: var(--text);
+  background: var(--surface);
+}
+
+.lang-list {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  z-index: 11;
+  min-width: 160px;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  background: var(--bg-raised);
+  box-shadow: 0 20px 50px -20px rgb(0 0 0 / 0.8);
+}
+
+.lang-list a {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 12px;
+  border-radius: 8px;
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.lang-list a:hover {
+  color: var(--text);
+  background: var(--surface);
+}
+
+.lang-list a[aria-current="page"] {
+  color: var(--accent);
+}
+
 /* Buttons and links */
 
 .button {
@@ -303,9 +356,17 @@ main:focus {
   letter-spacing: -0.035em;
 }
 
-:lang(ko) .hero-title {
+:lang(ko) .hero-title,
+:lang(ja) .hero-title,
+:lang(zh) .hero-title {
   letter-spacing: -0.02em;
   line-height: 1.18;
+}
+
+.hero-title,
+.section-head h2,
+.closing h2 {
+  text-wrap: balance;
 }
 
 .hero-line {
@@ -916,4 +977,17 @@ main:focus {
 
 .not-found .button {
   margin-top: 20px;
+}
+
+.not-found-list {
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+  color: var(--muted);
+}
+
+.not-found-list a {
+  color: var(--accent);
 }

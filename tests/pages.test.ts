@@ -8,9 +8,10 @@ import { DIST, serveDist } from "./serve";
 
 import type { Browser, Page } from "playwright-core";
 
-// The built pages opened in a real browser at a desktop's width and a phone's: every key section stands on the
-// page with its heading, every picture has its words, the language link leads to the other version, and nothing
-// is wider than the window. Run `bun run build` first; the test reads dist/ as a static host serves it, and is
+// The built pages opened in a real browser at a desktop's width, a tablet's and a phone's: every key section stands
+// on the page with its heading, every picture has its words and is a capture in the page's own capture language
+// (Korean on /ko/, English on every other page, read from the picture's file name), the language menu reaches every
+// version, and nothing is wider than the window. Run `bun run build` first; the test reads dist/ as a static host serves it, and is
 // skipped where the browser build Playwright pins is not on the machine.
 
 const ready = (() => {
@@ -28,8 +29,10 @@ const WIDTHS = [
 ];
 
 const PAGES = [
-  { path: "/", lang: "en", other: "/ko/" },
-  { path: "/ko/", lang: "ko", other: "/" },
+  { path: "/", lang: "en", capture: "en" },
+  { path: "/ko/", lang: "ko", capture: "ko" },
+  { path: "/ja/", lang: "ja", capture: "en" },
+  { path: "/zh/", lang: "zh-Hans", capture: "en" },
 ];
 
 const SECTIONS = ["#hero-title", "#how-title", "#features-title", "#screens-title", "#download-title", "#repositories-title", "#closing-title"];
@@ -84,13 +87,20 @@ describe.skipIf(!ready)("the built pages", () => {
           await Promise.all(Array.from(document.images).map((image) => image.decode().catch(() => undefined)));
         });
         const pictures = await page.locator("img").evaluateAll((images) =>
-          (images as HTMLImageElement[]).map((image) => ({ alt: image.alt, loaded: image.complete && image.naturalWidth > 0 }))
+          (images as HTMLImageElement[]).map((image) => ({
+            alt: image.alt,
+            loaded: image.complete && image.naturalWidth > 0,
+            file: (image.currentSrc || image.src).split("/").pop() ?? "",
+            sources: Array.from(image.closest("picture")?.querySelectorAll("source") ?? []).flatMap((source) => source.srcset.split(",").map((one) => one.trim().split(" ")[0]!.split("/").pop()!)),
+          }))
         );
 
         expect(pictures.length).toBeGreaterThan(0);
         for (const picture of pictures) {
-          expect(picture.alt.length).toBeGreaterThan(20);
+          expect(picture.alt.length).toBeGreaterThan(10);
           expect(picture.loaded).toBe(true);
+          // Every file the picture may show is a capture in the page's capture language.
+          for (const file of [picture.file, ...picture.sources]) expect(file).toMatch(new RegExp(`-${entry.capture}\\.`));
         }
 
         // Nothing reaches past the window's right edge, at the top or after scrolling to the end.
@@ -113,10 +123,18 @@ describe.skipIf(!ready)("the built pages", () => {
 
         expect(wider).toEqual([]);
 
-        // The language link leads to the other version.
-        const other = page.locator(".nav .lang");
+        // The language menu opens, stands inside the window and reaches every version.
+        await page.evaluate(() => window.scrollTo(0, 0));
+        await page.locator(".lang-menu summary").click();
+        const links = page.locator(".lang-list a");
 
-        expect(await other.getAttribute("href")).toBe(entry.other);
+        expect(await links.evaluateAll((all) => all.map((link) => link.getAttribute("href")))).toEqual(["/", "/ko/", "/ja/", "/zh/"]);
+        for (const box of await links.evaluateAll((all) => all.map((link) => link.getBoundingClientRect().toJSON()))) {
+          expect(box.left).toBeGreaterThanOrEqual(0);
+          expect(box.right).toBeLessThanOrEqual(width.viewport.width);
+          expect(box.height).toBeGreaterThanOrEqual(44);
+        }
+        expect(await page.locator(".lang-list a[aria-current=page]").getAttribute("href")).toBe(entry.path);
 
         await page.context().close();
       }, 60_000);

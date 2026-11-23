@@ -1,18 +1,24 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { messagesFor } from "../i18n";
+import { LOCALES, messagesFor } from "../i18n";
 
 const en = messagesFor("en");
-const ko = messagesFor("ko");
+const languages = LOCALES.map((entry) => messagesFor(entry.code));
 ---
 
 <Layout locale="en" title={`${en.notFound.title} — BMO`} noindex>
   <section class="section not-found">
     <div class="container">
       <h1>404</h1>
-      <p>{en.notFound.body}</p>
-      <p lang="ko">{ko.notFound.body}</p>
-      <p><a class="button button-primary" href="/">{en.notFound.home}</a></p>
+      <ul class="not-found-list">
+        {
+          languages.map((words) => (
+            <li lang={words.htmlLang}>
+              {words.notFound.body} <a href={words.path}>{words.notFound.home}</a>
+            </li>
+          ))
+        }
+      </ul>
     </div>
   </section>
 </Layout>

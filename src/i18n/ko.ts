@@ -18,8 +18,7 @@ export const ko: Messages = {
     github: "GitHub",
     skip: "본문으로 건너뛰기",
     home: "BMO 홈",
-    otherLanguage: "English",
-    otherLanguageLabel: "이 페이지를 영어로 보기",
+    language: "언어",
   },
   hero: {
     eyebrow: "오픈소스 · MIT 라이선스",
@@ -31,7 +30,7 @@ export const ko: Messages = {
     source: "소스 코드 보기",
     shotAlt:
       "데모 데이터를 띄운 BMO 콘솔: BMO가 일정과 버그 수정 요청에 답하는 개인 대화방과, 대기 중·진행 중·완료된 작업이 보이는 TODO 패널.",
-    shotNote: "데모 데이터를 띄운 콘솔 화면입니다.",
+    shotNote: "이 페이지의 모든 화면은 데모 데이터입니다.",
   },
   values: [
     { title: "내 머신에서 돌아갑니다", body: "모든 서비스와 기억, 문서가 내가 가진 하드웨어에 남습니다. 가입도, 원격 수집도 없습니다." },
@@ -70,7 +69,7 @@ export const ko: Messages = {
     items: [
       { key: "calendar", caption: "캘린더 — 내 캘린더와 조직 캘린더를 나란히, 알림은 BMO가 전해 줍니다.", alt: "디자인 리뷰, 주간 회의, 스터디 모임 같은 데모 일정이 있는 캘린더 주간 보기." },
       { key: "archive", caption: "아카이브 — 리서치와 기록이 목차, 공유, 읽어 주기가 있는 문서로 남습니다.", alt: "작은 임베딩 모델 세 개를 표로 비교한 아카이브의 리서치 문서와 옆의 목차." },
-      { key: "phone", caption: "휴대폰에서 — 같은 방을, 한 손에 맞게.", alt: "휴대폰으로 본 BMO와의 개인 대화방. 버그 수정 접수와 리서치 요청에 관한 데모 메시지." },
+      { key: "phone", caption: "휴대폰에서 — 같은 화면을, 한 손에 맞게.", alt: "휴대폰으로 본 노트 화면. 주간 회의록 데모 노트가 열려 있습니다." },
     ],
   },
   download: {

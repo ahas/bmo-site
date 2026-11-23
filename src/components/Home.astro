@@ -2,14 +2,11 @@
 import { Picture, getImage } from "astro:assets";
 
 import Icon from "./Icon.astro";
-import { messagesFor } from "../i18n";
+import { captureLocale, messagesFor } from "../i18n";
 import { currentRelease, megabytes } from "../lib/release";
 import { REPOSITORY_GROUPS } from "../lib/repositories";
 import { DESKTOP_DOC_URL, STRUCTURE_URL, UMBRELLA_URL, repositoryUrl } from "../lib/site";
-import archiveShot from "../assets/shots/archive-document.webp";
-import calendarShot from "../assets/shots/calendar-week.webp";
-import roomShot from "../assets/shots/console-room.webp";
-import phoneShot from "../assets/shots/console-room-phone.webp";
+import { HERO_SHOTS, SCREEN_SHOTS } from "../lib/shots";
 
 import type { Locale } from "../i18n";
 import type { ReleaseFile } from "../lib/release";
@@ -37,11 +34,14 @@ async function sources(src: ImageMetadata, widths: number[]) {
   return { avif: await set("avif"), webp: await set("webp") };
 }
 
+const capture = captureLocale(locale);
+const roomShot = HERO_SHOTS[capture].wide;
+const phoneShot = HERO_SHOTS[capture].phone;
 const heroWide = await sources(roomShot, [720, 1080, 1440, 2160, 2880]);
 const heroPhone = await sources(phoneShot, [390, 780]);
 const heroFallback = await getImage({ src: roomShot, width: 1440, format: "webp", quality: 72 });
 const PHONE_MEDIA = "(max-width: 599px)";
-const SHOTS = { calendar: calendarShot, archive: archiveShot, phone: phoneShot } as const;
+const SHOTS = SCREEN_SHOTS[capture];
 ---
 
 <section class="hero" aria-labelledby="hero-title">

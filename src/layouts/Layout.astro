@@ -2,9 +2,9 @@
 import { getImage } from "astro:assets";
 
 import Logo from "../components/Logo.astro";
-import { messagesFor, otherLocale } from "../i18n";
+import { LOCALES, captureLocale, messagesFor } from "../i18n";
 import { GITHUB_OWNER_URL, LICENSE_URL, SITE_URL, STRUCTURE_URL, UMBRELLA_URL } from "../lib/site";
-import socialShot from "../assets/shots/console-room.webp";
+import { HERO_SHOTS } from "../lib/shots";
 import "../styles/global.css";
 
 import type { Locale } from "../i18n";
@@ -18,11 +18,11 @@ interface Props {
 
 const { locale, noindex = false } = Astro.props;
 const t = messagesFor(locale);
-const other = messagesFor(otherLocale(locale));
+const languages = LOCALES.map((entry) => ({ ...entry, messages: messagesFor(entry.code) }));
 const title = Astro.props.title ?? t.meta.title;
 const description = Astro.props.description ?? t.meta.description;
 const canonical = new URL(t.path, SITE_URL).href;
-const social = await getImage({ src: socialShot, width: 1200, format: "png" });
+const social = await getImage({ src: HERO_SHOTS[captureLocale(locale)].wide, width: 1200, format: "png" });
 const socialUrl = new URL(social.src, SITE_URL).href;
 const home = t.path;
 ---
@@ -37,8 +37,7 @@ const home = t.path;
     <title>{title}</title>
     <meta name="description" content={description} />
     {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
-    {!noindex && <link rel="alternate" hreflang="en" href={new URL("/", SITE_URL).href} />}
-    {!noindex && <link rel="alternate" hreflang="ko" href={new URL("/ko/", SITE_URL).href} />}
+    {!noindex && languages.map((entry) => <link rel="alternate" hreflang={entry.messages.htmlLang} href={new URL(entry.messages.path, SITE_URL).href} />)}
     {!noindex && <link rel="alternate" hreflang="x-default" href={new URL("/", SITE_URL).href} />}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -48,7 +47,7 @@ const home = t.path;
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={socialUrl} />
-    <meta property="og:locale" content={locale === "ko" ? "ko_KR" : "en_US"} />
+    <meta property="og:locale" content={{ en: "en_US", ko: "ko_KR", ja: "ja_JP", zh: "zh_CN" }[locale]} />
     <meta name="twitter:card" content="summary_large_image" />
   </head>
   <body>
@@ -67,9 +66,28 @@ const home = t.path;
           <a href={STRUCTURE_URL}>{t.nav.docs}</a>
         </nav>
         <div class="nav-end">
-          <a class="lang" href={other.path} hreflang={other.htmlLang} lang={other.htmlLang} aria-label={t.nav.otherLanguageLabel}>
-            {t.nav.otherLanguage}
-          </a>
+          <details class="lang-menu">
+            <summary class="lang" aria-label={t.nav.language}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z" /></svg>
+              <span>{languages.find((entry) => entry.code === locale)!.name}</span>
+            </summary>
+            <ul class="lang-list">
+              {
+                languages.map((entry) => (
+                  <li>
+                    <a
+                      href={entry.messages.path}
+                      hreflang={entry.messages.htmlLang}
+                      lang={entry.messages.htmlLang}
+                      aria-current={entry.code === locale ? "page" : undefined}
+                    >
+                      {entry.name}
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+          </details>
           <a class="nav-github" href={UMBRELLA_URL} aria-label={t.nav.github}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
               <path d="M12 .5C5.65.5.5 5.65.5 12a11.5 11.5 0 0 0 7.86 10.93c.58.1.79-.25.79-.56v-2c-3.2.69-3.88-1.37-3.88-1.37-.52-1.33-1.27-1.69-1.27-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.76 2.68 1.25 3.33.96.1-.75.4-1.25.72-1.54-2.55-.29-5.24-1.27-5.24-5.67 0-1.25.45-2.28 1.18-3.08-.12-.29-.51-1.45.11-3.02 0 0 .96-.31 3.15 1.18a10.96 10.96 0 0 1 5.74 0c2.19-1.49 3.15-1.18 3.15-1.18.62 1.57.23 2.73.11 3.02.74.8 1.18 1.83 1.18 3.08 0 4.41-2.7 5.38-5.27 5.66.41.36.78 1.06.78 2.13v3.16c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z" />
@@ -95,9 +113,33 @@ const home = t.path;
           <a href={GITHUB_OWNER_URL}>{t.nav.repositories}</a>
           <a href={STRUCTURE_URL}>{t.footer.structure}</a>
           <a href={LICENSE_URL}>{t.footer.licenseLink}</a>
-          <a href={other.path} hreflang={other.htmlLang} lang={other.htmlLang}>{t.nav.otherLanguage}</a>
+          {
+            languages
+              .filter((entry) => entry.code !== locale)
+              .map((entry) => (
+                <a href={entry.messages.path} hreflang={entry.messages.htmlLang} lang={entry.messages.htmlLang}>
+                  {entry.name}
+                </a>
+              ))
+          }
         </nav>
       </div>
     </footer>
+    <script is:inline>
+      // Closes the language menu on Escape and on a press outside it; the menu works without this.
+      (function () {
+        var menu = document.querySelector(".lang-menu");
+        if (!menu) return;
+        document.addEventListener("keydown", function (event) {
+          if (event.key === "Escape" && menu.open) {
+            menu.open = false;
+            menu.querySelector("summary").focus();
+          }
+        });
+        document.addEventListener("click", function (event) {
+          if (menu.open && !menu.contains(event.target)) menu.open = false;
+        });
+      })();
+    </script>
   </body>
 </html>

@@ -52,6 +52,6 @@ await page.evaluate((swaps) => {
   }
 }, TEXT_SWAPS);
 await page.waitForTimeout(500);
-await page.screenshot({ path: `${OUT}${shotName}.png` });
-console.log("saved", `${OUT}${shotName}.png`);
+await page.screenshot({ path: `${OUT}${shotName}.ko.png` });
+console.log("saved", `${shotName}.ko`);
 await browser.close();
