@@ -13,7 +13,7 @@ bun run preview    # serves dist/ at http://localhost:4321
 bun run dev        # the development server with reload
 ```
 
-빌드는 데스크톱 앱의 현재 릴리스를 `https://ai.example.org/bmo/jake/desktop/release.json`에서 읽어(jake의 `docs/desktop.md`, "The read the console uses") 다운로드 섹션에 버전과 설치 파일을 넣습니다. 이 주소에 닿지 못하거나 `BMO_SITE_OFFLINE=1`이면 릴리스 문서로 연결합니다. 배포는 `dist/`를 도메인을 서비스하는 호스트로 복사하는 것입니다.
+다운로드 섹션은 데스크톱 앱의 공개 릴리스를 보여 줍니다. 릴리스 정보는 빌드할 때 `src/lib/release.ts`가 지정한 주소에서 읽습니다. 아직 공개 빌드는 없습니다. 배포마다 직접 만드는 빌드는 그 배포의 콘솔을 열기 때문에 여기에 올리지 않습니다. 처음 실행할 때 각자의 서버 주소를 묻는 빌드가 공개되기 전까지는 릴리스 문서로 연결합니다. 배포는 `dist/`를 도메인을 서비스하는 호스트로 복사하는 것입니다.
 
 ## 검사
 

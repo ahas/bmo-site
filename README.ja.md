@@ -13,7 +13,7 @@ bun run preview    # serves dist/ at http://localhost:4321
 bun run dev        # the development server with reload
 ```
 
-ビルド時に、デスクトップアプリの現在のリリースを `https://ai.example.org/bmo/jake/desktop/release.json`（jake の `docs/desktop.md`、"The read the console uses"）から読み、ダウンロード欄にバージョンとインストーラーを書き込みます。このアドレスに届かない場合や `BMO_SITE_OFFLINE=1` のときは、リリース文書へのリンクになります。デプロイは `dist/` をドメインを配信するホストへコピーするだけです。
+ダウンロード欄にはデスクトップアプリの公開リリースを載せます。ビルド時に `src/lib/release.ts` が指すアドレスから読みます。公開ビルドはまだありません。各デプロイが自分用に作るビルドはそのデプロイのコンソールを開くため、ここには載せません。初回起動時にそれぞれのサーバーアドレスを尋ねるビルドが公開されるまでは、リリース文書へリンクします。デプロイは `dist/` をドメインを配信するホストへコピーするだけです。
 
 ## チェック
 

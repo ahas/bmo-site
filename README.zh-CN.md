@@ -13,7 +13,7 @@ bun run preview    # serves dist/ at http://localhost:4321
 bun run dev        # the development server with reload
 ```
 
-构建时会从 `https://ai.example.org/bmo/jake/desktop/release.json`（见 jake 的 `docs/desktop.md`，"The read the console uses"）读取桌面应用的当前版本，并把版本号和安装包写进下载区。若无法访问该地址，或设置了 `BMO_SITE_OFFLINE=1`，则改为链接到发布说明。部署就是把 `dist/` 复制到为该域名提供服务的主机。
+下载区展示桌面应用的公开版本，构建时从 `src/lib/release.ts` 指定的地址读取。目前还没有公开版本：各部署自己构建的版本会打开该部署的控制台，因此不会放在这里；在首次启动时询问各自服务器地址的版本发布之前，该区会链接到发布说明。部署就是把 `dist/` 复制到为该域名提供服务的主机。
 
 ## 检查
 

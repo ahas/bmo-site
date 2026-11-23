@@ -17,10 +17,7 @@ bun run preview    # serves dist/ at http://localhost:4321
 bun run dev        # the development server with reload
 ```
 
-The build reads the desktop app's current release from `https://ai.example.org/bmo/jake/desktop/release.json` (jake's
-`docs/desktop.md`, "The read the console uses") and writes its version and installers into the download section.
-Where that address cannot be reached, or with `BMO_SITE_OFFLINE=1`, the section links to the release documentation
-instead. Deploying is copying `dist/` to the host that serves the domain.
+The download section lists the desktop app's public release, read at build time from the address `src/lib/release.ts` names. No public build stands yet: a deployment's own builds open that deployment's console, so they are never offered here, and until a build that asks each person for their own server's address is published, the section links to the release documentation. Deploying is copying `dist/` to the host that serves the domain.
 
 ## Checks
 
