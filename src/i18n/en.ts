@@ -156,6 +156,7 @@ export const en = {
     title: "BMO Desktop",
     sub: "Two desktop apps. The Remote Controller opens the BMO server you already run; the All-in-One runs BMO itself on your PC.",
     version: "Version {version} · {date}",
+    preview: "Preview {version}",
     nightly: "Nightly {version}",
     apps: {
       remote: { name: "BMO Remote Controller", body: "Your BMO server's console in a window, with this PC joined to it as a machine BMO can work on. Needs a BMO server." },

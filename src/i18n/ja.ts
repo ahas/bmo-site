@@ -158,6 +158,7 @@ export const ja: Messages = {
     title: "BMO デスクトップ",
     sub: "デスクトップアプリは 2 種類です。リモートコントローラーはすでに動かしている BMO サーバーを開き、All-in-One は BMO そのものをあなたの PC で動かします。",
     version: "バージョン {version} · {date}",
+    preview: "プレビュー {version}",
     nightly: "ナイトリー {version}",
     apps: {
       remote: { name: "BMO リモートコントローラー", body: "お使いの BMO サーバーのコンソールをひとつのウィンドウで開き、この PC を BMO が作業できるマシンとしてつなぎます。BMO サーバーが必要です。" },

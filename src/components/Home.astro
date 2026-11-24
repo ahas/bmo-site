@@ -3,7 +3,7 @@ import GetStarted from "./GetStarted.astro";
 import Icon from "./Icon.astro";
 import Shot from "./Shot.astro";
 import { messagesFor } from "../i18n";
-import { currentRelease, megabytes } from "../lib/release";
+import { PRERELEASE_CHANNELS, currentRelease, megabytes } from "../lib/release";
 import { REPOSITORY_GROUPS } from "../lib/repositories";
 import { DESKTOP_DOC_URL, UMBRELLA_URL, repositoryUrl } from "../lib/site";
 import { EXAMPLES, KINDS, ROWS } from "../lib/comparison";
@@ -26,13 +26,18 @@ const FORMAT_ORDER = ["windows-nsis", "linux-appimage", "linux-deb"] as const;
 const formatKey = (file: ReleaseFile): string => `${file.platform}-${file.format}`;
 const buttons = (app: ReleaseApp | undefined): { file: ReleaseFile; label: string }[] =>
   FORMAT_ORDER.flatMap((key) => (app?.files ?? []).filter((file) => formatKey(file) === key).map((file) => ({ file, label: t.download.formats[key] })));
-// The two desktop apps, each with the files of the release and of the nightly build where one is published.
+// The builds ahead of the release that are published, the preview's before the nightly's, each named by its line.
+const prereleases = PRERELEASE_CHANNELS.flatMap((channel) => {
+  const build = release?.[channel];
+
+  return build ? [{ channel, build, line: t.download[channel].replace("{version}", build.version) }] : [];
+});
+// The two desktop apps, each with the files of the release and of each build ahead of it.
 const apps = [
-  { key: "remote", words: t.download.apps.remote, files: buttons(release ?? undefined), nightly: buttons(release?.nightly) },
-  { key: "all-in-one", words: t.download.apps.allInOne, files: buttons(release?.allInOne), nightly: buttons(release?.nightly?.allInOne) },
+  { key: "remote", words: t.download.apps.remote, files: buttons(release ?? undefined), builds: prereleases.map(({ channel, build, line }) => ({ channel, line, files: buttons(build) })) },
+  { key: "all-in-one", words: t.download.apps.allInOne, files: buttons(release?.allInOne), builds: prereleases.map(({ channel, build, line }) => ({ channel, line, files: buttons(build.allInOne) })) },
 ];
 const versionLine = release ? t.download.version.replace("{version}", release.version).replace("{date}", released) : "";
-const nightlyLine = release?.nightly ? t.download.nightly.replace("{version}", release.nightly.version) : "";
 // Every screenshot is the same screen in every language, captured in the page's own (src/lib/slots.ts).
 const SHOTS = { calendar: shot(SLOTS.screens.calendar, locale), archive: shot(SLOTS.screens.archive, locale), phone: shot(SLOTS.screens.phone, locale) };
 const TOUR = slotShots("tour", locale);
@@ -292,7 +297,7 @@ const MARK_SIGN = { yes: "✓", partial: "", none: "–" } as const;
       <h2 id="download-title">{t.download.title}</h2>
       <p>{t.download.sub}</p>
       {release ? <p class="release-line">{versionLine}</p> : <p class="release-missing">{t.download.unavailable}</p>}
-      {nightlyLine !== "" && <p class="release-nightly">{nightlyLine}</p>}
+      {prereleases.map(({ channel, line }) => <p class="release-prerelease" data-channel={channel}>{line}</p>)}
       <p class="download-note">{t.download.note}</p>
       <a class="text-link" href={DESKTOP_DOC_URL}>{t.download.docs} →</a>
     </div>
@@ -319,21 +324,24 @@ const MARK_SIGN = { yes: "✓", partial: "", none: "–" } as const;
                 ))}
               </ul>
             )}
-            {app.nightly.length > 0 && (
-              <ul class="nightly-files" aria-label={nightlyLine}>
-                {app.nightly.map(({ file, label }) => (
-                  <li>
-                    <a class="file file-nightly" href={file.url} download>
-                      <span class="file-name">
-                        {label} · {nightlyLine}
-                      </span>
-                      <span class="file-meta">
-                        {file.file} · {megabytes(file.size)}
-                      </span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
+            {app.builds.map(
+              (build) =>
+                build.files.length > 0 && (
+                  <ul class="prerelease-files" data-channel={build.channel} aria-label={build.line}>
+                    {build.files.map(({ file, label }) => (
+                      <li>
+                        <a class="file file-prerelease" href={file.url} download>
+                          <span class="file-name">
+                            {label} · {build.line}
+                          </span>
+                          <span class="file-meta">
+                            {file.file} · {megabytes(file.size)}
+                          </span>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                ),
             )}
           </div>
         ))

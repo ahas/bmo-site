@@ -108,7 +108,7 @@ If you already have a BMO server, use the **BMO Remote Controller** app instead.
 
 - **Official builds come from GitHub releases.** The download page and the app's updates both read the [jake repository's releases](https://github.com/ahas/jake/releases), and an update is installed only if its signature checks out against the public key built into the app.
 - **They install quietly.** The app checks for a new version at startup and every six hours, downloads it in the background, and installs it with no window or prompt when you quit the app or when the app is idle. The tray menu of the restarted app shows "Updated · v(version)". If the install fails, the app restarts on its original version and tries again at the next check.
-- **Channel:** under "Desktop" in "Settings", choose the "Update channel" between "Stable (default)" and "Nightly". Nightly is a build made every day, so it may not work properly. Switching from nightly back to stable never moves you down to a version lower than the one already installed.
+- **Channel:** under "Desktop" in "Settings", choose the "Update channel" among "Stable (default)", "Preview" and "Nightly". Stable takes stable releases only; Preview also takes alphas, betas and release candidates; Nightly takes every build, the one made every day included. Preview and Nightly may not work properly. Switching to a channel that takes less never moves you down to a version lower than the one already installed: it stays until that channel publishes a higher one.
 - On Linux, the AppImage replaces itself; an app installed from the deb package is updated by hand through the package manager or the download page.
 
 ## Good to know

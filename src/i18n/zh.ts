@@ -158,6 +158,7 @@ export const zh: Messages = {
     title: "BMO 桌面版",
     sub: "桌面应用有两个。远程控制器打开你已经在运行的 BMO 服务器，All-in-One 则在你的电脑上运行 BMO 本身。",
     version: "版本 {version} · {date}",
+    preview: "预览版 {version}",
     nightly: "每夜版 {version}",
     apps: {
       remote: { name: "BMO 远程控制器", body: "在一个窗口中打开你的 BMO 服务器控制台，并把这台电脑接入为 BMO 可以工作的机器。需要一台 BMO 服务器。" },

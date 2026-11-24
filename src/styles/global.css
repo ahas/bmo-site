@@ -1093,13 +1093,13 @@ main:focus {
 }
 
 .release-line,
-.release-nightly {
+.release-prerelease {
   margin-top: 20px;
   font-family: var(--mono);
   font-size: 15px;
 }
 
-.release-nightly {
+.release-prerelease {
   margin-top: 6px;
   color: var(--muted);
 }

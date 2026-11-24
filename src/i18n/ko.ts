@@ -159,6 +159,7 @@ export const ko: Messages = {
     title: "BMO 데스크톱",
     sub: "데스크톱 앱은 두 가지입니다. 원격 제어기는 이미 돌리는 BMO 서버를 열고, All-in-One은 BMO 자체를 내 PC에서 돌립니다.",
     version: "버전 {version} · {date}",
+    preview: "프리뷰 {version}",
     nightly: "나이틀리 {version}",
     apps: {
       remote: { name: "BMO 원격 제어기", body: "내 BMO 서버의 콘솔을 창 하나로 열고, 이 PC를 BMO가 작업할 수 있는 기계로 연결합니다. BMO 서버가 있어야 합니다." },
