@@ -1,6 +1,6 @@
 ---
 title: "Getting started"
-description: "Install BMO by handing one line to a coding agent, and choose the right path among the three install kinds and the All-in-One desktop app."
+description: "Install BMO by handing one line to a coding agent, choose the right path among the three install kinds and the desktop apps, then get to your first conversation through an invite link and the getting started guide."
 order: 1
 shots: []
 ---
@@ -71,6 +71,28 @@ The agent tells you the console address, your sign-in name (it never says the pa
 
 Adding another repository after the install (for example `bmo-research`) is BMO's own job. BMO adds one only when you have approved that particular repository. New versions arrive through BMO's deployment process.
 
+## The getting started guide
+
+The first time you sign in, the console opens the **getting started guide** (`/start`). It asks, one step at a time, what needs deciding before BMO answers you, and ends with your first conversation with BMO. At the top of the screen are `{n}/{m}` and a progress bar, and you move between steps with "Back" and "Next".
+
+- **The platform administrator:** it opens only when the platform has no supply source it can use. The steps are "Platform supply" (a Claude sign-in on the server, a provider's API key, or "Local AI" at an OpenAI-compatible address), "Connection test", "Default model" (the provider and model of the default supervisor that answers in rooms), "Company name" and "First chat".
+- **Members:** of "Welcome", "Supply", "Provider", "Connect", "Connection test", "Machine" and "First chat", only the steps with something to do appear. If the organisation supplies everything, the supply steps are left out. People who must have their own Claude sign-in or key can't move on until it passes the test, and people for whom it is optional can skip with "Later".
+- **"Connection test"** runs once now on the source you chose and tells you "Connected" or why it doesn't work.
+- **"Machine"**, when your PC isn't linked yet, walks you through getting the desktop app and entering the pairing code.
+
+Unless it is a supply step you can't do without, you can close the guide at any time, and the steps you have done are saved. Open it again later with "Show getting started again" under "Account" in "Settings".
+
+## Joining by invitation
+
+In `team` and `operator` installs, you join through a link a head made with "Create invite link". Open the link and choose a name, a user ID and a password to create your account, then link your PC. Pick one of two tabs for how to link it.
+
+- **"Start with the desktop app":** download the installer for your operating system (installers for other operating systems are beside it), paste the address shown on screen when the app asks for the "BMO server address", then enter the "Pairing code" shown in the app window's title bar and click "Connect".
+- **"Start with the jake command":** copy the one-line install command for Linux and WSL or for Windows, and run it on your PC.
+
+Once the PC is linked, your account is ready, and your own BMO, your private room and the agents from the organisation's "Signup setup" are created. Signing in takes you straight into the getting started guide.
+
+**Only one agent attaches to a PC.** If you open the desktop app on a PC where a jake of the same name is already installed, the app doesn't start its built-in agent and tells you the installed jake is looking after this PC. "Switch to the built-in agent" takes the installed jake down with its own uninstaller and switches to the app's agent. The hub, too, refuses a second install under the same name.
+
 ## The All-in-One desktop app
 
 If you'd like BMO on your own PC straight away, without a coding agent, there is the **BMO All-in-One** app. It installs and runs the personal install (`personal`) on this PC and opens the console in the app's window. No separate server is needed.
@@ -78,9 +100,16 @@ If you'd like BMO on your own PC straight away, without a coding agent, there is
 - **Requirements:** Linux with 16 GB of memory and 60 GB of disk, or Windows with WSL 2. On Windows it runs inside a WSL 2 distribution named `BMO`.
 - **First run:** it shows what will be installed where and asks for your consent, then goes one screen at a time: checking the computer, preparing, installing the programs it needs, your inputs, and the install. Administrator rights are asked for only through the operating system's own prompt.
 - **While running:** the tray icon opens the console and shows its status. Quitting the app stops the BMO services too, and opening the app again starts them again.
-- **Updates:** the app updates itself through its own update feature, and BMO's repositories get new versions through BMO's own deployment, just as on a server.
+- **Updates:** BMO's repositories get new versions through BMO's own deployment, just as on a server. The app itself follows "Desktop app updates" below.
 
 If you already have a BMO server, use the **BMO Remote Controller** app instead. It opens your server's console in a window and joins this PC as a machine BMO can work on. Both apps are built in the [jake](https://github.com/ahas/jake) repository.
+
+### Desktop app updates
+
+- **Official builds come from GitHub releases.** The download page and the app's updates both read the [jake repository's releases](https://github.com/ahas/jake/releases), and an update is installed only if its signature checks out against the public key built into the app.
+- **They install quietly.** The app checks for a new version at startup and every six hours, downloads it in the background, and installs it with no window or prompt when you quit the app or when the app is idle. The tray menu of the restarted app shows "Updated · v(version)". If the install fails, the app restarts on its original version and tries again at the next check.
+- **Channel:** under "Desktop" in "Settings", choose the "Update channel" between "Stable (default)" and "Nightly". Nightly is a build made every day, so it may not work properly. Switching from nightly back to stable never moves you down to a version lower than the one already installed.
+- On Linux, the AppImage replaces itself; an app installed from the deb package is updated by hand through the package manager or the download page.
 
 ## Good to know
 

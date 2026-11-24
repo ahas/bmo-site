@@ -4,7 +4,7 @@ description: "How settings come down from the platform through the company and i
 order: 4
 shots:
   - name: org
-    alt: "The agents tab of the organisation screen: for personal, organisation and platform supply, a box to choose follow parent, allow sub-organisations or lock sub-organisations, and an on/off switch"
+    alt: "The agents tab of the organisation screen: a choice of the BMO personalisation right for the team and each person, the organisation instructions with how many come from above, and choices to follow the parent or allow sub-organisations"
 ---
 
 ## What the delegation chain is
@@ -68,9 +68,8 @@ Organisations and the platform also have a **supply policy**. The policy decides
 
 ### Your own "Supply" settings
 
-Your side is under "Supply" in "Settings".
+Pick "Me" on the organisation screen's "Supply" tab to see your side. Clicking "Open" in "Supply" under "Settings" also brings you here.
 
-- "Agent supply sources": shows whether each of the three sources is on for you. You can see who decided, but you can't change it here.
 - "Supply logins": add your Claude sign-ins and set their order. Click "Add supply login" to sign in in your browser, paste the code you receive into "Authorization code", and click "Finish sign-in".
 - "Supply keys": pick a key you have stored in your secrets by name and link it. The key's value never appears on this screen.
 - "Supply order": the order of the sources you use and whether each is on, plus a monthly cap on personal credits.
@@ -84,10 +83,13 @@ Payments are switched off. Credits only grow when an administrator or credit man
 |---|---|
 | "Organization instructions", "Persona" | The organisation screen's "Agents" tab |
 | "Signup setup", "Personal changes", "Manage repositories" | The organisation screen's "Agents" tab |
-| Offering apps and turning them on or off | The organisation screen's "Apps & tools" tab |
+| Offering apps, skills and MCP servers and turning them on or off | The organisation screen's "Apps, tools & skills" tab |
 | The document "Storage location" | The organisation screen's "Artifact storage" tab |
-| "BMO settings permission" | The organisation screen's "BMO" tab ("Allow", "Block", "Follow parent organization") |
-| Making personal apps, network and secret use, sharing scope | Platform and organisation settings |
+| "Default BMO", "BMO settings permission" | The organisation screen's "Agents" tab ("Allow", "Block", "Follow parent organization") |
+| Making personal apps, network and secret use, sharing scope | "Personal apps" on the organisation screen's "Apps, tools & skills" tab |
+| Mail servers | The organisation screen's "Mail servers" tab |
+| "Require two-step verification" | The organisation screen's "Security" tab |
+| "Read the platform memory", "Read the organisation memory" | "Reading" on the organisation screen's "Organization memory" tab |
 
 ## When a change takes effect
 

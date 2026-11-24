@@ -25,7 +25,8 @@
                 "사람마다 소속 단위가 하나 있고 같은 회사의 다른 단위에 겸직할 수 있습니다. 조직장과 대행은 자기 단위와 그 아래 모든 단위에 같은 권한을 가지며, 단위마다 사람을 묶은 그룹을 둘 수 있습니다.",
                 "위임 사슬은 설정이 플랫폼에서 회사와 각 조직 단위를 거쳐 사람에게 내려가는 길입니다. 고리마다 값과 함께 아래 고리가 바꿀 수 있는지를 허용, 잠금, 위를 따름 가운데 하나로 정합니다.",
                 "잠금은 그 아래 모든 고리를 묶되, 아래에서 정해 둔 값은 지우지 않고 보관했다가 잠금이 풀리면 그대로 되살립니다. 한 고리 안에서도 특정한 사람, 그룹, 단위에 따로 적용할 규칙을 둘 수 있습니다.",
-                "조직 화면은 조직 트리 하나로 이루어지며, 고른 노드의 설정마다 값이 어디서 왔는지(위를 따름 또는 직접 정함)와 위에서 건 잠금을 함께 보여 줍니다. 각 사람에게는 자신이 바꿀 수 있는 고리만 나타납니다."
+                "조직 화면은 조직 트리 하나로 이루어지며, 고른 노드의 설정마다 값이 어디서 왔는지(위를 따름 또는 직접 정함)와 위에서 건 잠금을 함께 보여 줍니다. 각 사람에게는 자신이 바꿀 수 있는 고리만 나타납니다.",
+                "조직 화면의 탭은 조직도, 사용자, 직책·종류, 초대, 에이전트, 앱·도구·스킬, 아티팩트 저장, 메일 서버, 비밀 보관함, 조직 기억, 권한, 공급, 보안입니다. 기본 BMO와 BMO 설정 권한은 에이전트 탭에, 플랜과 조직 공급 키는 공급 탭에 모였고, 「나」와 「플랫폼 전체」도 같은 탭으로 다룹니다."
               ]
             },
             {
@@ -38,13 +39,14 @@
               ]
             },
             {
-              "title": "앱과 개인 도구, 카탈로그",
+              "title": "앱과 개인 도구, 스토어",
               "items": [
                 "앱은 같은 키를 나누는 화면과 도구의 묶음이며, 제공과 켜짐 두 설정으로 플랫폼, 회사, 단위, 사람마다 켜고 끕니다. 조직장은 자기 단위 아래를 잠글 수 있고, 플랫폼 관리자는 앱을 한 번에 회수할 수 있습니다.",
                 "사람이 부탁하면 그 사람의 BMO가 PC에서 개인 앱을 만들고 빌드해 버전으로 보관합니다. 다음 턴부터 그 사람의 세션에서 바로 쓸 수 있고, 이전 버전 세 개를 남겨 되돌릴 수 있으며, 콘솔에 자기만의 화면을 붙일 수도 있습니다.",
                 "개인 도구는 bubblewrap 격리 안에서만 실행됩니다. 시스템 파일은 읽기 전용, 자기 데이터 폴더만 쓰기 가능하며, 홈 폴더와 토큰, 다른 도구의 폴더는 보이지 않습니다. bubblewrap이 없는 기기에서는 실행을 거부합니다.",
                 "네트워크와 비밀은 매니페스트의 permissions에 선언한 것만 받습니다. 주소는 IP가 아닌 호스트 이름으로만 적고 호출마다 열리는 프록시를 거쳐서만 나가며, 비밀은 그 호출 동안 격리 공간의 메모리에만 놓이고 출력에서는 가려집니다. 두 권한은 플랫폼이 회사별로 켜기 전까지 꺼져 있습니다.",
-                "만든 앱은 자기 팀, 자기 라인의 조직장, 회사 전체와 나눌 수 있습니다. 회사 카탈로그에는 빌드가 아닌 소스가 보관되어 받는 사람의 PC가 해시를 확인한 뒤 직접 빌드하고, 버전마다 자동 검토 보고서가 붙으며, 회사가 원하면 조직장 승인을 거쳐야 설치됩니다."
+                "만든 앱은 자기 팀, 자기 라인의 조직장, 회사 전체와 나눌 수 있습니다. 회사 스토어에는 빌드가 아닌 소스가 보관되어 받는 사람의 PC가 해시를 확인한 뒤 직접 빌드하고, 버전마다 자동 검토 보고서가 붙으며, 회사가 원하면 조직장 승인을 거쳐야 설치됩니다.",
+                "사이드바 시스템 서비스의 「스토어」에서 회사 사람들이 공유한 앱, 스킬, MCP 서버를 찾아 설치합니다. 스킬과 MCP 서버는 내가 붙인 에이전트만 쓰고, 이름과 설명, 검토 보고서는 읽는 사람의 언어로 번역해 보여 줍니다."
               ]
             },
             {
@@ -94,7 +96,8 @@
                 "첫 실행은 동의와 채팅 서비스 선택, 기기 점검, 필수 프로그램 설치, 입력값, 설치 진행을 한 화면씩 안내하고, 실패하면 멈춘 곳부터 다시 이어 갑니다. 입력한 값은 명령줄, 로그, 앱 기록 어디에도 남지 않습니다.",
                 "Linux에서는 메모리 16GB와 디스크 60GB가 필요합니다. Windows에서는 앱 전용 WSL 2 배포판 안에서 돌도록 만들어졌으며, 실제 Windows에서의 검증은 아직 남아 있습니다.",
                 "BMO 원격 제어기는 이미 운영 중인 내 BMO 서버의 콘솔을 창에 띄우고, 내장된 jake 에이전트로 이 PC를 BMO가 작업할 수 있는 기기로 연결합니다. 연결은 콘솔에서 코드를 확인해 승인하는 페어링으로 하며, 자격 증명은 운영체제의 자격 증명 저장소에만 둡니다.",
-                "두 앱 모두 트레이 아이콘과 콘솔이 직접 그리는 프레임 없는 창을 쓰고, 안정 채널과 나이틀리 채널에서 서명이 확인된 업데이트만 설치합니다. 설치 파일은 GitHub 릴리즈로 배포됩니다."
+                "두 앱 모두 트레이 아이콘과 콘솔이 직접 그리는 프레임 없는 창을 쓰고, 안정 채널과 나이틀리 채널에서 서명이 확인된 업데이트만 설치합니다. 설치 파일은 GitHub 릴리즈로 배포됩니다.",
+                "데스크톱 앱의 공식 빌드는 GitHub 릴리즈에서 업데이트를 받아, 앱을 끝내거나 아무 일도 하지 않을 때 창 없이 조용히 설치하고 트레이에 「업데이트됨」을 띄웁니다. 한 PC에는 에이전트 하나만 붙으며, 설치된 jake가 있으면 앱이 「내장 에이전트로 전환」을 제안합니다."
               ]
             },
             {
@@ -105,6 +108,32 @@
                 "재시작 규칙, 시작 순서, 타이머, 유닛별 로그, 상태 점검을 systemd처럼 처리하고, status 명령으로 유닛마다 상태와 재시작 횟수를 보여 줍니다.",
                 "설치 런북이 systemd가 있는지 확인해 없으면 감독자 경로로 설치를 이어 가며, systemd가 있는 기기에서는 그대로 systemd가 기본입니다.",
                 "메모리 상한처럼 control group이 있어야 하는 제한은 감독자에서 적용되지 않으며, 유닛 상태에 적용되지 않은 항목으로 표시됩니다."
+              ]
+            },
+            {
+              "title": "세션, 수면, 휴식",
+              "items": [
+                "콘솔의 방 메뉴, 내 에이전트, 에이전시 화면에서 감독관의 세션을 넘기거나 초기화합니다. 넘기기는 인계 메모를 남기고, 초기화는 아무것도 가져가지 않으며, 둘 다 대화 기록과 기억은 그대로 둡니다.",
+                "세션을 넘기기 전에 BMO는 잠들어 기억을 정리하고, 방에는 채팅 서비스로 보내지 않는 시스템 줄 하나가 남습니다.",
+                "감독관은 하루에 한 번 방 밖에서 잠들어 남은 에피소드를 정리하고, 같은 기억을 합치고, 끝난 일을 닫습니다. 주인의 개인 방에 지난밤 수면 결과가 한 줄로 남고, 수면 여부와 시각은 감독관 설정에서 정합니다.",
+                "플랫폼의 Claude 로그인이 한도에 걸리면 배포가 휴식에 들어가 방에 언제까지 쉬는지 알리고, 그동안 받은 말은 휴식이 풀린 뒤 답합니다. 관리자는 휴식을 직접 끝낼 수 있습니다."
+              ]
+            },
+            {
+              "title": "계정 보안",
+              "items": [
+                "로그인 화면의 비밀번호 찾기로 인증된 이메일에 30분짜리 일회용 재설정 링크를 받습니다. 관리자와 조직장은 비밀번호를 보지 않고 재설정 링크를 만들어 줍니다.",
+                "인증 앱의 2단계 인증과 복구 코드, 30일 기기 기억을 지원하고, 조직은 보안 탭에서 2단계 인증을 요구할 수 있습니다.",
+                "로그인한 기기와 로그인 기록을 보고 다른 기기를 로그아웃합니다. 실패가 이어지면 기다림과 잠금이 걸리고, 계정 잠금과 새 브라우저 로그인은 메일로 알립니다.",
+                "플랫폼은 관리자가 고른 메일 서버로 시스템 메일을 보내며, 서버 비밀번호는 비밀 보관함의 이름으로만 건넵니다."
+              ]
+            },
+            {
+              "title": "처음 시작",
+              "items": [
+                "처음 로그인하면 시작 안내가 공급, 연결 시험, 기기 연결을 거쳐 BMO와의 첫 대화까지 한 단계씩 안내합니다. 플랫폼 관리자는 공급원이 없을 때 서버의 Claude 로그인, API 키, 로컬 AI 주소 가운데 하나로 시작합니다.",
+                "초대 링크의 가입 페이지는 「데스크톱 앱으로 시작」과 「jake 명령으로 시작」 두 탭으로 PC를 연결합니다.",
+                "방 정보에서 호출 권한 탭이 빠졌습니다. 방의 구성원이면 누구나 자기 BMO를 부르고, 채팅 서비스는 방을 추가할 때 정해지며, 지원하는 방에서는 아바타 모드를 켭니다."
               ]
             },
             {
@@ -139,7 +168,8 @@
                 "Each person has one home unit and may hold concurrent posts in other units of the same company. Heads and acting heads hold the same authority over their own unit and every unit below it, and each unit can keep named groups of people.",
                 "The delegation chain is how a setting travels from the platform through the company and each organisation unit down to a person. At every link, a value is set together with whether the links below may change it: Allow, Lock or Follow parent.",
                 "A lock binds every link below it, yet the values set below are kept rather than erased and come back as they were once the lock is lifted. Within one link, separate rules can apply to a particular person, group or unit.",
-                "The organisation screen is a single organisation tree; for the node chosen it shows where each setting's value comes from (Follow parent or Set by you) and any lock above it. Each person sees only the links they may change."
+                "The organisation screen is a single organisation tree; for the node chosen it shows where each setting's value comes from (Follow parent or Set by you) and any lock above it. Each person sees only the links they may change.",
+                "The organisation screen's tabs are Organisation chart, Users, Roles & kinds, Invites, Agents, Apps, tools & skills, Artifact storage, Mail servers, Secret store, Org memory, Permissions, Supply and Security. The default BMO and the BMO personalisation right sit on Agents, plans and organisation supply keys on Supply, and Me and the whole platform are set on the same tabs."
               ]
             },
             {
@@ -152,13 +182,14 @@
               ]
             },
             {
-              "title": "Apps, personal tools and the catalogue",
+              "title": "Apps, personal tools and the store",
               "items": [
                 "An app is a screen and the tools sharing one key, switched on and off for the platform, a company, a unit or a person by two settings, Offer and on. Heads can lock an app for everything under their unit, and the platform administrator can recall an app in one step.",
                 "When a person asks, their BMO builds a personal app on their PC and keeps it in versions. It is usable in that person's sessions from their next turn, three earlier versions are kept for going back, and it can carry a console screen of its own.",
                 "Personal tools run only inside a bubblewrap confinement. System files are read-only, the tool's own data folder is the only place it writes, and the home folder, tokens and other tools' folders are not visible at all. On a machine without bubblewrap, the call is refused.",
                 "A tool gets only the network access and secrets its manifest declares under permissions. Addresses are written as host names, never IP addresses, and reached only through a proxy opened for each call; secrets live in the confinement's memory for that call alone and are masked in its output. Both stay off until the platform turns them on for a company.",
-                "A person can share an app with their team, the heads of their line or the whole company. The company catalogue keeps the source rather than a build, so each receiver's PC checks its hash and builds it itself; every version carries an automatic review report, and where the company asks for it a head must approve a version before anyone installs it."
+                "A person can share an app with their team, the heads of their line or the whole company. The company store keeps the source rather than a build, so each receiver's PC checks its hash and builds it itself; every version carries an automatic review report, and where the company asks for it a head must approve a version before anyone installs it.",
+                "The Store in the sidebar's system services finds and installs the apps, skills and MCP servers people of the company share. A skill or an MCP server reaches only the agents a person attaches it to, and names, descriptions and review reports are shown translated into the reader's language."
               ]
             },
             {
@@ -208,7 +239,8 @@
                 "The first run walks through consent and the choice of chat service, a machine check, installing prerequisites, inputs and the install itself one screen at a time, and resumes where it stopped after a failure. Values you enter never appear on a command line, in a log or in the app's own record.",
                 "On Linux it needs 16 GB of memory and 60 GB of disk. On Windows it is built to run inside a WSL 2 distribution of its own, which has yet to be verified on real Windows machines.",
                 "The BMO Remote Controller shows the console of the BMO server you already run in a window, and its built-in jake agent joins this PC as a machine BMO can work on. It connects by pairing, approved in the console against a code shown on both sides, and keeps its credential only in the operating system's credential store.",
-                "Both apps use a tray icon and a frameless window whose frame the console draws itself, and install only signature-verified updates from a stable or a nightly channel. Installers are distributed as GitHub releases."
+                "Both apps use a tray icon and a frameless window whose frame the console draws itself, and install only signature-verified updates from a stable or a nightly channel. Installers are distributed as GitHub releases.",
+                "Official desktop builds take their updates from GitHub releases and install them quietly, with no window, when the app quits or stands idle, then say \"Updated\" in the tray. One machine carries one agent: where an installed jake serves it, the app offers to switch to its built-in agent."
               ]
             },
             {
@@ -219,6 +251,32 @@
                 "It handles restart rules, start order, timers, per-unit logs and health checks the way systemd does, and its status command shows each unit's state and restart count.",
                 "The install runbook checks for systemd and continues down the supervisor's road where there is none; on a machine with systemd, systemd stays the default.",
                 "Limits that need control groups, such as memory caps, are not applied under the supervisor, and each unit's state lists them as not applied."
+              ]
+            },
+            {
+              "title": "Sessions, sleep and rest",
+              "items": [
+                "A supervisor's session is handed over or reset from the room's menu, My agents or the agency screen. A handover leaves a handoff note, a reset carries nothing over, and both keep the conversation's record and the memories.",
+                "Before its session is handed over BMO sleeps to tidy its memories, and the room keeps one system line that goes to no chat service.",
+                "Once a day each supervisor sleeps outside every room, consolidating its pending episodes, merging duplicate memories and closing what has ended. The night's sleep is told in one line in the owner's private room, and whether and when it sleeps is set in the supervisor's settings.",
+                "When the platform's Claude logins reach their limit the deployment rests, tells the rooms until when, and answers the words held meanwhile once the rest lifts. The administrator can end a rest by hand."
+              ]
+            },
+            {
+              "title": "Account security",
+              "items": [
+                "Forgot your password? on the sign-in screen mails a one-use reset link, good for 30 minutes, to a verified email. The administrator and a person's heads make a reset link without ever seeing the password.",
+                "Two-step verification with an authenticator app, recovery codes and a device remembered for 30 days; an organisation can require it on its Security tab.",
+                "Signed-in devices and the sign-in history are listed, and other devices are signed out from there. Repeated failures bring waits and a lock, and a locked account or a new browser is told by mail.",
+                "The platform sends system mail through the mail server the administrator chooses, the server's password handed over only by its name in the secret store."
+              ]
+            },
+            {
+              "title": "Getting started",
+              "items": [
+                "At the first sign-in, Getting started leads step by step through supply, a connection test and connecting the PC to the first words with BMO. With no supply source the administrator starts from a Claude login on the server, an API key or a local AI address.",
+                "The join page of an invitation connects the PC through two tabs, Start with the desktop app and Start with the jake command.",
+                "Room information no longer has a callers tab: every member of a room calls their own BMO, a room's chat service is fixed as it is added, and avatar mode is switched on where the service offers it."
               ]
             },
             {
@@ -253,7 +311,8 @@
                 "一人ひとりに所属単位が一つあり、同じ会社の別の単位を兼務できます。組織長と代行は自分の単位とその下のすべての単位に同じ権限を持ち、単位ごとに人をまとめたグループを置けます。",
                 "委任チェーンは、設定がプラットフォームから会社、各組織単位を経て一人ひとりへ届く道筋です。リンクごとに値と、下のリンクが変更できるかどうかを、許可、ロック、上位に従うのいずれかで決めます。",
                 "ロックはその下のすべてのリンクを縛りますが、下で決めていた値は消さずに保管し、ロックが外れるとそのまま元に戻します。一つのリンクの中でも、特定の人、グループ、単位にだけ適用するルールを置けます。",
-                "組織画面は一つの組織ツリーでできており、選んだノードの設定ごとに値の出どころ（上位に従うか自分で設定か）と上でかかったロックを合わせて示します。各人には自分が変更できるリンクだけが表示されます。"
+                "組織画面は一つの組織ツリーでできており、選んだノードの設定ごとに値の出どころ（上位に従うか自分で設定か）と上でかかったロックを合わせて示します。各人には自分が変更できるリンクだけが表示されます。",
+                "組織画面のタブは組織図、ユーザー、役職・種類、招待、エージェント、アプリ・ツール・スキル、アーティファクト保存、メールサーバー、シークレット保管庫、組織の記憶、権限、供給、セキュリティです。既定の BMO と BMO 設定権限はエージェントタブに、プランと組織供給キーは供給タブにまとまり、「自分」と「プラットフォーム全体」も同じタブで設定します。"
               ]
             },
             {
@@ -266,13 +325,14 @@
               ]
             },
             {
-              "title": "アプリと個人ツール、カタログ",
+              "title": "アプリと個人ツール、ストア",
               "items": [
                 "アプリは同じキーを共有する画面とツールのまとまりで、提供とオンの二つの設定により、プラットフォーム、会社、単位、個人ごとにオンとオフを切り替えます。組織長は自分の単位の下をロックでき、プラットフォーム管理者はアプリを一度に回収できます。",
                 "頼まれると、その人のBMOがPC上で個人アプリを作ってビルドし、バージョンとして保管します。次のターンからその人のセッションですぐに使え、以前のバージョンを三つ残して戻すことができ、コンソールに専用の画面を付けることもできます。",
                 "個人ツールはbubblewrapの隔離の中でしか実行されません。システムファイルは読み取り専用、書き込めるのは自分のデータフォルダーだけで、ホームフォルダーやトークン、ほかのツールのフォルダーは見えません。bubblewrapのない機器では実行を拒否します。",
                 "ネットワークとシークレットは、マニフェストのpermissionsで宣言したものだけを受け取ります。アドレスはIPではなくホスト名だけで書き、呼び出しごとに開くプロキシを通してのみ外へ出ます。シークレットはその呼び出しの間だけ隔離空間のメモリーに置かれ、出力では伏せられます。どちらの権限も、プラットフォームが会社ごとにオンにするまではオフです。",
-                "作ったアプリは自分のチーム、自分のラインの組織長、会社全体と共有できます。会社のカタログにはビルドではなくソースが保管され、受け取る側のPCがハッシュを確かめてから自分でビルドします。バージョンごとに自動レビューの報告が付き、会社が望めば組織長の承認を経てからインストールされます。"
+                "作ったアプリは自分のチーム、自分のラインの組織長、会社全体と共有できます。会社のストアにはビルドではなくソースが保管され、受け取る側のPCがハッシュを確かめてから自分でビルドします。バージョンごとに自動レビューの報告が付き、会社が望めば組織長の承認を経てからインストールされます。",
+                "サイドバーのシステムサービスにある「ストア」で、会社の人が共有したアプリ、スキル、MCP サーバーを探してインストールします。スキルと MCP サーバーは自分が付けたエージェントだけが使い、名前と説明、レビュー報告は読む人の言語に翻訳して表示します。"
               ]
             },
             {
@@ -322,7 +382,8 @@
                 "初回起動では、同意とチャットサービスの選択、機器のチェック、必要なプログラムのインストール、入力値、インストールの進行を一画面ずつ案内し、失敗しても止まったところから再開します。入力した値は、コマンドライン、ログ、アプリの記録のどこにも残りません。",
                 "Linuxではメモリー16GBとディスク60GBが必要です。Windowsではアプリ専用のWSL 2ディストリビューションの中で動くように作られていますが、実際のWindowsでの検証はまだ残っています。",
                 "BMOリモートコントローラーは、すでに運用している自分のBMOサーバーのコンソールをウィンドウに表示し、内蔵のjakeエージェントでこのPCをBMOが作業できる機器としてつなぎます。接続はコンソールでコードを確かめて承認するペアリングで行い、認証情報はOSの資格情報ストアにだけ保管します。",
-                "どちらのアプリもトレイアイコンと、コンソール自身が枠を描くフレームレスウィンドウを使い、安定版とナイトリーのチャンネルから署名が確認された更新だけをインストールします。インストーラーはGitHubのリリースで配布されます。"
+                "どちらのアプリもトレイアイコンと、コンソール自身が枠を描くフレームレスウィンドウを使い、安定版とナイトリーのチャンネルから署名が確認された更新だけをインストールします。インストーラーはGitHubのリリースで配布されます。",
+                "デスクトップアプリの公式ビルドは GitHub のリリースから更新を受け取り、アプリの終了時や何もしていないときにウィンドウなしで静かにインストールし、トレイに「アップデート済み」を表示します。1台の PC につなぐエージェントは一つだけで、jake がインストール済みならアプリが内蔵エージェントへの切り替えを提案します。"
               ]
             },
             {
@@ -333,6 +394,32 @@
                 "再起動のルール、起動順序、タイマー、ユニットごとのログ、ヘルスチェックをsystemdと同じように扱い、statusコマンドでユニットごとの状態と再起動回数を示します。",
                 "インストール手順書がsystemdの有無を確かめ、なければ監督者の道筋でインストールを続けます。systemdのある機器では、そのままsystemdが既定です。",
                 "メモリー上限のようにcontrol groupを必要とする制限は監督者では適用されず、ユニットの状態に未適用の項目として表示されます。"
+              ]
+            },
+            {
+              "title": "セッション、睡眠、休憩",
+              "items": [
+                "コンソールのルームメニュー、マイエージェント、エージェンシー画面から監督者のセッションを引き継いだり初期化したりします。引き継ぎは引き継ぎメモを残し、初期化は何も持ち越さず、どちらも会話の記録と記憶はそのまま残します。",
+                "セッションを引き継ぐ前に BMO は眠って記憶を整理し、ルームにはチャットサービスへ送らないシステム行が一つ残ります。",
+                "監督者は一日に一度ルームの外で眠り、残ったエピソードを整理し、同じ記憶をまとめ、終わったことを閉じます。オーナーの個人ルームに昨夜の睡眠の結果が一行で残り、眠るかどうかと時刻は監督者の設定で決めます。",
+                "プラットフォームの Claude ログインが上限に達するとデプロイ全体が休憩に入り、いつまで休むかをルームに知らせ、その間に受けた言葉は休憩が明けてから答えます。管理者は休憩を手動で終えられます。"
+              ]
+            },
+            {
+              "title": "アカウントのセキュリティ",
+              "items": [
+                "ログイン画面の「パスワードをお忘れですか?」から、認証済みのメールに30分有効の使い切りリセットリンクが届きます。管理者と組織長はパスワードを見ることなくリセットリンクを作れます。",
+                "認証アプリによる2段階認証、リカバリーコード、30日間の端末記憶に対応し、組織はセキュリティタブで2段階認証を必須にできます。",
+                "ログイン中の端末とログイン履歴を確認し、ほかの端末をログアウトできます。失敗が続くと待ち時間とロックがかかり、アカウントのロックと新しいブラウザーからのログインはメールで知らせます。",
+                "プラットフォームは管理者が選んだメールサーバーでシステムメールを送り、サーバーのパスワードはシークレット保管庫の名前でだけ渡します。"
+              ]
+            },
+            {
+              "title": "はじめに",
+              "items": [
+                "初めてログインすると「はじめに」が供給、接続テスト、PC の接続を経て BMO との最初の会話まで一歩ずつ案内します。供給元がない場合、プラットフォーム管理者はサーバーの Claude ログイン、API キー、ローカル AI のアドレスのいずれかから始めます。",
+                "招待リンクの参加ページは「デスクトップアプリで始める」と「jake コマンドで始める」の二つのタブで PC を接続します。",
+                "ルーム情報から呼び出し権限のタブがなくなりました。ルームのメンバーなら誰でも自分の BMO を呼べ、チャットサービスはルームを追加するときに決まり、対応するルームではアバターモードを有効にできます。"
               ]
             },
             {
@@ -367,7 +454,8 @@
                 "每个人有一个所属单元，并可在同一公司的其他单元兼职。负责人及其代理对自己的单元和其下所有单元拥有相同的权限，每个单元还可以建立人员分组。",
                 "委托链是设置从平台经由公司和各级组织单元传到个人的路径。每一环在设定值的同时，用允许、锁定或沿用上级三者之一决定下级能否更改。",
                 "锁定会约束其下的所有环节，但下级原先设定的值不会被删除，而是保存起来，解除锁定后原样恢复。在同一环节内，还可以为特定的人、分组或单元单独设置规则。",
-                "组织页面由一棵组织树构成，对选中的节点逐项显示每个设置的值来自哪里（沿用上级或自己设定）以及上级施加的锁定。每个人只能看到自己有权更改的环节。"
+                "组织页面由一棵组织树构成，对选中的节点逐项显示每个设置的值来自哪里（沿用上级或自己设定）以及上级施加的锁定。每个人只能看到自己有权更改的环节。",
+                "组织页面的标签页为组织架构、用户、职务·类型、邀请、智能体、应用·工具·技能、制品存储、邮件服务器、机密库、组织记忆、权限、供给和安全。默认 BMO 与 BMO 设置权限归入智能体标签页，套餐与组织供给密钥归入供给标签页，「我」和「整个平台」也在同样的标签页中设置。"
               ]
             },
             {
@@ -380,13 +468,14 @@
               ]
             },
             {
-              "title": "应用、个人工具与目录",
+              "title": "应用、个人工具与应用商店",
               "items": [
                 "应用是共享同一个键的页面与工具的组合，通过提供和开启两项设置，可以按平台、公司、单元和个人分别开关。负责人可以锁定自己单元以下的设置，平台管理员可以一次性收回应用。",
                 "只要提出请求，个人的 BMO 就会在其 PC 上制作并构建个人应用，按版本保存。从下一轮起即可在本人的会话中使用，保留三个旧版本以便回退，还可以在控制台中附上专属页面。",
                 "个人工具只在 bubblewrap 隔离环境中运行。系统文件只读，只有自己的数据文件夹可写，主目录、令牌和其他工具的文件夹都不可见。没有 bubblewrap 的设备会拒绝运行。",
                 "网络和密钥只按清单 permissions 中声明的内容提供。地址只能写主机名而不能写 IP，并且只能经由每次调用单独开启的代理访问外部；密钥仅在该次调用期间存放于隔离环境的内存中，并在输出中被遮蔽。这两项权限在平台按公司开启之前一直处于关闭状态。",
-                "做好的应用可以分享给自己的团队、自己所在线上的负责人或整个公司。公司目录保存的是源码而不是构建产物，接收方的 PC 先校验哈希再自行构建；每个版本都附有自动审查报告，公司需要时还须经负责人批准后才能安装。"
+                "做好的应用可以分享给自己的团队、自己所在线上的负责人或整个公司。公司应用商店保存的是源码而不是构建产物，接收方的 PC 先校验哈希再自行构建；每个版本都附有自动审查报告，公司需要时还须经负责人批准后才能安装。",
+                "侧边栏系统服务中的「应用商店」用于查找并安装公司成员分享的应用、技能和 MCP 服务器。技能和 MCP 服务器只供自己挂载的智能体使用，名称、说明和审查报告会翻译成读者的语言显示。"
               ]
             },
             {
@@ -436,7 +525,8 @@
                 "首次运行会逐屏引导完成同意与聊天服务选择、设备检查、必备程序安装、输入信息和安装过程，失败后会从中断处继续。输入的值不会留在命令行、日志或应用记录中的任何地方。",
                 "在 Linux 上需要 16 GB 内存和 60 GB 磁盘。在 Windows 上，它被设计为在应用专属的 WSL 2 发行版中运行，但尚未在真实的 Windows 上完成验证。",
                 "BMO 远程控制器会在窗口中显示你已在运行的 BMO 服务器的控制台，并通过内置的 jake 代理把这台 PC 接入为 BMO 可以工作的设备。连接通过配对完成，需在控制台核对两边显示的代码后批准，凭据只保存在操作系统的凭据存储中。",
-                "两款应用都使用托盘图标和由控制台自行绘制边框的无边框窗口，只从稳定版或每夜版通道安装签名验证通过的更新。安装程序通过 GitHub Releases 发布。"
+                "两款应用都使用托盘图标和由控制台自行绘制边框的无边框窗口，只从稳定版或每夜版通道安装签名验证通过的更新。安装程序通过 GitHub Releases 发布。",
+                "桌面应用的官方构建从 GitHub Releases 获取更新，在退出应用或空闲时无窗口地静默安装，并在托盘显示「已更新」。一台电脑只接入一个智能体：已安装 jake 时，应用会提示切换到内置智能体。"
               ]
             },
             {
@@ -447,6 +537,32 @@
                 "它像 systemd 一样处理重启规则、启动顺序、定时器、按单元划分的日志和健康检查，并可通过 status 命令查看每个单元的状态和重启次数。",
                 "安装手册会检查是否存在 systemd，没有时改走监督者的路径继续安装；在有 systemd 的设备上，仍以 systemd 为默认。",
                 "内存上限这类需要 control group 的限制在监督者下不会生效，并会在单元状态中标为未应用的项目。"
+              ]
+            },
+            {
+              "title": "会话、睡眠与休息",
+              "items": [
+                "可以在控制台的聊天室菜单、我的智能体和代理中心页面中交接或重置主管的会话。交接会留下交接备忘，重置不带走任何内容，两者都保留对话记录和记忆。",
+                "交接会话前 BMO 会先睡一觉整理记忆，聊天室里留下一条不发往聊天服务的系统消息。",
+                "主管每天在所有聊天室之外睡一次，整理待处理的事件记录、合并重复的记忆、关闭已结束的事项。昨夜睡眠的结果会以一行记录留在所有者的私人聊天室，是否睡眠及时间在主管设置中决定。",
+                "平台的 Claude 登录达到用量上限时，整个部署进入休息，告知各聊天室休息到何时，期间收到的消息在休息结束后再回答。管理员可以手动结束休息。"
+              ]
+            },
+            {
+              "title": "账号安全",
+              "items": [
+                "在登录页面点击「忘记密码？」，可向已验证的邮箱收到 30 分钟内有效的一次性重置链接。管理员和负责人可以在看不到密码的情况下生成重置链接。",
+                "支持验证器应用的两步验证、恢复码和 30 天记住设备，组织可以在安全标签页中要求两步验证。",
+                "可以查看已登录设备和登录记录，并从中退出其他设备。连续失败会触发等待和锁定，账号被锁定或在新浏览器登录时会邮件通知。",
+                "平台通过管理员选定的邮件服务器发送系统邮件，服务器密码只以机密库中的名称传递。"
+              ]
+            },
+            {
+              "title": "入门",
+              "items": [
+                "首次登录时，「入门指南」会依次引导完成供给、连接测试和电脑连接，直到与 BMO 的第一次对话。没有可用供给时，平台管理员可从服务器上的 Claude 登录、API 密钥或本地 AI 地址之一开始。",
+                "邀请链接的加入页面通过「使用桌面应用开始」和「使用 jake 命令开始」两个标签页连接电脑。",
+                "聊天室信息中去掉了呼叫权限标签页：聊天室成员都可以呼叫自己的 BMO，聊天服务在添加聊天室时确定，支持的聊天室可以开启代答模式。"
               ]
             },
             {

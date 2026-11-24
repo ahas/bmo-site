@@ -1,6 +1,6 @@
 ---
 title: "A tour of the console"
-description: "A walk through the screens you meet first in the web console: the sidebar, rooms, the TODO panel and the settings window."
+description: "A walk through the screens you meet first in the web console: the sidebar, rooms and room info, system lines, the TODO panel and the settings window."
 order: 2
 shots:
   - name: console-room
@@ -23,9 +23,9 @@ The platform administrator's home screen shows at a glance what rooms and agents
 
 - **"Search":** the search at the very top opens from anywhere with Ctrl+K (⌘K on a Mac). It finds screens and their tabs, rooms and agents, and people in your organisation by name.
 - **Screen groups:** the screens are split into three groups.
-  - "System services": the admin screens that look after the deployment and the screens heads of organisations use. "Organization", "Platform settings", "Agency", "Brain" and others are here.
-  - "Applications": screens for everyday use, such as "Notes", "Calendar", "Artifacts" and "App catalogue".
-  - "My apps": the screens of personal apps your BMO made for you.
+  - "System services": the admin screens that look after the deployment, the screens heads of organisations use, and the "Store" everyone opens. "Organization", "Platform settings", "Agency", "Brain" and others are here, and everyone with an account sees at least the "Store" in this group.
+  - "Applications": screens for everyday use, such as "Notes", "Calendar", "Artifacts" and "Mail".
+  - "My apps": the screens of personal apps your BMO made for you. If an app's name isn't written in your language, it is shown translated, with the original name in a tooltip.
 - **"Rooms":** your list of rooms. Pinned rooms stay at the top, and when a new message arrives the room moves up and shows an unread count.
 - **"Agents":** the list of supervisors, roles and repositories, shown to the platform administrator.
 - **The user menu at the bottom:** click your name for "Settings", the desktop app download, the display mode (light, dark or system) and "Sign out".
@@ -38,12 +38,24 @@ Rooms are where BMO and people talk.
 
 - **Your private room with BMO:** a conversation for just you and your BMO. Write in the input box at the bottom ("Talk to BMO") and BMO answers. You can attach files with the paperclip button too.
 - **Group rooms:** create one from "New chat" beside the rooms heading in the sidebar: choose "Create console room" and enter a "Room name". It is a room used only inside the console, with no chat service, and the BMO of the person who created it answers.
-- **Adding members:** the person who opened the room, or their head of organisation, can bring in people or whole organisations at once with "Add members" on the "Members" tab of "Room info". With "Allow calling" on, the people who join can call their own BMO into the room by name.
-- **"Call permissions":** a tab of "Room info" that shows, and changes, who may call their own BMO in this room.
+- **Adding members:** the person who opened the room, or their head of organisation, can bring in people or whole organisations at once with "Add members" on the "Members" tab of "Room info".
+- **Any member of the room can call their own BMO:** people who joined from the console, and members of the chat service linked to their account alike, call their own BMO into the room by name. There is no separate allow list: the ability comes when you join and goes when you leave.
 - **"Talk to my BMO privately":** in a group room's menu. The group room stays as it is while a panel opens beside it for a one-to-one talk with your BMO. Nothing you say there goes out to the group room.
 - **"Find in conversation" and pinning:** the room's menu lets you search the conversation, and pin or unpin the room.
+- **"Hand over session" and "Reset session":** if you may manage the BMO answering in that room, the room's menu has both. The “Sessions” chapter covers them in detail.
 
 Telegram and Discord rooms you add to the console appear in the same room list. Your private room with BMO is always in the list.
+
+### Room info
+
+Click the room's name at the top of the room, and "Room info" opens beside it on a wide screen, or from the bottom on a phone. It has the "Members", "Media", "Files", "Links", "Music", "Voice" and "Situation" tabs; the platform administrator also has "Session info", and a room you may change also has "Chat service" and "Tone".
+
+- **"Chat service":** only shows the chat service that carries this room, without changing it. A room's chat service is set when the room is added or created, and stays as it is.
+- **"Avatar mode":** a switch that appears only in added rooms whose chat service supports it. On means "In this room, BMO answers for you as your account"; off means "Only records, and doesn't answer".
+
+### System lines
+
+Notices that are nobody's words, from no agent, appear not as speech bubbles but as one faint centred line. With no picture and no name, they don't read as something BMO said. Notices when a service stops for a deployment or restart, people joining and leaving, a session handed over or reset, and a rest beginning all appear this way. Their wording comes from the console's language pack, so you read them in your own language.
 
 ## The TODO panel
 
@@ -55,21 +67,19 @@ When you hand BMO a piece of work, such as "fix this bug", BMO files it as a TOD
 
 | Section | What it does |
 |---|---|
-| "Account" | Sign-in details and your profile (name, title and so on), "My information shared with the organization" and "Show my presence" |
-| "My BMO" | Your BMO's name, call names, persona and profile picture. Shown only to people their organisation allows |
-| "My agents" | The agents your organisation gave you, what you have added or changed, and "My instructions" |
+| "Account" | Sign-in details and your profile (name, title and so on), "My information shared with the organization", "Show my presence", "Show getting started again", and "Security" (email verification, two-step verification, signed-in devices, sign-in history) |
+| "My agents", "Supply", "My apps, tools & skills" | Doors that open the organisation screen's "Agents", "Supply" and "Apps, tools & skills" tabs with "Me" picked |
 | "Machine" | The machines linked to your account and their status, and "Disconnect device" |
-| "Desktop" | App settings, shown only when the console is opened inside the desktop app |
+| "Desktop" | App settings and the "Update channel", shown only when the console is opened inside the desktop app |
 | "Secrets" | Where you leave API keys or passwords without putting them in a conversation |
-| "Supply" | What your agents run on, and who pays for it |
-| "My apps & tools", "My personal apps" | Turning apps on and off, and the apps BMO made for you |
+| "My personal apps", "My skills" | The apps and MCP servers BMO made for you, and the skills you made or installed from the store |
 | "Theme", "Rooms" | Language, display mode, auto-translate, theme and room colours |
 
 The platform administrator also has "Notifications" and "Voice briefing".
 
 ### My BMO
 
-In "My BMO" you can change the name, the "Call names" and the "Persona". Under each line it says whether the value is "Set by you" or "Set by company". Turning off "Use the persona" keeps BMO's name and picture but drops the instructions about its tone and character. "Reset" clears the name, call names, picture and persona you set yourself and goes back to the company's settings.
+Your BMO is under "My BMO" at the very top when you pick "Me" on the organisation screen's "Agents" tab. It is shown only to people their organisation allows. There you can change the name, the "Call names" and the "Persona". Under each line it says whether the value is "Set by you" or "Set by company". Turning off "Use the persona" keeps BMO's name and picture but drops the instructions about its tone and character. "Reset" clears the name, call names, picture and persona you set yourself and goes back to the company's settings.
 
 ## Good to know
 

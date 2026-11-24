@@ -13,7 +13,7 @@ The brain is one agent's long-term memory. Apart from the conversation itself, B
 
 - **Every agent has its own brain.** Even two agents on the same account don't see each other's memories, and another account's brain is even further out of reach.
 - **Versions are kept, never deleted.** Editing a memory creates a new version, and a memory that no longer holds is closed and hidden, never deleted. You can read who changed what and when through its versions.
-- **Nothing is forgotten because of age.** A memory doesn't fade for being old or unused. It ends only when its end condition is met, when it is corrected, or when a person ends it.
+- **Nothing is forgotten because of age.** A memory doesn't disappear for being old or unused. It ends only when its end condition is met, when it is corrected, or when a person ends it. The one exception: "Hearsay" left unused for a long time only ranks a little lower when memories are recalled, and comes straight back once it is used.
 
 ## What it remembers
 
@@ -40,6 +40,10 @@ BMO decides what to remember as it reads the conversation, on the spot.
 - **Memories are stored in English.** Whatever language was spoken in the room, the memory itself is written in English.
 - **What is said in a room stays as that room's memory.** BMO doesn't bring it up carelessly in other rooms.
 
+### Tidying up and sleep
+
+Episodes aren't left as they are; they are tidied into facts. Tidying happens at only three times: when the importance of the episodes piled up reaches a set amount, when a session is folded or handed over, and at a once-a-day **sleep**. Sleep is a run BMO does by itself outside any room: it tidies all remaining episodes, merges memories that say the same thing, and closes finished promises and to-dos. When sleep ends, a line in the owner's private room says what it learned, merged and ended. The details are in the “Sessions” chapter's “Nightly sleep” section.
+
 ### How it recalls during a conversation
 
 BMO doesn't read every memory on every turn. It picks the memories relevant to the conversation at hand and receives them as a short bundle. If a memory says "when it is needed" and "when it ends", it comes up when that situation arrives and drops away when the ending situation comes.
@@ -64,7 +68,7 @@ This is under "Account" in "Settings". It shows what the memories of your organi
 
 ### The "Organization memory" tab
 
-Heads, and people given write permission, add and edit the organisation's memories on the "Organization memory" tab of the organisation screen. What members leave doesn't apply at once: it gathers under "Suggestions" and becomes fact once a head clicks "Accept". Memories managed by other services can't be edited here; the tab only shows where they came from.
+Heads, and people given write permission, add and edit the organisation's memories on the "Organization memory" tab of the organisation screen. Org memory is written only on this tab; the "Brain" screen only reads it. What members leave doesn't apply at once: it gathers under "Suggestions" and becomes fact once a head clicks "Accept". Memories managed by other services can't be edited here; the tab only shows where they came from.
 
 ### The "Brain" screen
 
@@ -77,7 +81,7 @@ The platform administrator sees every brain under "Brain" in "System services" i
 - Choose "Teach" in "Add memory or layer", and you are shown similar memories so you can decide whether yours is a duplicate, an addition, a contradiction or something new, and teach it accordingly.
 - "Translate" lets you read memories in your own language. Text written in Korean is shown translated into English before it is saved, for you to confirm.
 
-Only the platform administrator writes global memory. Candidates are picked from the tips and knowledge many BMOs have learned, and the administrator goes through them one by one in "Review", raising each with "Make global", leaving it in its original brain, or discarding it.
+Only the platform administrator writes global memory. Candidates are picked from the tips and knowledge many BMOs have learned, and the administrator goes through them one by one in "Review" on the "Organization memory" tab with "Whole platform" picked on the organisation screen, raising each with "Raise to the platform", leaving it in its original brain, or discarding it.
 
 ## Good to know
 
