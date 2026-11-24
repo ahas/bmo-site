@@ -1,0 +1,47 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import { localePaths, messagesFor } from "../../../i18n";
+import { DOCS } from "../../../i18n/docs";
+import { chapters } from "../../../lib/guide";
+
+import type { Locale } from "../../../i18n";
+
+// The guidebook's front page: its chapters in order, each with the one sentence that says what it covers.
+export function getStaticPaths() {
+  return localePaths();
+}
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = messagesFor(locale);
+const words = DOCS[locale].guide;
+const list = await chapters(locale);
+---
+
+<Layout locale={locale} path="guide/" title={`${words.title} — BMO`} description={words.meta}>
+  <section class="section docs">
+    <div class="container docs-narrow">
+      <header class="docs-head">
+        <p class="eyebrow">BMO</p>
+        <h1 id="guide-title">{words.title}</h1>
+        <p class="docs-sub">{words.sub}</p>
+      </header>
+      <h2 class="docs-h2" id="guide-chapters">{words.chapters}</h2>
+      <ol class="guide-chapters" aria-labelledby="guide-chapters">
+        {
+          list.map((chapter) => (
+            <li>
+              <a href={`${t.path}guide/${chapter.slug}/`}>
+                <span class="guide-chapter-title">{chapter.data.title}</span>
+                <span class="guide-chapter-desc">{chapter.data.description}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+</Layout>

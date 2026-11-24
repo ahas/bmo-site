@@ -76,3 +76,8 @@ export const NEW_SHOTS: Record<Capture, { key: NewKey; shot: Themed }[]> = {
     { key: "note", shot: themed("note", "ko") },
   ],
 };
+
+/** A screen's captures in a language by the name of its files, or null where that language has no capture of it. */
+export function shotByName(name: string, capture: Capture): Themed | null {
+  return FILES[`../assets/shots/${name}-${capture}-dark.webp`] && FILES[`../assets/shots/${name}-${capture}-light.webp`] ? themed(name, capture) : null;
+}

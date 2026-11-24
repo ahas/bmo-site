@@ -29,3 +29,11 @@ export function messagesFor(locale: Locale): Messages {
 export function captureLocale(locale: Locale): "en" | "ko" {
   return locale === "ko" ? "ko" : "en";
 }
+
+/**
+ * Where a page that stands in every language is built: English at the root and every other language under its code,
+ * the way the home page stands. A page under src/pages/[...locale]/ takes these as its static paths.
+ */
+export function localePaths(): { params: { locale: string | undefined }; props: { locale: Locale } }[] {
+  return LOCALES.map(({ code }) => ({ params: { locale: code === "en" ? undefined : code }, props: { locale: code } }));
+}

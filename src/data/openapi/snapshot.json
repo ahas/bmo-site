@@ -1,0 +1,134 @@
+{
+  "units": [
+    {
+      "name": "bmo-receiver",
+      "commit": "a8e2224e6e34eeb744a0ef64972d81612a61fe0b",
+      "operations": 115
+    },
+    {
+      "name": "bmo-gate",
+      "commit": "bc62c422419defc9b92e5272a8327639ede5d545",
+      "operations": 23
+    },
+    {
+      "name": "bmo-agency",
+      "commit": "1fe37830a4400a1580f7165d3b89ad1020f29089",
+      "operations": 199
+    },
+    {
+      "name": "bmo-brain",
+      "commit": "1f297331ab12d992395291329085190cc61345bf",
+      "operations": 43
+    },
+    {
+      "name": "bmo-pocket",
+      "commit": "c5c1227b4e32c72b3c0af00d45f7f77eb2bfe26c",
+      "operations": 20
+    },
+    {
+      "name": "bmo-web",
+      "commit": "a94e57a216898c29bb61496b3c06bc41447cb360",
+      "operations": 148
+    },
+    {
+      "name": "bmo-telegram",
+      "commit": "19460dff0fc3a7371614e2e5cff9533149d58e10",
+      "operations": 15
+    },
+    {
+      "name": "bmo-discord",
+      "commit": "a729f3fbaccb8deca96cb89273095696a73d2da2",
+      "operations": 10
+    },
+    {
+      "name": "bmo-voice",
+      "commit": "3d6a33816742deb73fa8f163a74d3764c18b7d8c",
+      "operations": 18
+    },
+    {
+      "name": "bmo-job",
+      "commit": "07b602c12c86ec5f1248d4f0e822fde2a22ce4e8",
+      "operations": 45
+    },
+    {
+      "name": "bmo-testbed",
+      "commit": "07911f9b5a07386334cb568a358893ad3e29d877",
+      "operations": 9
+    },
+    {
+      "name": "bmo-review",
+      "commit": "bcdf3f45033baa7358b44f84567f1fcb47c273ec",
+      "operations": 18
+    },
+    {
+      "name": "bmo-research",
+      "commit": "e0b411a70ece884ea5ef97dff0a7c96d7557acd9",
+      "operations": 32
+    },
+    {
+      "name": "bmo-voc",
+      "commit": "0405175cc5856ff0f924ecad03716019cf0d2458",
+      "operations": 14
+    },
+    {
+      "name": "bmo-cache-siren",
+      "commit": "f029eed68a0c646c70897c91cf77a6ad09e3cce1",
+      "operations": 7
+    },
+    {
+      "name": "bmo-cache-warmer",
+      "commit": "1cdfb43b244c9f4a86b3fcc6ac1e75deaef6c191",
+      "operations": 15
+    },
+    {
+      "name": "bmo-artifact",
+      "commit": "fc7c375b420c488d6cce4221cdee358dc319c952",
+      "operations": 51
+    },
+    {
+      "name": "bmo-calendar",
+      "commit": "e721fd064ec463a1b60e8f323a378d52d02a1346",
+      "operations": 36
+    },
+    {
+      "name": "bmo-drive",
+      "commit": "6239d9f1d159043da1bfe32454ece98878ae76e4",
+      "operations": 30
+    },
+    {
+      "name": "bmo-mail",
+      "commit": "0df717062e5d8958be0da9ae48eb4e830c5a5593",
+      "operations": 42
+    },
+    {
+      "name": "bmo-remote",
+      "commit": "cfe3a08743f8c15bea185322ca9a7d6790e1a113",
+      "operations": 14
+    },
+    {
+      "name": "bmo-theater",
+      "commit": "736ff935cf571d4f4753e2cf55e2fa6c6a666ea4",
+      "operations": 59
+    },
+    {
+      "name": "bmo-node",
+      "commit": "f70cf7031bbe3229255ba959f5f78fa525e317fc",
+      "operations": 18
+    },
+    {
+      "name": "bmo-arbiter",
+      "commit": "c134aa44d577ef4af2160c3fb231435d80d82bca",
+      "operations": 19
+    },
+    {
+      "name": "bmo-explorer",
+      "commit": "4b50b7d5c049aa2df7653a844ef9249b918d77e1",
+      "operations": 0
+    },
+    {
+      "name": "bmo-eye",
+      "commit": "962107d4c4dfaceea50aa04698cc713fc659c2b9",
+      "operations": 10
+    }
+  ]
+}

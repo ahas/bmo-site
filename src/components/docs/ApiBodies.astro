@@ -1,0 +1,27 @@
+---
+import ApiFields from "./ApiFields.astro";
+import ApiType from "./ApiType.astro";
+
+import type { Body } from "../../lib/openapi";
+import type { ApiWords } from "../../i18n/docs";
+
+// A request's or a response's bodies, one a media type: its type, and the fields where the schema has no name of its
+// own to link to.
+interface Props {
+  bodies: Body[];
+  words: ApiWords;
+}
+
+const { bodies, words } = Astro.props;
+---
+
+{
+  bodies.map((body) => (
+    <div class="api-body">
+      <p class="api-body-head">
+        <span class="api-media">{body.mediaType}</span> <ApiType type={body.type} />
+      </p>
+      {body.fields.length > 0 && <ApiFields fields={body.fields} words={words} />}
+    </div>
+  ))
+}

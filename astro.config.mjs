@@ -8,6 +8,8 @@ export default defineConfig({
   trailingSlash: "ignore",
   build: { format: "directory" },
   compressHTML: true,
+  // The guidebook's code blocks take the site's own colours in either scheme rather than one highlighter theme.
+  markdown: { syntaxHighlight: false },
   i18n: {
     defaultLocale: "en",
     locales: ["en", "ko", "ja", "zh"],

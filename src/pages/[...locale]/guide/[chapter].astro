@@ -1,0 +1,112 @@
+---
+import { render } from "astro:content";
+
+import Shot from "../../../components/Shot.astro";
+import Layout from "../../../layouts/Layout.astro";
+import { captureLocale, localePaths, messagesFor } from "../../../i18n";
+import { DOCS } from "../../../i18n/docs";
+import { chapters } from "../../../lib/guide";
+import { shotByName } from "../../../lib/shots";
+
+import type { Locale } from "../../../i18n";
+import type { Chapter } from "../../../lib/guide";
+
+// One chapter of the guidebook: its text, the screenshots it names in the page's capture language (a screen not
+// captured in that language is left out), the chapter list beside it and the way to the chapters around it.
+export async function getStaticPaths() {
+  const paths = await Promise.all(
+    localePaths().map(async (entry) => {
+      const list = await chapters(entry.props.locale);
+
+      return list.map((chapter, index) => ({
+        params: { locale: entry.params.locale, chapter: chapter.slug },
+        props: { locale: entry.props.locale, chapter, list, index },
+      }));
+    })
+  );
+
+  return paths.flat();
+}
+
+interface Props {
+  locale: Locale;
+  chapter: Chapter;
+  list: Chapter[];
+  index: number;
+}
+
+const { locale, chapter, list, index } = Astro.props;
+const t = messagesFor(locale);
+const words = DOCS[locale].guide;
+const { Content } = await render(chapter);
+const shots = chapter.data.shots.flatMap((shot) => {
+  const themed = shotByName(shot.name, captureLocale(locale));
+
+  return themed ? [{ ...shot, themed }] : [];
+});
+const previous = list[index - 1];
+const next = list[index + 1];
+const href = (one: Chapter) => `${t.path}guide/${one.slug}/`;
+---
+
+<Layout locale={locale} path={`guide/${chapter.slug}/`} title={`${chapter.data.title} — ${words.title} — BMO`} description={chapter.data.description}>
+  <section class="section docs">
+    <div class="container docs-layout">
+      <nav class="docs-side" aria-labelledby="guide-contents">
+        <a class="docs-back" href={`${t.path}guide/`}>← {words.title}</a>
+        <details class="docs-toc">
+          <summary id="guide-contents">{words.chapters}</summary>
+          <ol>
+            {
+              list.map((one) => (
+                <li>
+                  <a href={href(one)} aria-current={one.slug === chapter.slug ? "page" : undefined}>
+                    {one.data.title}
+                  </a>
+                </li>
+              ))
+            }
+          </ol>
+        </details>
+      </nav>
+      <article class="docs-main guide">
+        <header class="docs-head">
+          <p class="eyebrow">{words.title} · {index + 1}</p>
+          <h1 id="guide-title">{chapter.data.title}</h1>
+          <p class="docs-sub">{chapter.data.description}</p>
+        </header>
+        {
+          shots.length > 0 && (
+            <div class="guide-shots">
+              {shots.map((shot, at) => (
+                <figure class="guide-shot">
+                  <Shot shot={shot.themed} widths={[640, 960, 1440]} sizes="(min-width: 1100px) 820px, 100vw" alt={shot.alt} eager={at === 0} />
+                </figure>
+              ))}
+              <p class="docs-note">{words.shotNote}</p>
+            </div>
+          )
+        }
+        <div class="guide-body">
+          <Content />
+        </div>
+        <nav class="guide-pager" aria-label={words.chapters}>
+          {previous ? (
+            <a class="guide-prev" href={href(previous)} rel="prev">
+              <span>{words.previous}</span>
+              {previous.data.title}
+            </a>
+          ) : (
+            <span />
+          )}
+          {next && (
+            <a class="guide-next" href={href(next)} rel="next">
+              <span>{words.next}</span>
+              {next.data.title}
+            </a>
+          )}
+        </nav>
+      </article>
+    </div>
+  </section>
+</Layout>

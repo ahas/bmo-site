@@ -9,10 +9,13 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "test": "bun test tests"
+    "test": "bun test tests",
+    "openapi": "bun scripts/openapi/refresh.ts"
   },
   "dependencies": {
+    "@apidevtools/swagger-parser": "^13.1.0",
     "astro": "^7.4.13",
+    "marked": "^18.2.1",
     "sharp": "^0.35.5"
   },
   "devDependencies": {

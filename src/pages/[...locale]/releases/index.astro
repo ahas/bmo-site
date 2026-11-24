@@ -1,0 +1,74 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import { localePaths, messagesFor } from "../../../i18n";
+import { DOCS, fill } from "../../../i18n/docs";
+import { RELEASES, releaseAnchor } from "../../../lib/release-notes";
+
+import type { Locale } from "../../../i18n";
+
+// The release notes: every release of the set, the newest first, a release not yet published marked as such, then how
+// versions are numbered and how a release joins this list.
+export function getStaticPaths() {
+  return localePaths();
+}
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = messagesFor(locale);
+const words = DOCS[locale].releases;
+const day = (date: string) => new Intl.DateTimeFormat(locale, { dateStyle: "long", timeZone: "UTC" }).format(new Date(date));
+---
+
+<Layout locale={locale} path="releases/" title={`${words.title} — BMO`} description={words.meta}>
+  <section class="section docs">
+    <div class="container docs-narrow">
+      <header class="docs-head">
+        <p class="eyebrow">BMO</p>
+        <h1 id="releases-title">{words.title}</h1>
+        <p class="docs-sub">{words.sub}</p>
+      </header>
+
+      {
+        RELEASES.map((release) => {
+          const notes = release.notes[locale];
+
+          return (
+            <article class="release" id={releaseAnchor(release.version)} aria-labelledby={`${releaseAnchor(release.version)}-title`}>
+              <header class="release-head">
+                <h2 id={`${releaseAnchor(release.version)}-title`}>{release.version}</h2>
+                {release.status === "upcoming" ? (
+                  <span class="release-status release-upcoming">{words.upcoming}</span>
+                ) : (
+                  release.date && <span class="release-status">{fill(words.released, { date: day(release.date) })}</span>
+                )}
+              </header>
+              {release.status === "upcoming" && <p class="release-note">{words.upcomingNote}</p>}
+              <p class="release-summary">{notes.summary}</p>
+              {notes.sections.map((section) => (
+                <section class="release-section">
+                  <h3>{section.title}</h3>
+                  <ul>
+                    {section.items.map((item) => (
+                      <li>{item}</li>
+                    ))}
+                  </ul>
+                </section>
+              ))}
+            </article>
+          );
+        })
+      }
+
+      <section class="docs-aside" aria-labelledby="versioning-title">
+        <h2 id="versioning-title">{words.versioningTitle}</h2>
+        {words.versioning.map((paragraph) => <p>{paragraph}</p>)}
+        <h2 id="listing-title">{words.listingTitle}</h2>
+        <p>{words.listing}</p>
+        <p><a href={`${t.path}#new`}>{words.whatsNew} →</a></p>
+      </section>
+    </div>
+  </section>
+</Layout>

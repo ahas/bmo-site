@@ -14,17 +14,25 @@ interface Props {
   title?: string;
   description?: string;
   noindex?: boolean;
+  /** The page's address below its language's root, such as `guide/` or `api/bmo-agency/`; the home page has none. */
+  path?: string;
 }
 
-const { locale, noindex = false } = Astro.props;
+const { locale, noindex = false, path = "" } = Astro.props;
 const t = messagesFor(locale);
 const languages = LOCALES.map((entry) => ({ ...entry, messages: messagesFor(entry.code) }));
 const title = Astro.props.title ?? t.meta.title;
 const description = Astro.props.description ?? t.meta.description;
-const canonical = new URL(t.path, SITE_URL).href;
+const canonical = new URL(`${t.path}${path}`, SITE_URL).href;
 const social = await getImage({ src: HERO_SHOTS[captureLocale(locale)].wide.dark, width: 1200, format: "png" });
 const socialUrl = new URL(social.src, SITE_URL).href;
 const home = t.path;
+// The three reading sections, each marked where the page stands in it.
+const sections = [
+  { href: `${home}guide/`, label: t.nav.guide, current: path.startsWith("guide/") },
+  { href: `${home}api/`, label: t.nav.api, current: path.startsWith("api/") },
+  { href: `${home}releases/`, label: t.nav.releases, current: path.startsWith("releases/") },
+];
 ---
 
 <!doctype html>
@@ -38,8 +46,8 @@ const home = t.path;
     <title>{title}</title>
     <meta name="description" content={description} />
     {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
-    {!noindex && languages.map((entry) => <link rel="alternate" hreflang={entry.messages.htmlLang} href={new URL(entry.messages.path, SITE_URL).href} />)}
-    {!noindex && <link rel="alternate" hreflang="x-default" href={new URL("/", SITE_URL).href} />}
+    {!noindex && languages.map((entry) => <link rel="alternate" hreflang={entry.messages.htmlLang} href={new URL(`${entry.messages.path}${path}`, SITE_URL).href} />)}
+    {!noindex && <link rel="alternate" hreflang="x-default" href={new URL(`/${path}`, SITE_URL).href} />}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta property="og:type" content="website" />
@@ -60,13 +68,11 @@ const home = t.path;
           <span>BMO</span>
         </a>
         <nav class="nav-links" aria-label="Primary">
-          <a href={`${home}#new`}>{t.nav.whatsNew}</a>
           <a href={`${home}#features`}>{t.nav.features}</a>
           <a href={`${home}#compare`}>{t.nav.compare}</a>
-          <a href={`${home}#how`}>{t.nav.how}</a>
           <a href={`${home}#download`}>{t.nav.download}</a>
+          {sections.map((section) => <a href={section.href} aria-current={section.current ? "page" : undefined}>{section.label}</a>)}
           <a href={`${home}#repositories`}>{t.nav.repositories}</a>
-          <a href={STRUCTURE_URL}>{t.nav.docs}</a>
         </nav>
         <div class="nav-end">
           <details class="lang-menu">
@@ -79,7 +85,7 @@ const home = t.path;
                 languages.map((entry) => (
                   <li>
                     <a
-                      href={entry.messages.path}
+                      href={`${entry.messages.path}${path}`}
                       hreflang={entry.messages.htmlLang}
                       lang={entry.messages.htmlLang}
                       aria-current={entry.code === locale ? "page" : undefined}
@@ -112,6 +118,7 @@ const home = t.path;
           <a href={LICENSE_URL}>{t.footer.license}</a> · {t.footer.copyright}
         </p>
         <nav class="footer-links" aria-label="Footer">
+          {sections.map((section) => <a href={section.href}>{section.label}</a>)}
           <a href={UMBRELLA_URL}>GitHub</a>
           <a href={GITHUB_OWNER_URL}>{t.nav.repositories}</a>
           <a href={STRUCTURE_URL}>{t.footer.structure}</a>
@@ -129,6 +136,13 @@ const home = t.path;
       </div>
     </footer>
     <script is:inline>
+      // Opens a reading section's contents list where it stands beside the page; on a narrow screen it stays folded above.
+      (function () {
+        if (!window.matchMedia("(min-width: 1000px)").matches) return;
+        document.querySelectorAll(".docs-toc").forEach(function (toc) {
+          toc.open = true;
+        });
+      })();
       // Closes the language menu on Escape and on a press outside it; the menu works without this.
       (function () {
         var menu = document.querySelector(".lang-menu");

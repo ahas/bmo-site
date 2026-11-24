@@ -1,0 +1,13 @@
+---
+import type { TypePart } from "../../lib/openapi";
+import { schemaAnchor } from "../../lib/openapi";
+
+// A schema's type as a line of code, every named schema in it linking to its place in the page's schema list.
+interface Props {
+  type: TypePart[];
+}
+
+const { type } = Astro.props;
+---
+
+<code class="api-type">{type.map((part) => (part.schema ? <a href={`#${schemaAnchor(part.schema)}`}>{part.text}</a> : part.text))}</code>

@@ -1,0 +1,215 @@
+---
+import ApiBodies from "../../../components/docs/ApiBodies.astro";
+import ApiFields from "../../../components/docs/ApiFields.astro";
+import ApiType from "../../../components/docs/ApiType.astro";
+import Layout from "../../../layouts/Layout.astro";
+import { localePaths, messagesFor } from "../../../i18n";
+import { DOCS, fill } from "../../../i18n/docs";
+import { apiUnits, inline, prose } from "../../../lib/openapi";
+import { repositoryUrl } from "../../../lib/site";
+
+import type { Locale } from "../../../i18n";
+import type { ApiUnit } from "../../../lib/openapi";
+
+// One unit's API reference: its operations grouped by tag, each with its parameters, request body, responses and
+// error codes, then the schemas they name. The contents list stands beside the page on a wide screen and folds above
+// it on a narrow one.
+export async function getStaticPaths() {
+  const units = await apiUnits();
+
+  return localePaths().flatMap((entry) =>
+    units.map((unit) => ({ params: { locale: entry.params.locale, unit: unit.slug }, props: { locale: entry.props.locale, unit } }))
+  );
+}
+
+interface Props {
+  locale: Locale;
+  unit: ApiUnit;
+}
+
+const { locale, unit } = Astro.props;
+const t = messagesFor(locale);
+const words = DOCS[locale].api;
+const groupName = (name: string) => name || words.other;
+---
+
+<Layout
+  locale={locale}
+  path={`api/${unit.slug}/`}
+  title={`${unit.repository.name} — ${words.title} — BMO`}
+  description={fill(words.unitMeta, { unit: unit.repository.name, count: unit.operationCount })}
+>
+  <section class="section docs">
+    <div class="container docs-layout">
+      <nav class="docs-side" aria-labelledby="api-contents">
+        <a class="docs-back" href={`${t.path}api/`}>← {words.back}</a>
+        <details class="docs-toc">
+          <summary id="api-contents">{words.contents}</summary>
+          <ul>
+            {
+              unit.groups.map((group) => (
+                <li>
+                  <a href={`#${group.anchor}`}>
+                    {groupName(group.name)} <span class="docs-count">{group.operations.length}</span>
+                  </a>
+                </li>
+              ))
+            }
+            {unit.schemas.length > 0 && (
+              <li>
+                <a href="#schemas">
+                  {words.schemas} <span class="docs-count">{unit.schemas.length}</span>
+                </a>
+              </li>
+            )}
+          </ul>
+        </details>
+      </nav>
+      <div class="docs-main">
+        <header class="docs-head">
+          <p class="eyebrow">{words.title}</p>
+          <h1 id="api-title">{unit.repository.name}</h1>
+          <p class="docs-sub">{unit.repository.role[locale]}</p>
+          <p class="docs-meta">
+            {fill(words.version, { version: unit.version, openapi: unit.openapi })} · {fill(words.endpoints, { count: unit.operationCount })} ·
+            <a href={`${repositoryUrl(unit.repository.name)}/blob/main/docs/openapi.json`}>{words.source}</a>
+          </p>
+          {unit.description && <div class="api-prose" lang="en" set:html={prose(unit.description)} />}
+          {
+            (unit.servers.length > 0 || unit.security.length > 0) && (
+              <dl class="api-facts">
+                {unit.servers.length > 0 && (
+                  <div>
+                    <dt>{words.servers}</dt>
+                    <dd>
+                      {unit.servers.map((server) => (
+                        <span class="api-fact">
+                          <code>{server.url}</code>
+                          {server.description && <span lang="en"> — {server.description}</span>}
+                        </span>
+                      ))}
+                    </dd>
+                  </div>
+                )}
+                {unit.security.length > 0 && (
+                  <div>
+                    <dt>{words.security}</dt>
+                    <dd>
+                      {unit.security.map((scheme) => (
+                        <span class="api-fact">
+                          <code>{scheme.name}</code> <span lang="en">{scheme.text}</span>
+                        </span>
+                      ))}
+                    </dd>
+                  </div>
+                )}
+              </dl>
+            )
+          }
+          <p class="docs-note">{words.snapshot}</p>
+          {unit.operationCount === 0 && <p class="docs-note">{words.noEndpoints}</p>}
+        </header>
+
+        {
+          unit.groups.map((group) => (
+            <section class="api-group" id={group.anchor} aria-labelledby={`${group.anchor}-title`}>
+              <h2 id={`${group.anchor}-title`}>{groupName(group.name)}</h2>
+              {group.description && <div class="api-prose" lang="en" set:html={prose(group.description)} />}
+              {group.operations.map((operation) => (
+                <article class="api-op" id={operation.anchor}>
+                  <h3 class="api-op-head">
+                    <span class={`api-method api-method-${operation.method}`}>{operation.method.toUpperCase()}</span>
+                    <code class="api-path">{operation.path}</code>
+                  </h3>
+                  <div class="api-op-tags">
+                    {operation.secured && <span class="api-badge">{words.secured}</span>}
+                    {operation.deprecated && <span class="api-badge api-badge-warn">{words.deprecated}</span>}
+                  </div>
+                  {operation.summary && <p class="api-summary" lang="en" set:html={inline(operation.summary)} />}
+                  {operation.description && <div class="api-prose" lang="en" set:html={prose(operation.description)} />}
+                  <div>
+                    {operation.parameters.length > 0 && (
+                      <>
+                        <h4>{words.parameters}</h4>
+                        <ul class="api-fields">
+                          {operation.parameters.map((parameter) => (
+                            <li>
+                              <div class="api-field-head">
+                                <code class="api-name">{parameter.name}</code>
+                                <span class="api-in">{parameter.in}</span>
+                                <ApiType type={parameter.type} />
+                                {parameter.required && <span class="api-badge">{words.required}</span>}
+                              </div>
+                              {parameter.description && <div class="api-prose" lang="en" set:html={prose(parameter.description)} />}
+                            </li>
+                          ))}
+                        </ul>
+                      </>
+                    )}
+                    {operation.request && (
+                      <>
+                        <h4>
+                          {words.requestBody}
+                          {operation.request.required && <span class="api-badge">{words.required}</span>}
+                        </h4>
+                        {operation.request.description && <div class="api-prose" lang="en" set:html={prose(operation.request.description)} />}
+                        <ApiBodies bodies={operation.request.bodies} words={words} />
+                      </>
+                    )}
+                    <h4>{words.responses}</h4>
+                    <ul class="api-answers">
+                      {operation.answers.map((answer) => (
+                        <li>
+                          <span class={`api-status api-status-${answer.status.charAt(0)}`}>{answer.status}</span>
+                          <div class="api-answer">
+                            {answer.description && <div class="api-prose" lang="en" set:html={prose(answer.description)} />}
+                            <ApiBodies bodies={answer.bodies} words={words} />
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                    {operation.codes.length > 0 && (
+                      <>
+                        <h4>{words.codes}</h4>
+                        <p class="api-codes">
+                          {operation.codes.map((code) => (
+                            <code>{code}</code>
+                          ))}
+                        </p>
+                      </>
+                    )}
+                  </div>
+                </article>
+              ))}
+            </section>
+          ))
+        }
+
+        {
+          unit.schemas.length > 0 && (
+            <section class="api-group" id="schemas" aria-labelledby="schemas-title">
+              <h2 id="schemas-title">{words.schemas}</h2>
+              {unit.schemas.map((schema) => (
+                <article class="api-schema" id={schema.anchor}>
+                  <h3>
+                    <code>{schema.name}</code>
+                  </h3>
+                  <p>
+                    <ApiType type={schema.type} />
+                  </p>
+                  {schema.description && <div class="api-prose" lang="en" set:html={prose(schema.description)} />}
+                  {schema.values && (
+                    <p class="api-values">
+                      {words.values}: {schema.values.map((value, index) => (<>{index > 0 && ", "}<code>{value}</code></>))}
+                    </p>
+                  )}
+                  {schema.fields.length > 0 && <ApiFields fields={schema.fields} words={words} />}
+                </article>
+              ))}
+            </section>
+          )
+        }
+      </div>
+    </div>
+  </section>
+</Layout>

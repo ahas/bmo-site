@@ -1,0 +1,126 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import { localePaths, messagesFor } from "../../../i18n";
+import { DOCS, fill } from "../../../i18n/docs";
+import { apiUnits } from "../../../lib/openapi";
+
+import type { Locale } from "../../../i18n";
+
+// The API reference's front page: every public unit that publishes an OpenAPI document, with its endpoint count, and
+// one search over all their endpoints. The search reads /api/search.json on the first keystroke; without script the
+// page still lists every unit, and the search box stays hidden.
+export function getStaticPaths() {
+  return localePaths();
+}
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = messagesFor(locale);
+const words = DOCS[locale].api;
+const units = await apiUnits();
+const total = units.reduce((count, unit) => count + unit.operationCount, 0);
+---
+
+<Layout locale={locale} path="api/" title={`${words.title} — BMO`} description={words.meta}>
+  <section class="section docs">
+    <div class="container">
+      <header class="docs-head">
+        <p class="eyebrow">BMO</p>
+        <h1 id="api-title">{words.title}</h1>
+        <p class="docs-sub">{words.sub}</p>
+        <p class="docs-meta">{fill(words.endpoints, { count: total })} · {units.length} {words.units}</p>
+      </header>
+
+      <form class="api-search" role="search" hidden data-base={`${t.path}api/`} data-count={words.searchCount} data-more={words.searchMore} data-empty={words.searchEmpty} onsubmit="return false">
+        <label for="api-search-input">{words.searchLabel}</label>
+        <input id="api-search-input" type="search" autocomplete="off" spellcheck="false" placeholder={words.searchPlaceholder} />
+        <p class="api-search-status" aria-live="polite"></p>
+        <ul class="api-results"></ul>
+      </form>
+
+      <h2 class="docs-h2" id="api-units">{words.units}</h2>
+      <ul class="api-units" aria-labelledby="api-units">
+        {
+          units.map((unit) => (
+            <li>
+              <a class="api-unit" href={`${t.path}api/${unit.slug}/`}>
+                <span class="api-unit-name">{unit.repository.name}</span>
+                <span class="api-unit-role">{unit.repository.role[locale]}</span>
+                <span class="api-unit-count">{fill(words.endpoints, { count: unit.operationCount })}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="docs-note">{words.snapshot}</p>
+    </div>
+  </section>
+</Layout>
+
+<script is:inline>
+  // Searches every unit's endpoints by method, path, summary and unit, each word of the query matched anywhere.
+  (function () {
+    var form = document.querySelector(".api-search");
+    if (!form || !window.fetch) return;
+    form.hidden = false;
+    var input = form.querySelector("input");
+    var status = form.querySelector(".api-search-status");
+    var list = form.querySelector(".api-results");
+    var limit = 50;
+    var endpoints = null;
+    var loading = null;
+
+    function load() {
+      loading = loading || fetch("/api/search.json").then(function (answer) { return answer.json(); }).then(function (read) {
+        endpoints = read.map(function (one) {
+          one.text = (one.method + " " + one.path + " " + one.summary + " " + one.unit).toLowerCase();
+          return one;
+        });
+      });
+      return loading;
+    }
+
+    function show() {
+      var query = input.value.trim().toLowerCase();
+      list.textContent = "";
+      if (!query) { status.textContent = ""; return; }
+      var terms = query.split(/\s+/);
+      var found = endpoints.filter(function (one) {
+        return terms.every(function (term) { return one.text.indexOf(term) >= 0; });
+      });
+      status.textContent = found.length === 0 ? form.dataset.empty : form.dataset.count.replace("{count}", found.length) + (found.length > limit ? " " + form.dataset.more.replace("{count}", limit) : "");
+      found.slice(0, limit).forEach(function (one) {
+        var item = document.createElement("li");
+        var link = document.createElement("a");
+        link.href = form.dataset.base + one.unit + "/#" + one.anchor;
+        var head = document.createElement("span");
+        head.className = "api-result-head";
+        var method = document.createElement("span");
+        method.className = "api-method api-method-" + one.method;
+        method.textContent = one.method.toUpperCase();
+        var path = document.createElement("code");
+        path.className = "api-path";
+        path.textContent = one.path;
+        var unit = document.createElement("span");
+        unit.className = "api-result-unit";
+        unit.textContent = one.unit;
+        head.append(method, path, unit);
+        var summary = document.createElement("span");
+        summary.className = "api-result-summary";
+        summary.lang = "en";
+        summary.textContent = one.summary;
+        link.append(head, summary);
+        item.append(link);
+        list.append(item);
+      });
+    }
+
+    input.addEventListener("input", function () {
+      if (endpoints) show();
+      else load().then(show);
+    });
+  })();
+</script>

@@ -9,6 +9,18 @@
   show English captures only. Every screen is captured dark and light, a source's name ends in
   `-<en|ko>-<dark|light>`, the page shows the capture of the scheme it stands in, and the browser test holds every
   page to both.
+- **Three reading sections beside the home page.** The guidebook (`/guide/`), the API reference (`/api/`) and the
+  release notes (`/releases/`) stand in all four languages under `src/pages/[...locale]/`, their surrounding words in
+  `src/i18n/docs.ts`. The guidebook's chapters are Markdown, `src/content/guide/<language>/<chapter>.md`, Korean the
+  source and every language holding the same chapters; a chapter names its screenshots in its front matter.
+- **The API reference renders a snapshot.** `bun run openapi` reads every public unit's `docs/openapi.json` from its
+  main branch through the unit's checkout in the workspace (references into another unit's document read the same
+  way), bundles each with Swagger Parser and writes it under `src/data/openapi/` with `snapshot.json`; commit the
+  refreshed snapshot. At build time Swagger Parser resolves each document and the pages render it statically, a page a
+  unit; the search reads `/api/search.json`. Descriptions are the units' own English.
+- **Release notes are data.** `src/data/releases.json` holds one entry a release, newest first: its version (the
+  whole set shares one), `upcoming` or `released`, its date once released, and its notes in all four languages with
+  the same sections and items. A release adds its entry at the head; the page needs no other change.
 - **Public repositories only.** `src/lib/repositories.ts` lists what the site links to; a repository that is not
   public is never named or linked anywhere on the site.
 - **Demo data only in pictures.** Screenshots come from the units' browser-test harnesses with demo answers
@@ -23,6 +35,8 @@
   by keyboard and at least 44px high on a phone.
 - **Checks:** `bun run check`, then `bun run build && bun run test`, which opens the four built pages at 1440, 1024
   and 390 pixels in both colour schemes and fails on a missing section, a picture without words or in another
-  language or scheme, a comparison row or footnote missing, or a horizontal overflow.
+  language or scheme, a comparison row or footnote missing, or a horizontal overflow; and holds the reading sections
+  to every language, every public unit with a snapshot, the same chapters and release shape in every language, no
+  repository that is not public and no host of the domain but the site's own.
 - **English in code, comments and commits.** Other languages stand only in `src/i18n/`, the role words of
-  `src/lib/repositories.ts` and the shots' demo data.
+  `src/lib/repositories.ts`, the guidebook's chapters, the release notes' data and the shots' demo data.

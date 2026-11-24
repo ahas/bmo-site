@@ -1,0 +1,43 @@
+---
+import ApiType from "./ApiType.astro";
+import { prose } from "../../lib/openapi";
+
+import type { Field } from "../../lib/openapi";
+import type { ApiWords } from "../../i18n/docs";
+
+// An object's fields as a stacked list — name, type and whether it is required on one line, its words under it — with
+// the fields of an unnamed nested object listed under their field. A list rather than a table, so a long type or path
+// wraps inside a phone's width.
+interface Props {
+  fields: Field[];
+  words: ApiWords;
+}
+
+const { fields, words } = Astro.props;
+---
+
+<ul class="api-fields">
+  {
+    fields.map((field) => (
+      <li>
+        <div class="api-field-head">
+          <code class="api-name">{field.name}</code>
+          <ApiType type={field.type} />
+          {field.required && <span class="api-badge">{words.required}</span>}
+        </div>
+        {field.description && <div class="api-prose" lang="en" set:html={prose(field.description)} />}
+        {field.values && (
+          <p class="api-values">
+            {words.values}: {field.values.map((value, index) => (<>{index > 0 && ", "}<code>{value}</code></>))}
+          </p>
+        )}
+        {field.fallback !== undefined && (
+          <p class="api-values">
+            {words.fallback}: <code>{field.fallback}</code>
+          </p>
+        )}
+        {field.fields.length > 0 && <Astro.self fields={field.fields} words={words} />}
+      </li>
+    ))
+  }
+</ul>
