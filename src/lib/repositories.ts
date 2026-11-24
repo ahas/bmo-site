@@ -57,7 +57,7 @@ export const REPOSITORY_GROUPS: RepositoryGroup[] = [
     title: { en: "Your desk", ko: "책상", ja: "デスク", zh: "办公桌" },
     items: [
       r("bmo-artifact", "Documents kept, searched and shared", "문서 보관, 검색, 공유", "ドキュメントの保管・検索・共有", "文档的存档、搜索与分享"),
-      r("bmo-note", "Editable notes on the BlockSuite editor", "BlockSuite 편집기 기반 노트", "BlockSuite エディターによるノート", "基于 BlockSuite 编辑器的笔记"),
+      r("bmo-note", "Notes on Nuxt UI's TipTap editor: folders, bookmarks, inline comments and the Agent", "Nuxt UI의 TipTap 편집기 기반 노트: 폴더, 북마크, 글 위 댓글, Agent", "Nuxt UI の TipTap エディターによるノート：フォルダー、ブックマーク、本文へのコメント、Agent", "基于 Nuxt UI 的 TipTap 编辑器的笔记：文件夹、书签、正文评论与 Agent"),
       r("bmo-calendar", "Calendars, events, alarms and bookings", "캘린더, 일정, 알림, 예약", "カレンダー、予定、通知、予約", "日历、日程、提醒与预约"),
       r("bmo-drive", "Files across drives, storage and nodes", "드라이브, 스토리지, 노드의 파일", "ドライブ、ストレージ、ノード上のファイル", "跨磁盘、存储和节点的文件"),
       r("bmo-mail", "Mail over your own mailboxes", "내 메일함 위의 메일", "自分のメールボックスで使うメール", "基于你自己邮箱的邮件"),
