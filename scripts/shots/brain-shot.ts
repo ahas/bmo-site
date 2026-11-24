@@ -14,6 +14,10 @@ import type { Route } from "playwright-core";
 
 const locale = localeOf(process.argv[2]);
 const OUT = new URL("../../shots-out/", import.meta.url).pathname;
+// The console wraps a screen in a fixed full-screen dashboard group, and the screen fills its height. A host stood
+// on its own has no such group, so the screen stops at its content's height and the capture carries an empty lower
+// half; the host is stood at the window's height before the capture.
+const FULL_HEIGHT = "html, body { margin: 0; } [id^='dashboard-panel'] { height: 100vh; min-height: 0; }";
 const CLIENT = new URL("../../../brain/client/", import.meta.url).pathname;
 const HOST = `${CLIENT}tests/browser/host`;
 const RELAY = "/relay/brain";
@@ -268,6 +272,9 @@ try {
     // The person's sheet, folded as the screen opens, is unfolded over the memories.
     await page.getByText(PACK.brain.label.sheet_of.replace("{name}", "Alex")).click();
     await page.waitForTimeout(1500);
+    // The screen fills the window, as it does in the console's dashboard group, and the capture is the window.
+    await page.addStyleTag({ content: FULL_HEIGHT });
+    await page.waitForTimeout(400);
     await page.screenshot({ path: `${OUT}${name}.${locale}.${theme}.png` });
     console.log("saved", `${name}.${locale}.${theme}`);
     await context.close();
