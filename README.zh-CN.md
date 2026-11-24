@@ -24,6 +24,8 @@ bun run check      # astro check: types of the pages and scripts
 bun run build && bun run test
 ```
 
+`bun run check` 不检查 `scripts/shots/` 下的截图脚本：它们引入旁边检出的各单元的浏览器测试框架（「截图」），只能在那个工作区里做类型检查。
+
 `bun run test` 会像静态主机一样提供构建好的 `dist/`，并在 Chromium 中以 1440、1024、390 像素宽度、在深色与浅色两种主题下打开四个页面，检查：每个关键区块及其标题都在；每张图片都能加载、带有替代文本，且是用该页面的语言和主题截取的；比较表中每项能力都有一行，标记和脚注齐全；语言菜单能到达每个版本；没有元素超出窗口右边缘；不存在的地址返回 404 页面。它需要 `playwright-core` 固定的 Chromium 版本，缺失时会跳过。
 
 ## 部署
