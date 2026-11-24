@@ -1,0 +1,55 @@
+# How the testbed tests, checks, builds and deploys this repository, in the testbed's declaration format.
+
+testbed = 0
+name = "bmo-site"
+
+[test]
+# The tests read the built site in dist/, which the static check's build step writes before the suite runs.
+languages = ["bun"]
+files = ["tests/**/*.test.ts"]
+setup = ["bun install --frozen-lockfile"]
+
+[check]
+# The sweep that holds every tracked file of a public repository free of personal data.
+quick = ["personal-data"]
+
+# The types of the pages and scripts.
+[[check.step]]
+id = "astro-check"
+command = "bun run check"
+lane = "wide"
+
+# The site built into dist/, which the tests serve as a static host does.
+[[check.step]]
+id = "site-build"
+command = "bun run build"
+lane = "wide"
+
+# The site built in the build tree and written into the release being built: the release beside the build tree,
+# named by the first twelve hex digits of the commit (the testbed's docs/deploy.md, 「The places」).
+[[build.step]]
+id = "site-build"
+lane = "wide"
+command = "bun install --frozen-lockfile && bun run build --outDir \"$(git rev-parse --show-toplevel)/../deploy-releases/$(git rev-parse HEAD | cut -c1-12)/dist\""
+
+# The site's own deploy tree, and a data root holding only where the site is published. The host serving the
+# domain and the folder it serves stand in env/publish-target under the data root as one rsync destination,
+# `<host>:<folder>/`, linked into each release as publish.target; neither is written here.
+[deploy]
+root = "~/.local/share/bmo-site"
+link = "deploy"
+data_root = "~/.local/share/bmo-site/data"
+env_links = [{ link = "publish.target", target = "env/publish-target" }]
+
+# The release's build copied whole onto the serving host before the flip, every file it no longer holds taken away
+# there; a copy that fails leaves the release unrecorded and the deploy tree where it stood.
+[[deploy.step]]
+id = "publish"
+phase = "before-flip"
+command = "target=\"$(cat publish.target)\" && test -n \"$target\" && rsync -a --delete dist/ \"$target\""
+
+# What the site's address serves held to the release's own build.
+[[deploy.step]]
+id = "served"
+phase = "after-health"
+command = "bun scripts/deploy/served.ts"

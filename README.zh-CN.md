@@ -13,7 +13,7 @@ bun run preview    # serves dist/ at http://localhost:4321
 bun run dev        # the development server with reload
 ```
 
-下载区提供两个桌面应用：打开你已在运行的 BMO 服务器的远程控制器，以及在你的电脑上安装并运行 BMO 本身的 All-in-One。两者都在构建时从 jake 最新 GitHub 发布中的 `release.json`，即 `src/lib/release.ts` 指定的地址读取：远程控制器的文件在 `files` 下，All-in-One 的文件在 `allInOne.files` 下，如有每夜版，其文件在 `nightly` 下。远程控制器会在首次启动时询问各自 BMO 服务器的地址，因此同一套安装程序适用于所有部署。在发布上线之前，这个地址返回 404，下载区会说明暂时还没有可下载的版本，并链接到发布说明。部署就是把 `dist/` 复制到为该域名提供服务的主机。
+下载区提供两个桌面应用：打开你已在运行的 BMO 服务器的远程控制器，以及在你的电脑上安装并运行 BMO 本身的 All-in-One。两者都在构建时从 jake 最新 GitHub 发布中的 `release.json`，即 `src/lib/release.ts` 指定的地址读取：远程控制器的文件在 `files` 下，All-in-One 的文件在 `allInOne.files` 下，如有每夜版，其文件在 `nightly` 下。远程控制器会在首次启动时询问各自 BMO 服务器的地址，因此同一套安装程序适用于所有部署。在发布上线之前，这个地址返回 404，下载区会说明暂时还没有可下载的版本，并链接到发布说明。站点由 testbed 部署（见下文「部署」）。
 
 “开始使用”区给出一个人交给自己编程智能体的那一行，智能体按索引的安装手册安装 BMO。`/install.md` 提供这份手册，即索引的 `INSTALL.md`，在构建时从索引的 main 分支、`src/lib/runbook.ts` 指定的地址读取；构建离线或读不到索引时，改为提供一段指向手册的简短说明。该区各语言的文字在 `src/i18n/start.ts` 中。
 
@@ -25,6 +25,10 @@ bun run build && bun run test
 ```
 
 `bun run test` 会像静态主机一样提供构建好的 `dist/`，并在 Chromium 中以 1440、1024、390 像素宽度、在深色与浅色两种主题下打开四个页面，检查：每个关键区块及其标题都在；每张图片都能加载、带有替代文本，且是用该页面的语言和主题截取的；比较表中每项能力都有一行，标记和脚注齐全；语言菜单能到达每个版本；没有元素超出窗口右边缘；不存在的地址返回 404 页面。它需要 `playwright-core` 固定的 Chromium 版本，缺失时会跳过。
+
+## 部署
+
+testbed 像部署其他所有单元一样按 `testbed.toml` 部署站点，因此合入 main 的提交会随本仓库的批量部署上线。门禁先运行 `bun run check`，构建 `dist/` 并以它运行测试；随后构建步骤把该提交构建进发布目录，并在切换部署树之前用 `rsync -a --delete` 把发布目录的 `dist/` 整体复制到为该域名提供服务的主机。哪台主机、哪个文件夹不写在本仓库里，而写在机器的设置中，即站点数据根目录下 `env/publish-target` 里的一个 rsync 目标。发布上线后，`scripts/deploy/served.ts` 会把站点地址返回的首页与发布目录自己的 `dist/index.html` 比对。部署记录，即部署根目录下的 `deployed.json`，指明主机所提供的提交。
 
 ## 结构
 
@@ -38,6 +42,8 @@ bun run build && bun run test
 | `src/assets/shots/` | 页面使用的截图，WebP 原图由构建生成多种尺寸的 AVIF 与 WebP |
 | `src/styles/global.css` | 唯一的样式表 |
 | `scripts/shots/` | 用于截图的脚本 |
+| `scripts/deploy/` | 检查站点地址是否提供该发布构建的部署检查 |
+| `testbed.toml` | testbed 检查、测试、构建和部署站点的方式 |
 | `tests/` | 构建后页面的浏览器测试 |
 
 ## 截图

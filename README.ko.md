@@ -13,7 +13,7 @@ bun run preview    # serves dist/ at http://localhost:4321
 bun run dev        # the development server with reload
 ```
 
-다운로드 섹션은 두 데스크톱 앱을 내놓습니다. 이미 돌리는 BMO 서버를 여는 원격 제어기와, BMO 자체를 내 PC에 설치해 돌리는 All-in-One입니다. 둘 다 빌드할 때 jake의 최신 GitHub 릴리스에 있는 `release.json`, 곧 `src/lib/release.ts`가 지정한 주소에서 읽습니다. 원격 제어기의 파일은 `files`, All-in-One의 파일은 `allInOne.files`, 나이틀리 빌드가 게시돼 있으면 그 파일은 `nightly` 아래에 있습니다. 원격 제어기는 처음 실행할 때 각자의 BMO 서버 주소를 묻기 때문에, 같은 설치 파일을 모든 배포에서 씁니다. 릴리스가 게시되기 전에는 주소가 404로 응답하고, 다운로드 섹션은 아직 내려받을 수 있는 릴리스가 없다고 알리며 릴리스 문서로 연결합니다. 배포는 `dist/`를 도메인을 서비스하는 호스트로 복사하는 것입니다.
+다운로드 섹션은 두 데스크톱 앱을 내놓습니다. 이미 돌리는 BMO 서버를 여는 원격 제어기와, BMO 자체를 내 PC에 설치해 돌리는 All-in-One입니다. 둘 다 빌드할 때 jake의 최신 GitHub 릴리스에 있는 `release.json`, 곧 `src/lib/release.ts`가 지정한 주소에서 읽습니다. 원격 제어기의 파일은 `files`, All-in-One의 파일은 `allInOne.files`, 나이틀리 빌드가 게시돼 있으면 그 파일은 `nightly` 아래에 있습니다. 원격 제어기는 처음 실행할 때 각자의 BMO 서버 주소를 묻기 때문에, 같은 설치 파일을 모든 배포에서 씁니다. 릴리스가 게시되기 전에는 주소가 404로 응답하고, 다운로드 섹션은 아직 내려받을 수 있는 릴리스가 없다고 알리며 릴리스 문서로 연결합니다. 사이트는 testbed가 배포합니다(아래 「배포」).
 
 시작하기 섹션은 사람이 자기 코딩 에이전트에게 건넬 한 줄을 보여 주고, 에이전트는 인덱스의 런북대로 BMO를 설치합니다. `/install.md`는 그 런북, 곧 인덱스의 `INSTALL.md`를 빌드할 때 인덱스의 main 브랜치에서 `src/lib/runbook.ts`가 지정한 주소로 읽어 내보냅니다. 빌드가 오프라인이거나 인덱스를 읽지 못하면 런북을 가리키는 짧은 안내를 대신 내보냅니다. 이 섹션의 언어별 문구는 `src/i18n/start.ts`에 있습니다.
 
@@ -25,6 +25,10 @@ bun run build && bun run test
 ```
 
 `bun run test`는 빌드된 `dist/`를 정적 호스트처럼 띄우고, 네 페이지를 Chromium에서 1440, 1024, 390픽셀 너비로, 어두운 테마와 밝은 테마에서 엽니다. 핵심 섹션이 제목과 함께 모두 있는지, 그림이 모두 로드되고 대체 텍스트를 갖는지, 그림이 그 페이지 언어와 테마로 찍은 것인지, 비교 표에 기능마다 행과 표시, 각주가 모두 있는지, 언어 메뉴가 모든 버전에 닿는지, 창 오른쪽 끝을 넘는 요소가 없는지, 없는 주소가 404 페이지로 답하는지를 확인합니다. `playwright-core`가 고정한 Chromium 빌드가 필요하며, 없으면 건너뜁니다.
+
+## 배포
+
+testbed가 다른 모든 유닛처럼 `testbed.toml`에 따라 사이트를 배포하므로, main에 올라간 커밋은 이 저장소의 일괄 배포와 함께 라이브가 됩니다. 게이트는 `bun run check`를 돌리고 `dist/`를 빌드한 뒤 그 결과로 테스트를 돌립니다. 이어 빌드 단계가 커밋을 릴리스 안에 빌드하고, 배포 트리를 넘기기 전에 릴리스의 `dist/`를 `rsync -a --delete`로 도메인을 서비스하는 호스트에 통째로 복사합니다. 어느 호스트의 어느 폴더인지는 이 저장소가 아니라 머신 설정, 곧 사이트 데이터 루트 아래 `env/publish-target`의 rsync 대상 하나에 있습니다. 릴리스가 라이브가 되면 `scripts/deploy/served.ts`가 사이트 주소가 내주는 첫 페이지를 릴리스 자신의 `dist/index.html`과 맞춰 봅니다. 배포 기록인 배포 루트 아래 `deployed.json`이 호스트가 내주는 커밋을 가리킵니다.
 
 ## 구성
 
@@ -38,6 +42,8 @@ bun run build && bun run test
 | `src/assets/shots/` | 페이지에 쓰는 스크린샷. WebP 원본을 빌드가 AVIF·WebP 여러 크기로 만듦 |
 | `src/styles/global.css` | 스타일시트 하나 |
 | `scripts/shots/` | 스크린샷을 찍은 캡처 스크립트 |
+| `scripts/deploy/` | 사이트 주소가 릴리스의 빌드를 내주는지 보는 배포 검사 |
+| `testbed.toml` | testbed가 사이트를 검사·테스트·빌드·배포하는 방법 |
 | `tests/` | 빌드된 페이지의 브라우저 테스트 |
 
 ## 스크린샷

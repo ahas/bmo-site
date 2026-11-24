@@ -17,7 +17,7 @@ bun run preview    # serves dist/ at http://localhost:4321
 bun run dev        # the development server with reload
 ```
 
-The download section offers the two desktop apps, the Remote Controller, which opens a BMO server the person already runs, and the All-in-One, which installs and runs BMO itself on their PC. Both are read at build time from the `release.json` of jake's latest GitHub release, the address `src/lib/release.ts` names: the Remote Controller's files under `files`, the All-in-One's under `allInOne.files`, and the builds ahead of the release, where one is published, under `preview`, the newest alpha, beta or release candidate, and `nightly`, the newest nightly, each listed under the release's files with its own version. The Remote Controller asks for the person's own BMO server's address on its first run, so the same installers serve every deployment. Until a release is published the address answers 404, and the section says no release is available yet and links to the release documentation. Deploying is copying `dist/` to the host that serves the domain.
+The download section offers the two desktop apps, the Remote Controller, which opens a BMO server the person already runs, and the All-in-One, which installs and runs BMO itself on their PC. Both are read at build time from the `release.json` of jake's latest GitHub release, the address `src/lib/release.ts` names: the Remote Controller's files under `files`, the All-in-One's under `allInOne.files`, and the builds ahead of the release, where one is published, under `preview`, the newest alpha, beta or release candidate, and `nightly`, the newest nightly, each listed under the release's files with its own version. The Remote Controller asks for the person's own BMO server's address on its first run, so the same installers serve every deployment. Until a release is published the address answers 404, and the section says no release is available yet and links to the release documentation. The testbed deploys the site (「Deploying」 below).
 
 The what's-new section states in plain words what the release adds, each item backed by the public repositories, with the new screens beside it; its words stand in `src/i18n/` under `whatsNew`.
 
@@ -36,6 +36,17 @@ picture loads, carries alternative text and is a capture in the page's own captu
 comparison holds a row for every capability with every mark and footnote, the language menu reaches every version, nothing reaches past the window's right edge, and an unknown address
 answers with the not-found page. It needs the Chromium build `playwright-core` pins, and skips where it is missing.
 
+## Deploying
+
+The testbed deploys the site by `testbed.toml`, like every other unit, so a commit on main goes live with its
+repository's batch deployment. The gate runs `bun run check`, builds `dist/` and runs the tests against it; the build
+step then builds the commit into the release, and the release's `dist/` is copied whole onto the host that serves the
+domain with `rsync -a --delete`, before the deploy tree is flipped. Which host and which folder stand in the
+machine's settings, one rsync destination in `env/publish-target` under the site's data root, never in this
+repository. Once the release is live, `scripts/deploy/served.ts` holds the home page the site's address serves to
+the release's own `dist/index.html`. The deployment record, `deployed.json` under the deploy root, names the commit
+the host serves.
+
 ## Layout
 
 | Path | Holds |
@@ -48,6 +59,8 @@ answers with the not-found page. It needs the Chromium build `playwright-core` p
 | `src/assets/shots/` | The screenshots the pages show, as WebP sources the build turns into AVIF and WebP sizes |
 | `src/styles/global.css` | The one stylesheet |
 | `scripts/shots/` | The capture scripts the screenshots were taken with |
+| `scripts/deploy/` | The deployment's check that the site's address serves the release's build |
+| `testbed.toml` | How the testbed checks, tests, builds and deploys the site |
 | `tests/` | The browser test of the built pages |
 
 ## Screenshots
