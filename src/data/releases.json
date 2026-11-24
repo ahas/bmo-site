@@ -96,7 +96,7 @@
                 "첫 실행은 동의와 채팅 서비스 선택, 기기 점검, 필수 프로그램 설치, 입력값, 설치 진행을 한 화면씩 안내하고, 실패하면 멈춘 곳부터 다시 이어 갑니다. 입력한 값은 명령줄, 로그, 앱 기록 어디에도 남지 않습니다.",
                 "Linux에서는 메모리 16GB와 디스크 60GB가 필요합니다. Windows에서는 앱 전용 WSL 2 배포판 안에서 돌도록 만들어졌으며, 실제 Windows에서의 검증은 아직 남아 있습니다.",
                 "BMO 원격 제어기는 이미 운영 중인 내 BMO 서버의 콘솔을 창에 띄우고, 내장된 jake 에이전트로 이 PC를 BMO가 작업할 수 있는 기기로 연결합니다. 연결은 콘솔에서 코드를 확인해 승인하는 페어링으로 하며, 자격 증명은 운영체제의 자격 증명 저장소에만 둡니다.",
-                "두 앱 모두 트레이 아이콘과 콘솔이 직접 그리는 프레임 없는 창을 쓰고, 안정 채널과 나이틀리 채널에서 서명이 확인된 업데이트만 설치합니다. 설치 파일은 GitHub 릴리즈로 배포됩니다.",
+                "두 앱 모두 트레이 아이콘과 콘솔이 직접 그리는 프레임 없는 창을 쓰고, 안정(stable), 프리뷰(preview), 나이틀리(nightly) 채널 가운데 하나에서 서명이 확인된 업데이트만 설치합니다. 설치 파일은 GitHub 릴리즈로 배포됩니다.",
                 "데스크톱 앱의 공식 빌드는 GitHub 릴리즈에서 업데이트를 받아, 앱을 끝내거나 아무 일도 하지 않을 때 창 없이 조용히 설치하고 트레이에 「업데이트됨」을 띄웁니다. 한 PC에는 에이전트 하나만 붙으며, 설치된 jake가 있으면 앱이 「내장 에이전트로 전환」을 제안합니다."
               ]
             },
@@ -239,7 +239,7 @@
                 "The first run walks through consent and the choice of chat service, a machine check, installing prerequisites, inputs and the install itself one screen at a time, and resumes where it stopped after a failure. Values you enter never appear on a command line, in a log or in the app's own record.",
                 "On Linux it needs 16 GB of memory and 60 GB of disk. On Windows it is built to run inside a WSL 2 distribution of its own, which has yet to be verified on real Windows machines.",
                 "The BMO Remote Controller shows the console of the BMO server you already run in a window, and its built-in jake agent joins this PC as a machine BMO can work on. It connects by pairing, approved in the console against a code shown on both sides, and keeps its credential only in the operating system's credential store.",
-                "Both apps use a tray icon and a frameless window whose frame the console draws itself, and install only signature-verified updates from a stable or a nightly channel. Installers are distributed as GitHub releases.",
+                "Both apps use a tray icon and a frameless window whose frame the console draws itself, and install only signature-verified updates from one of three channels, stable, preview or nightly. Installers are distributed as GitHub releases.",
                 "Official desktop builds take their updates from GitHub releases and install them quietly, with no window, when the app quits or stands idle, then say \"Updated\" in the tray. One machine carries one agent: where an installed jake serves it, the app offers to switch to its built-in agent."
               ]
             },
@@ -382,7 +382,7 @@
                 "初回起動では、同意とチャットサービスの選択、機器のチェック、必要なプログラムのインストール、入力値、インストールの進行を一画面ずつ案内し、失敗しても止まったところから再開します。入力した値は、コマンドライン、ログ、アプリの記録のどこにも残りません。",
                 "Linuxではメモリー16GBとディスク60GBが必要です。Windowsではアプリ専用のWSL 2ディストリビューションの中で動くように作られていますが、実際のWindowsでの検証はまだ残っています。",
                 "BMOリモートコントローラーは、すでに運用している自分のBMOサーバーのコンソールをウィンドウに表示し、内蔵のjakeエージェントでこのPCをBMOが作業できる機器としてつなぎます。接続はコンソールでコードを確かめて承認するペアリングで行い、認証情報はOSの資格情報ストアにだけ保管します。",
-                "どちらのアプリもトレイアイコンと、コンソール自身が枠を描くフレームレスウィンドウを使い、安定版とナイトリーのチャンネルから署名が確認された更新だけをインストールします。インストーラーはGitHubのリリースで配布されます。",
+                "どちらのアプリもトレイアイコンと、コンソール自身が枠を描くフレームレスウィンドウを使い、安定版(stable)、プレビュー(preview)、ナイトリー(nightly)のいずれかのチャンネルから署名が確認された更新だけをインストールします。インストーラーはGitHubのリリースで配布されます。",
                 "デスクトップアプリの公式ビルドは GitHub のリリースから更新を受け取り、アプリの終了時や何もしていないときにウィンドウなしで静かにインストールし、トレイに「アップデート済み」を表示します。1台の PC につなぐエージェントは一つだけで、jake がインストール済みならアプリが内蔵エージェントへの切り替えを提案します。"
               ]
             },
@@ -525,7 +525,7 @@
                 "首次运行会逐屏引导完成同意与聊天服务选择、设备检查、必备程序安装、输入信息和安装过程，失败后会从中断处继续。输入的值不会留在命令行、日志或应用记录中的任何地方。",
                 "在 Linux 上需要 16 GB 内存和 60 GB 磁盘。在 Windows 上，它被设计为在应用专属的 WSL 2 发行版中运行，但尚未在真实的 Windows 上完成验证。",
                 "BMO 远程控制器会在窗口中显示你已在运行的 BMO 服务器的控制台，并通过内置的 jake 代理把这台 PC 接入为 BMO 可以工作的设备。连接通过配对完成，需在控制台核对两边显示的代码后批准，凭据只保存在操作系统的凭据存储中。",
-                "两款应用都使用托盘图标和由控制台自行绘制边框的无边框窗口，只从稳定版或每夜版通道安装签名验证通过的更新。安装程序通过 GitHub Releases 发布。",
+                "两款应用都使用托盘图标和由控制台自行绘制边框的无边框窗口，只从稳定版（stable）、预览版（preview）或每夜版（nightly）三个通道之一安装签名验证通过的更新。安装程序通过 GitHub Releases 发布。",
                 "桌面应用的官方构建从 GitHub Releases 获取更新，在退出应用或空闲时无窗口地静默安装，并在托盘显示「已更新」。一台电脑只接入一个智能体：已安装 jake 时，应用会提示切换到内置智能体。"
               ]
             },

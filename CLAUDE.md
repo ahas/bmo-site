@@ -19,9 +19,11 @@
   way), bundles each with Swagger Parser and writes it under `src/data/openapi/` with `snapshot.json`; commit the
   refreshed snapshot. At build time Swagger Parser resolves each document and the pages render it statically, a page a
   unit; the search reads `/api/search.json`. Descriptions are the units' own English.
-- **Release notes are data.** `src/data/releases.json` holds one entry a release, newest first: its version (the
-  whole set shares one), `upcoming` or `released`, its date once released, and its notes in all four languages with
-  the same sections and items. A release adds its entry at the head; the page needs no other change.
+- **Release notes are data.** `src/data/releases.json` holds one entry a stable release or patch, newest first: its
+  version (the whole set shares one), `upcoming` or `released`, its date once released, and its notes in all four
+  languages with the same sections and items. A release adds its entry at the head, and may stand there as `upcoming`
+  before it is released; the page needs no other change. Nightlies, alphas, betas and release candidates have no
+  entry; the page's words state the versioning scheme and the desktop update channels.
 - **Public repositories only.** `src/lib/repositories.ts` lists what the site links to; a repository that is not
   public is never named or linked anywhere on the site.
 - **Demo data only in pictures.** Screenshots come from the units' browser-test harnesses with demo answers
