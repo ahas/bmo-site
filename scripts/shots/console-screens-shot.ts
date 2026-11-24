@@ -1,15 +1,17 @@
 // More of the console's screens on the console bmo-web stands up for its browser tests (its
-// tests/support/browser-console.ts), each in both colour schemes: the agency's roles as its stand-in serves them, the
-// GPU cards of the monitor's services tab answered with a demo cluster, and a running TODO item's job log answered
-// with a demo run. Usage: `bun scripts/shots/console-screens-shot.ts [agents|cards|job ...]`, every screen where none
-// is named.
+// tests/support/browser-console.ts), each in the language given and in both colour schemes: the agency's roles as its
+// stand-in serves them, the GPU cards of the monitor's services tab answered with a demo cluster, and a running TODO
+// item's job log answered with a demo run. The cluster's events and the worker's log are what the units write, in
+// English in every language. Usage: `bun scripts/shots/console-screens-shot.ts <en|ko|ja|zh> [agents|cards|job ...]`,
+// every screen where none is named.
 import { chromium } from "playwright-core";
 
-import { OUT, ORIGIN, demoContext, signedIn, swapTexts } from "./console";
-import { NOW, item } from "./demo";
-import { THEMES } from "./locale";
+import { OUT, ORIGIN, demoContext, shown, signedIn, swapTexts } from "./console";
+import { NOW, runningItemOf } from "./demo";
+import { THEMES, localeOf } from "./locale";
 
 import type { BrowserContext, Page } from "playwright-core";
+import type { Locale } from "./locale";
 
 const GiB = 1024;
 
@@ -67,10 +69,9 @@ const CARDS = {
 
 const SEAT = "builder-2";
 const JOB = 9284;
-const ITEM = item(1284, "노트 붙여넣기 줄바꿈 유지", {
-  instruction: "노트 앱에서 여러 줄을 붙여넣으면 줄바꿈이 사라지는 버그를 고쳐 주세요.", worker: "note", status: "running", running: true, liveState: "running", attempts: 1,
-  createdAt: NOW - 7200,
-});
+const [language, ...asked] = process.argv.slice(2);
+const locale = localeOf(language);
+const ITEM = runningItemOf(locale);
 const RUN = { id: JOB, kind: "worker", agent: SEAT, chatId: null, messageId: null, startedAt: NOW - 900, unit: `job-${JOB}`, capSeconds: null, depth: null, model: null, startedBy: null, todoId: ITEM.id, progress: null, stop: { kind: "item", id: String(ITEM.id) } };
 let lineId = 100;
 const line = (kind: "text" | "tool" | "tool-result", text: string, ago: number, name: string | null = null, ref: string | null = null) => ({
@@ -95,9 +96,9 @@ const LOG = [
 
 // --- Driving ---
 
-async function settle(page: Page, wait: number): Promise<void> {
-  await page.waitForTimeout(wait);
-  await swapTexts(page);
+async function settle(page: Page, text: string, locale: Locale): Promise<void> {
+  await shown(page, text);
+  await swapTexts(page, locale);
   await page.waitForTimeout(500);
 }
 
@@ -106,7 +107,7 @@ const SCREENS: Record<string, (context: BrowserContext) => Promise<Page>> = {
     const page = await context.newPage();
 
     await page.goto(`${ORIGIN}/agents?tab=roles`);
-    await settle(page, 12000);
+    await settle(page, "voyager", locale);
 
     return page;
   },
@@ -117,7 +118,7 @@ const SCREENS: Record<string, (context: BrowserContext) => Promise<Page>> = {
     const page = await context.newPage();
 
     await page.goto(`${ORIGIN}/monitor?tab=services`);
-    await settle(page, 12000);
+    await settle(page, "gpu-node-2", locale);
 
     return page;
   },
@@ -144,13 +145,12 @@ const SCREENS: Record<string, (context: BrowserContext) => Promise<Page>> = {
 
     await page.goto(`${ORIGIN}/?todo=${ITEM.id}`);
     await page.locator("[data-item-state-log]").click({ timeout: 60_000 });
-    await settle(page, 6000);
+    await settle(page, "Every check passes.", locale);
 
     return page;
   },
 };
 
-const asked = process.argv.slice(2);
 const session = await signedIn();
 const browser = await chromium.launch();
 
@@ -161,11 +161,11 @@ try {
     if (!screen) throw new Error(`no console screen named ${name}`);
 
     for (const theme of THEMES) {
-      const context = await demoContext(browser, session, theme);
+      const context = await demoContext(browser, session, theme, locale);
       const page = await screen(context);
 
-      await page.screenshot({ path: `${OUT}${name}.ko.${theme}.png` });
-      console.log("saved", `${name}.ko.${theme}`);
+      await page.screenshot({ path: `${OUT}${name}.${locale}.${theme}.png` });
+      console.log("saved", `${name}.${locale}.${theme}`);
       await context.close();
     }
   }

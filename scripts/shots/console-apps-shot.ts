@@ -2,12 +2,12 @@
 // tests/support/browser-console.ts), in the language given and in both colour schemes, each answered with a demo
 // company: the organisation screen's agents tab for a team three links down the delegation chain, the company's app
 // catalogue, the reader's own personal apps in the settings, and the language picker of the display settings. Usage:
-// `bun scripts/shots/console-apps-shot.ts <en|ko> [org|catalogue|personal-apps|language ...]`, every screen where
+// `bun scripts/shots/console-apps-shot.ts <en|ko|ja|zh> [org|catalogue|personal-apps|language ...]`, every screen where
 // none is named.
 import { chromium } from "playwright-core";
 
-import { OUT, ORIGIN, demoContext, signedIn, swapTexts } from "./console";
-import { NOW } from "./demo";
+import { OUT, ORIGIN, demoContext, shown, signedIn, swapTexts } from "./console";
+import { NOW, ROOM_TITLES } from "./demo";
 import { THEMES, localeOf } from "./locale";
 
 import type { BrowserContext, Page } from "playwright-core";
@@ -17,7 +17,23 @@ const DAY = 86_400;
 
 // --- The words of the demo company, in each capture language ---
 
-const WORDS = {
+type App = readonly [title: string, description: string];
+
+interface Words {
+  company: string;
+  units: readonly [string, string, string, string];
+  instructions: string;
+  above: readonly string[];
+  roles: readonly [string, string, string, string, string, string];
+  repositories: readonly [string, string];
+  people: readonly string[];
+  review: string;
+  /** What ends a sentence in the language, after an app's description in the reader's own list. */
+  stop: string;
+  apps: Record<"weekly" | "rates" | "rooms" | "receipts" | "trip" | "sheet", App>;
+}
+
+const WORDS: Record<Locale, Words> = {
   ko: {
     company: "한빛 스튜디오",
     units: ["제품개발본부", "앱개발팀", "디자인팀", "경영지원팀"],
@@ -27,6 +43,7 @@ const WORDS = {
     repositories: ["한빛 모바일 앱", "한빛 API 서버"],
     people: ["Alex", "김하늘", "박서준", "이도윤", "최지우"],
     review: "읽는 파일과 보내는 주소가 설명과 맞습니다.",
+    stop: ".",
     apps: {
       weekly: ["주간 보고 정리", "한 주의 TODO와 커밋을 모아 주간 보고 초안을 씁니다"],
       rates: ["환율 알림", "아침마다 환율을 확인해 정한 값을 넘으면 알려 줍니다"],
@@ -45,6 +62,7 @@ const WORDS = {
     repositories: ["Northwind mobile app", "Northwind API server"],
     people: ["Alex", "Sam Lee", "Priya Shah", "Jonas Berg", "Mia Chen"],
     review: "The files it reads and the addresses it calls match its description.",
+    stop: ".",
     apps: {
       weekly: ["Weekly report", "Drafts the weekly report from the week's TODO items and commits"],
       rates: ["Exchange rate alert", "Checks the exchange rate each morning and tells you when it passes your mark"],
@@ -54,9 +72,45 @@ const WORDS = {
       sheet: ["Expense sheet upload", "Uploads the sorted expense table to the team's spreadsheet"],
     },
   },
-} as const;
-
-type Words = (typeof WORDS)[Locale];
+  ja: {
+    company: "こもれびスタジオ",
+    units: ["製品開発本部", "アプリ開発チーム", "デザインチーム", "管理部"],
+    instructions: "コードレビューのコメントは日本語で書き、コミットメッセージとブランチ名は英語で書きます。",
+    above: ["お客様の個人情報は社外のサービスに送りません。", "すべての変更はテストに通ってからデプロイします。"],
+    roles: ["ワーカー", "シーカー", "ビルダー", "スカウト", "プロデューサー", "ボイジャー"],
+    repositories: ["こもれびモバイルアプリ", "こもれび API サーバー"],
+    people: ["Alex", "佐藤 葵", "鈴木 蓮", "高橋 陽菜", "田中 湊"],
+    review: "読むファイルと送信先のアドレスが説明と一致しています。",
+    stop: "。",
+    apps: {
+      weekly: ["週報まとめ", "1週間の TODO とコミットを集めて週報の下書きを書きます"],
+      rates: ["為替アラート", "毎朝為替レートを確認し、決めた値を超えたら知らせます"],
+      rooms: ["空き会議室検索", "社内の予約システムから今日空いている会議室を探します"],
+      receipts: ["レシート整理", "ドライブに上げたレシートの写真を月ごとの支出表にまとめます"],
+      trip: ["出張スケジュール", "出張のメールとカレンダーを読んで1日ごとの日程表を作ります"],
+      sheet: ["支出シートのアップロード", "まとめた支出表をチームのスプレッドシートに上げます"],
+    },
+  },
+  zh: {
+    company: "青禾工作室",
+    units: ["产品研发中心", "应用开发组", "设计组", "行政支持组"],
+    instructions: "代码评审意见用中文写，提交信息和分支名用英文写。",
+    above: ["客户的个人信息不发送到公司以外的服务。", "所有改动都要在测试通过后再部署。"],
+    roles: ["工作器", "探索者", "构建者", "侦察员", "制作人", "远航者"],
+    repositories: ["青禾移动应用", "青禾 API 服务器"],
+    people: ["Alex", "王雨桐", "李浩然", "张思远", "陈可欣"],
+    review: "读取的文件和访问的地址与说明一致。",
+    stop: "。",
+    apps: {
+      weekly: ["周报整理", "汇总一周的 TODO 和提交，写出周报草稿"],
+      rates: ["汇率提醒", "每天早上查看汇率，超过设定值时提醒你"],
+      rooms: ["查找空闲会议室", "从公司预订系统中找出今天还空着的会议室"],
+      receipts: ["收据整理", "把上传到云盘的收据照片整理成每月支出表"],
+      trip: ["出差日程表", "读取出差邮件和日历，生成按天排列的日程表"],
+      sheet: ["上传支出表", "把整理好的支出表上传到团队的电子表格"],
+    },
+  },
+};
 
 // --- The organisation: a company, units under it and a team under the first ---
 
@@ -150,7 +204,7 @@ function catalogueOf(words: Words) {
 
 function personalAppsOf(words: Words) {
   const app = (name: string, [title, description]: readonly [string, string], version: string, ago: number, permissions: { network: string[]; secrets: string[] }, kept: string[]) => ({
-    name, version, putAt: (NOW - ago) * 1000, entries: [{ name: `my/${name}`, title, description: `${description}.` }], permissions, kept,
+    name, version, putAt: (NOW - ago) * 1000, entries: [{ name: `my/${name}`, title, description: `${description}${words.stop}` }], permissions, kept,
   });
 
   return {
@@ -166,9 +220,9 @@ function personalAppsOf(words: Words) {
 
 // --- Driving ---
 
-async function settle(page: Page, wait: number, locale: Locale): Promise<void> {
-  await page.waitForTimeout(wait);
-  await swapTexts(page, [], locale);
+async function settle(page: Page, text: string, locale: Locale): Promise<void> {
+  await shown(page, text);
+  await swapTexts(page, locale);
   await page.waitForTimeout(500);
 }
 
@@ -179,7 +233,7 @@ const SCREENS: Record<string, (context: BrowserContext, locale: Locale) => Promi
     const page = await context.newPage();
 
     await page.goto(`${ORIGIN}/organization?company=1&unit=${TEAM}&tab=agents`);
-    await settle(page, 12000, locale);
+    await settle(page, WORDS[locale].instructions, locale);
 
     return page;
   },
@@ -189,7 +243,7 @@ const SCREENS: Record<string, (context: BrowserContext, locale: Locale) => Promi
     const page = await context.newPage();
 
     await page.goto(`${ORIGIN}/app-catalogue`);
-    await settle(page, 12000, locale);
+    await settle(page, WORDS[locale].apps.weekly[0], locale);
 
     return page;
   },
@@ -199,7 +253,7 @@ const SCREENS: Record<string, (context: BrowserContext, locale: Locale) => Promi
     const page = await context.newPage();
 
     await page.goto(`${ORIGIN}/?settings=personal-apps`);
-    await settle(page, 12000, locale);
+    await settle(page, WORDS[locale].apps.receipts[0], locale);
 
     return page;
   },
@@ -207,9 +261,9 @@ const SCREENS: Record<string, (context: BrowserContext, locale: Locale) => Promi
     const page = await context.newPage();
 
     await page.goto(`${ORIGIN}/?settings=theme`);
-    await page.waitForTimeout(12000);
+    await shown(page, ROOM_TITLES[locale]["43"]!, 6000);
     await page.locator("[data-language-choice]").first().click();
-    await settle(page, 1500, locale);
+    await settle(page, "English", locale);
 
     return page;
   },
@@ -227,7 +281,7 @@ try {
     if (!screen) throw new Error(`no console screen named ${name}`);
 
     for (const theme of THEMES) {
-      const context = await demoContext(browser, session, theme, 1440, 900, locale);
+      const context = await demoContext(browser, session, theme, locale);
       const page = await screen(context, locale);
 
       await page.screenshot({ path: `${OUT}${name}.${locale}.${theme}.png` });

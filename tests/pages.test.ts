@@ -11,7 +11,7 @@ import type { Browser, Page } from "playwright-core";
 // The built pages opened in a real browser at a desktop's width, a tablet's and a phone's, in the dark colour scheme
 // and the light one: every key section stands on the page with its heading, what's new holds its ten items and the
 // download section its two desktop apps, every picture has its words and is a
-// capture in the page's own capture language (Korean on /ko/, English on every other page) and in the scheme the
+// capture in the page's own language and in the scheme the
 // page stands in, both read from the picture's file name, the comparison stands whole, the language menu reaches
 // every version, and nothing is wider than the window. Run `bun run build` first; the test reads dist/ as a static host serves it, and is
 // skipped where the browser build Playwright pins is not on the machine.
@@ -33,8 +33,8 @@ const WIDTHS = [
 const PAGES = [
   { path: "/", lang: "en", capture: "en" },
   { path: "/ko/", lang: "ko", capture: "ko" },
-  { path: "/ja/", lang: "ja", capture: "en" },
-  { path: "/zh/", lang: "zh-Hans", capture: "en" },
+  { path: "/ja/", lang: "ja", capture: "ja" },
+  { path: "/zh/", lang: "zh-Hans", capture: "zh" },
 ];
 
 const SCHEMES = ["dark", "light"] as const;

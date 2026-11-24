@@ -23,14 +23,6 @@ export function messagesFor(locale: Locale): Messages {
 }
 
 /**
- * The language the page's screenshots are captured in. The platform's screens speak English and Korean; a page in
- * any other language shows the English captures.
- */
-export function captureLocale(locale: Locale): "en" | "ko" {
-  return locale === "ko" ? "ko" : "en";
-}
-
-/**
  * Where a page that stands in every language is built: English at the root and every other language under its code,
  * the way the home page stands. A page under src/pages/[...locale]/ takes these as its static paths.
  */

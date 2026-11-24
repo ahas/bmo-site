@@ -16,8 +16,13 @@ const guide = defineCollection({
     shots: z
       .array(
         z.object({
-          // Every screen a chapter shows is captured in Korean at least, in both colour schemes.
-          name: z.string().refine((name) => ["dark", "light"].every((scheme) => existsSync(`./src/assets/shots/${name}-ko-${scheme}.webp`)), "no such capture under src/assets/shots/"),
+          // Every screen a chapter shows is captured in every language, in both colour schemes.
+          name: z
+            .string()
+            .refine(
+              (name) => ["en", "ko", "ja", "zh"].every((language) => ["dark", "light"].every((scheme) => existsSync(`./src/assets/shots/${name}-${language}-${scheme}.webp`))),
+              "not captured in every language and scheme under src/assets/shots/"
+            ),
           alt: z.string().min(11),
         })
       )

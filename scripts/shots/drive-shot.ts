@@ -1,22 +1,29 @@
 // The Files screen on bmo-drive's own browser host (its tests/support/screen.ts), answered with a demo drive in the
-// locale given, the page's words switched to that locale. Usage: `bun scripts/shots/drive-shot.ts <en|ko>`.
+// locale given, the page's words switched to that locale. Usage: `bun scripts/shots/drive-shot.ts <en|ko|ja|zh>`.
 import { readFileSync } from "node:fs";
 
 import { standScreen } from "../../../drive/client/tests/support/screen.ts";
 import type { Route } from "playwright-core";
 
-import { REMOUNT_ROUTE, SWITCH_LOCALE, THEMES, commonWords, localeOf } from "./locale";
+import { REMOUNT_ROUTE, SWITCH_LOCALE, THEMES, browserLocale, commonWords, localeOf, packName } from "./locale";
+
+import type { Locale } from "./locale";
 
 const locale = localeOf(process.argv[2]);
 const OUT = new URL("../../shots-out/", import.meta.url).pathname;
-const BUNDLE_WORDS = JSON.parse(readFileSync(new URL(`../../../drive/client/i18n/${locale}.json`, import.meta.url), "utf8")) as Record<string, unknown>;
+const BUNDLE_WORDS = JSON.parse(readFileSync(new URL(`../../../drive/client/i18n/${packName(locale)}.json`, import.meta.url), "utf8")) as Record<string, unknown>;
 const NOW = Date.UTC(2026, 10, 23, 9);
 const HOUR = 3600_000, DAY = 24 * HOUR, MB = 1024 * 1024;
 
-const W = {
+type Names = Record<"drive" | "projects" | "design" | "photos" | "research" | "release" | "deck" | "budget" | "logo" | "video" | "contract" | "voice" | "minutes" | "sketch" | "data" | "archive", string>;
+
+const NAMES: Record<Locale, Names> = {
   en: { drive: "My drive", projects: "Projects", design: "Design", photos: "Photos", research: "Research", release: "Release notes 0.4.md", deck: "Demo day deck.pdf", budget: "Q4 budget.xlsx", logo: "Logo draft.png", video: "Product tour.mp4", contract: "Partner agreement.docx", voice: "Morning briefing.mp3", minutes: "Kickoff minutes.md", sketch: "Wireframes.fig", data: "Survey results.csv", archive: "Assets backup.zip" },
   ko: { drive: "내 드라이브", projects: "프로젝트", design: "디자인", photos: "사진", research: "리서치", release: "릴리스 노트 0.4.md", deck: "데모 데이 발표.pdf", budget: "4분기 예산.xlsx", logo: "로고 초안.png", video: "제품 소개 영상.mp4", contract: "파트너 계약서.docx", voice: "아침 브리핑.mp3", minutes: "킥오프 회의록.md", sketch: "와이어프레임.fig", data: "설문 결과.csv", archive: "에셋 백업.zip" },
-}[locale];
+  ja: { drive: "マイドライブ", projects: "プロジェクト", design: "デザイン", photos: "写真", research: "リサーチ", release: "リリースノート 0.4.md", deck: "デモデー発表資料.pdf", budget: "第4四半期予算.xlsx", logo: "ロゴ案.png", video: "製品紹介動画.mp4", contract: "パートナー契約書.docx", voice: "朝のブリーフィング.mp3", minutes: "キックオフ議事録.md", sketch: "ワイヤーフレーム.fig", data: "アンケート結果.csv", archive: "素材バックアップ.zip" },
+  zh: { drive: "我的云盘", projects: "项目", design: "设计", photos: "照片", research: "调研", release: "发布说明 0.4.md", deck: "演示日幻灯片.pdf", budget: "第四季度预算.xlsx", logo: "标志草稿.png", video: "产品介绍视频.mp4", contract: "合作协议.docx", voice: "晨间简报.mp3", minutes: "启动会议纪要.md", sketch: "线框图.fig", data: "问卷结果.csv", archive: "素材备份.zip" },
+};
+const W = NAMES[locale];
 
 type Kind = "folder" | "file";
 const entry = (place: string, folder: string, name: string, kind: Kind, bytes: number | null, ago: number) => ({
@@ -51,10 +58,12 @@ const LISTINGS: Record<string, ReturnType<typeof entry>[]> = {
     entry("drive", FOLDER, W.archive, "file", 640 * MB, 14 * DAY),
   ],
 };
-const NOTES = {
+const NOTES: Record<Locale, string> = {
   en: "# Release 0.4\n\n## Calendar\n- Holidays in the week view\n\n## Drive\n- Share links with an end date\n\n## Notes\n- Paste keeps line breaks\n\n## Voice\n- Briefing speed control\n",
   ko: "# 릴리스 0.4\n\n## 캘린더\n- 주간 보기에 공휴일 표시\n\n## 드라이브\n- 만료일이 있는 공유 링크\n\n## 노트\n- 붙여넣어도 줄바꿈 유지\n\n## 음성\n- 브리핑 재생 속도 조절\n",
-}[locale];
+  ja: "# リリース 0.4\n\n## カレンダー\n- 週表示に祝日を表示\n\n## ドライブ\n- 有効期限付きの共有リンク\n\n## ノート\n- 貼り付けても改行を保持\n\n## 音声\n- ブリーフィングの再生速度を調整\n",
+  zh: "# 版本 0.4\n\n## 日历\n- 周视图显示节假日\n\n## 云盘\n- 带到期日的共享链接\n\n## 笔记\n- 粘贴时保留换行\n\n## 语音\n- 简报播放速度调节\n",
+};
 const OWNER = { administrator: false, ownerKey: "owner-a", quotaBytes: null, usedBytes: 38 * 1024 * MB };
 const unanswered: string[] = [];
 
@@ -72,7 +81,7 @@ async function answer(route: Route): Promise<void> {
   if (path === "/owner") return json(OWNER);
   if (path === "/places") return json({ items: PLACES, more: false });
   if (path === "/shared" || path === "/shares" || path === "/member-shares") return json({ items: [], more: false });
-  if (parts[0] === "places" && parts[2] === "entries" && parts.length === 5 && parts[4] === "content") return route.fulfill({ contentType: "text/markdown", body: NOTES });
+  if (parts[0] === "places" && parts[2] === "entries" && parts.length === 5 && parts[4] === "content") return route.fulfill({ contentType: "text/markdown", body: NOTES[locale] });
   if (parts[0] === "places" && parts[2] === "entries" && parts.length === 3) {
     const items = parts[1] === "drive" ? (LISTINGS[url.searchParams.get("path") ?? ""] ?? []) : [];
 
@@ -91,7 +100,7 @@ try {
   for (const theme of THEMES) for (const [name, options] of [
     ["drive", { viewport: { width: 1440, height: 900 }, deviceScaleFactor: 2 }],
   ] as const) {
-    const context = await screen.browser.newContext({ ...options, locale: locale === "ko" ? "ko-KR" : "en-US", timezoneId: "UTC", colorScheme: theme, reducedMotion: "reduce" });
+    const context = await screen.browser.newContext({ ...options, locale: browserLocale(locale), timezoneId: "UTC", colorScheme: theme, reducedMotion: "reduce" });
 
     await context.addCookies([{ name: "nuxt-color-mode", value: theme, url: screen.origin }]);
     await context.route((url) => url.pathname.startsWith("/drive/"), answer);
@@ -100,7 +109,7 @@ try {
 
     await page.goto(`${screen.origin}/files?place=drive&path=${encodeURIComponent(FOLDER)}`, { waitUntil: "load", timeout: 180_000 });
     await page.locator(`[data-entry="${W.release}"]`).first().waitFor({ timeout: 120_000 });
-    if (!(await page.evaluate(SWITCH_LOCALE, { selector: "#__nuxt", locale, words }))) throw new Error("the page's vue-i18n was not found");
+    if (!(await page.evaluate(SWITCH_LOCALE, { selector: "#__nuxt", locale: packName(locale), words }))) throw new Error("the page's vue-i18n was not found");
     if (!(await page.evaluate(REMOUNT_ROUTE, { selector: "#__nuxt", away: "/files?place=garage" }))) throw new Error("the page's router was not found");
     await page.locator(`[data-entry="${W.release}"]`).first().waitFor();
     await page.locator(`[data-entry="${W.release}"]`).first().click();

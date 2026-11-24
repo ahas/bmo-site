@@ -1,9 +1,11 @@
 // What a capture shows in each language the site is read in: the locale given on the command line, and the
-// console's own words for the keys a bundle's screens borrow from the console (`common.*`). The Korean words are
-// read from the console's language pack, which bmo-web holds; the console holds no English pack, so the English
-// ones are written here.
+// console's own words for the keys a bundle's screens borrow from the console (`common.*`), read from the console's
+// language pack in that language, which bmo-web holds.
 
-export type Locale = "en" | "ko";
+/** The languages every screen is captured in, one capture each, as every page of the site shows its own. */
+export const LOCALES = ["en", "ko", "ja", "zh"] as const;
+
+export type Locale = (typeof LOCALES)[number];
 
 /** The colour schemes every screen is captured in, one capture each, as the site shows the one matching its own. */
 export const THEMES = ["dark", "light"] as const;
@@ -11,51 +13,31 @@ export const THEMES = ["dark", "light"] as const;
 export type Theme = (typeof THEMES)[number];
 
 export function localeOf(argument: string | undefined): Locale {
-  if (argument === "en" || argument === "ko") return argument;
+  if ((LOCALES as readonly string[]).includes(argument ?? "")) return argument as Locale;
 
-  throw new Error("name the capture's locale: en or ko");
+  throw new Error(`name the capture's locale: ${LOCALES.join(", ")}`);
 }
 
-const ENGLISH_COMMON = {
-  status: { loading: "Loading", no_match: "No match", no_choices: "No items" },
-  title: { discard_changes: "Discard unsaved changes?" },
-  label: {
-    forever: "No end",
-    hours: "{h} h",
-    hours_minutes: "{h} h {m} min",
-    minutes: "{m} min",
-    left_days: "{n} days left",
-    left_hours: "{n} h left",
-    left_minutes: "{n} min left",
-    left_under_minute: "Under a minute left",
-  },
-  action: {
-    cancel: "Cancel",
-    close: "Close",
-    discard: "Discard",
-    save: "Save",
-    previous_month: "Previous month",
-    next_month: "Next month",
-    previous_year: "Previous year",
-    next_year: "Next year",
-    refresh: "Refresh",
-    see_all: "See all",
-    back: "Back",
-    share: "Share",
-    download: "Download",
-    more: "More",
-  },
-  aria: { search_named: "Search {name}" },
-  placeholder: { search: "Search" },
+/** The language a capture's browser speaks, which the console and the units' screens follow for a reader naming none. */
+export function browserLocale(locale: Locale): string {
+  return { en: "en-US", ko: "ko-KR", ja: "ja-JP", zh: "zh-CN" }[locale];
+}
+
+/** The name of the language pack the console and the units keep for the locale. */
+export function packName(locale: Locale): string {
+  return locale === "zh" ? "zh-CN" : locale;
+}
+
+const PACKS: Record<Locale, () => Promise<{ default: { common: Record<string, unknown> } }>> = {
+  en: () => import("../../../web/client/apps/web/i18n/locales/en.yaml"),
+  ko: () => import("../../../web/client/apps/web/i18n/locales/ko.yaml"),
+  ja: () => import("../../../web/client/apps/web/i18n/locales/ja.yaml"),
+  zh: () => import("../../../web/client/apps/web/i18n/locales/zh-CN.yaml"),
 };
 
 /** The console's `common` words in the locale. */
 export async function commonWords(locale: Locale): Promise<Record<string, unknown>> {
-  if (locale === "en") return ENGLISH_COMMON;
-
-  const pack = (await import("../../../web/client/apps/web/i18n/locales/ko.yaml")) as { default: { common: Record<string, unknown> } };
-
-  return pack.default.common;
+  return (await PACKS[locale]()).default.common;
 }
 
 /** Sets a mounted Vue app's vue-i18n locale and merges words into it, in the page. */

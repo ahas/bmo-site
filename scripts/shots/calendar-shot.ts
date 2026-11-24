@@ -1,28 +1,45 @@
 // The calendar's week on bmo-calendar's own harness page (its tests/browser/harness.ts), answered with demo
-// calendars and events in the locale given, the page's words switched to that locale.
-// Usage: `bun scripts/shots/calendar-shot.ts <en|ko>`.
+// calendars and events in the locale given, the page's words switched to that locale's pack, and the clock held at
+// one moment of the week so every language shows the same day marked as today.
+// Usage: `bun scripts/shots/calendar-shot.ts <en|ko|ja|zh>`.
 import { readFileSync, readdirSync } from "node:fs";
 import { extname, join } from "node:path";
 
 import { chromium } from "playwright-core";
 
 import { buildHarness } from "../../../calendar/client/tests/browser/harness.ts";
-import { REMOUNT_ROUTE, SWITCH_LOCALE, THEMES, commonWords, localeOf } from "./locale";
+import { REMOUNT_ROUTE, SWITCH_LOCALE, THEMES, browserLocale, commonWords, localeOf, packName } from "./locale";
+
+import type { Locale } from "./locale";
 
 const locale = localeOf(process.argv[2]);
+const pack = packName(locale);
 const OUT = new URL("../../shots-out/", import.meta.url).pathname;
 const ORIGIN = "http://page.test";
 const RELAY = "/relay/calendar";
 // The harness page, its root carrying the colour scheme as a console's root does: the class `dark` in the dark one.
-const PAGE = (theme: string) => `<!doctype html><html lang="${locale}" class="${theme}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+const PAGE = (theme: string) => `<!doctype html><html lang="${pack}" class="${theme}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <script src="/screens-harness.js" defer></script></head><body><div id="page"></div></body></html>`;
 const TYPES: Record<string, string> = { ".js": "text/javascript", ".css": "text/css", ".woff2": "font/woff2" };
-const BUNDLE_WORDS = JSON.parse(readFileSync(new URL(`../../../calendar/client/i18n/${locale}.json`, import.meta.url), "utf8")) as Record<string, unknown>;
+const BUNDLE_WORDS = JSON.parse(readFileSync(new URL(`../../../calendar/client/i18n/${pack}.json`, import.meta.url), "utf8")) as Record<string, unknown>;
 
-const W = {
+// The moment the page is read at: the Wednesday of the week shown, in the middle of its day.
+const NOW = new Date("2026-11-25T12:20:00Z");
+
+/** The demo's words in each language: the calendars, the company and the events' titles. */
+interface Words {
+  personal: string; study: string; team: string; company: string; run: string; dentist: string; group: string; paper: string;
+  groceries: string; review: string; sync: string; planning: string; oneOnOne: string; demo: string; retro: string;
+}
+
+const WORDS: Record<Locale, Words> = {
   en: { personal: "Personal", study: "Study", team: "Team", company: "Demo Lab", run: "Morning run", dentist: "Dentist", group: "Study group", paper: "Paper reading", groceries: "Groceries", review: "Design review", sync: "Weekly sync", planning: "Release planning", oneOnOne: "1:1", demo: "Demo day", retro: "Retro" },
   ko: { personal: "개인", study: "공부", team: "팀", company: "데모 랩", run: "아침 달리기", dentist: "치과", group: "스터디 모임", paper: "논문 읽기", groceries: "장보기", review: "디자인 리뷰", sync: "주간 회의", planning: "릴리스 계획", oneOnOne: "1:1 면담", demo: "데모 데이", retro: "회고" },
-}[locale];
+  ja: { personal: "個人", study: "勉強", team: "チーム", company: "デモラボ", run: "朝のランニング", dentist: "歯医者", group: "勉強会", paper: "論文を読む", groceries: "買い出し", review: "デザインレビュー", sync: "週次ミーティング", planning: "リリース計画", oneOnOne: "1on1", demo: "デモデー", retro: "振り返り" },
+  zh: { personal: "个人", study: "学习", team: "团队", company: "演示实验室", run: "晨跑", dentist: "看牙医", group: "学习小组", paper: "论文阅读", groceries: "买菜", review: "设计评审", sync: "周会", planning: "发布计划", oneOnOne: "一对一面谈", demo: "演示日", retro: "复盘" },
+};
+
+const W = WORDS[locale];
 
 const cal = (realm: string, company: string | null, id: string, name: string, color: string) => ({ id, realm, company, name, color, writers: realm === "mine" ? null : "creator", tell: realm === "mine" ? null : "creator", hidden: false, creator: "1", createdAt: 1 });
 let n = 0;
@@ -79,10 +96,12 @@ try {
     ["calendar", { viewport: { width: 1440, height: 900 }, deviceScaleFactor: 2 }],
     ["calendar-phone", { viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true }],
   ] as const) {
-    const context = await browser.newContext({ ...options, locale: locale === "ko" ? "ko-KR" : "en-US", timezoneId: "UTC", colorScheme: theme, reducedMotion: "reduce" });
+    const context = await browser.newContext({ ...options, locale: browserLocale(locale), timezoneId: "UTC", colorScheme: theme, reducedMotion: "reduce" });
 
     await context.addCookies([{ name: "nuxt-color-mode", value: theme, url: ORIGIN }]);
     const page = await context.newPage();
+
+    await page.clock.setFixedTime(NOW);
     const files = new Set(readdirSync(built.folder));
 
     await page.route((url) => url.origin === ORIGIN, async (route) => {
@@ -105,7 +124,7 @@ try {
     });
     await page.goto(`${ORIGIN}/calendar/week/${D(25)}`);
     await page.locator("[data-console-frame]").waitFor();
-    if (!(await page.evaluate(SWITCH_LOCALE, { selector: "#page", locale, words }))) throw new Error("the page's vue-i18n was not found");
+    if (!(await page.evaluate(SWITCH_LOCALE, { selector: "#page", locale: pack, words }))) throw new Error("the page's vue-i18n was not found");
     if (!(await page.evaluate(REMOUNT_ROUTE, { selector: "#page", away: "/calendar/bookings" }))) throw new Error("the page's router was not found");
     await page.waitForTimeout(3000);
     await page.screenshot({ path: `${OUT}${name}.${locale}.${theme}.png` });

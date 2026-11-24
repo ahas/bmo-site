@@ -52,35 +52,37 @@ answers with the not-found page. It needs the Chromium build `playwright-core` p
 
 ## Screenshots
 
-Every picture on a page is captured in that page's language and in both colour schemes: Korean captures on `/ko/`,
-English captures on `/`, `/ja/` and `/zh/`, since the platform's screens speak English and Korean, and the dark
-capture where the page stands dark, the light one where it stands light, as the reader's system decides
-(`prefers-color-scheme`, which the stylesheet follows as well). A source's file name ends in its language and its
-scheme, `<name>-<en|ko>-<dark|light>.webp`; `src/lib/shots.ts` names which pictures each language shows and
-`src/components/Shot.astro` offers both schemes of one. The console's organisation and app screens are captured in
-both languages; its other screens, and the brain's, are captured in Korean alone, so they are shown on `/ko/` only.
+Every place a page shows a picture shows the same screen in every language, captured in that page's language and in
+both colour schemes: the dark capture where the page stands dark, the light one where it stands light, as the
+reader's system decides (`prefers-color-scheme`, which the stylesheet follows as well). A source's file name ends in
+its language and its scheme, `<screen>-<en|ko|ja|zh>-<dark|light>.webp`; `src/lib/slots.ts` names the one screen
+each place shows, a guidebook chapter names its own in its front matter, and `src/components/Shot.astro` offers both
+schemes of one. A test holds every slot and chapter to a capture in every language and scheme; a language with no
+capture of a screen yet is captured, never shown another screen in its place.
 
 Every screen is captured at one size: a desktop screen at 1440 by 900 CSS pixels and a phone at 390 by 844,
 both at twice the pixels; a test holds every source to it.
 
 The screenshots show demo data only. They are taken from the browser-test harnesses of the units whose screens
-they show, with demo answers in place of the harnesses' own, each in both schemes:
+they show, with demo answers in place of the harnesses' own, each in the language given (`en`, `ko`, `ja` or `zh`)
+and in both schemes:
 
-- `scripts/shots/console-shot.ts <name> <path> [width] [height]`: the console room and its TODO panel, against the
-  console `bmo-web` stands up for its browser tests (`client/tests/support/browser-console.ts`, address in
-  `BMO_CONSOLE_TEST_URL`); `room /rooms/42` and, with `SKIP=2`, `room-phone /rooms/42 390 844`.
-- `scripts/shots/console-screens-shot.ts [agents|cards|job]`: on the same console, the agency's roles, the GPU cards
-  of the monitor's services tab and a running TODO item's job log.
-- `scripts/shots/console-apps-shot.ts <en|ko> [org|catalogue|personal-apps|language]`: on the same console, with a
-  demo company, the organisation screen's agents tab for a team, the app catalogue, the reader's personal apps and
+- `scripts/shots/console-shot.ts <language> <name> <path> [width] [height]`: the console room and its TODO panel,
+  against the console `bmo-web` stands up for its browser tests (`client/tests/support/browser-console.ts`, address
+  in `BMO_CONSOLE_TEST_URL`); `room /rooms/42` and, with `SKIP=3`, `room-phone /rooms/42 390 844`.
+- `scripts/shots/console-screens-shot.ts <language> [agents|cards|job]`: on the same console, the agency's roles,
+  the GPU cards of the monitor's services tab and a running TODO item's job log.
+- `scripts/shots/console-apps-shot.ts <language> [org|catalogue|personal-apps|language]`: on the same console, with
+  a demo company, the organisation screen's agents tab for a team, the app catalogue, the reader's personal apps and
   the language menu of the display settings.
-- `scripts/shots/brain-shot.ts`: a person's memories and sheet on `bmo-brain`'s browser host.
-- `scripts/shots/calendar-shot.ts <en|ko>`: the calendar's week, on `bmo-calendar`'s harness page.
-- `scripts/shots/artifact-shot.ts <en|ko>`: an archive document, on `bmo-artifact`'s browser host.
-- `scripts/shots/note-shot.ts`: a note in both languages, its notes filed in folders and bookmarked, on `bmo-note`'s
-  browser stack.
-- `scripts/shots/drive-shot.ts <en|ko>`: the Files screen, on `bmo-drive`'s browser host.
-- `scripts/shots/theater-shot.ts <en|ko>`: the theater's library, on `bmo-theater`'s generated browser host, with
+- `scripts/shots/brain-shot.ts <language>`: a person's memories and sheet on `bmo-brain`'s browser host.
+- `scripts/shots/calendar-shot.ts <language>`: the calendar's week and a phone's days, on `bmo-calendar`'s harness
+  page.
+- `scripts/shots/artifact-shot.ts <language>`: an archive document, on `bmo-artifact`'s browser host.
+- `scripts/shots/note-shot.ts [language ...]`: a note, its notes filed in folders and bookmarked, on `bmo-note`'s
+  browser stack, in every language where none is named.
+- `scripts/shots/drive-shot.ts <language>`: the Files screen, on `bmo-drive`'s browser host.
+- `scripts/shots/theater-shot.ts <language>`: the theater's library, on `bmo-theater`'s generated browser host, with
   posters drawn as abstract art.
 - `scripts/shots/webp.ts`: turns the captures in `shots-out/` into the sources under `src/assets/shots/`.
 

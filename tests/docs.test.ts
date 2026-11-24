@@ -210,7 +210,7 @@ const WIDTHS = [
 describe.skipIf(!ready)("the reading pages in a browser", () => {
   let browser: Browser;
   let site: ReturnType<typeof serveDist>;
-  // The apps chapter shows captures taken in both capture languages.
+  // The apps chapter shows screenshots.
   const pages = ["guide/", "guide/apps/", "api/", `api/${SNAPSHOT.units[0]!.name}/`, "releases/"];
 
   beforeAll(async () => {
@@ -263,8 +263,8 @@ describe.skipIf(!ready)("the reading pages in a browser", () => {
             for (const picture of pictures) {
               expect(picture.alt.length).toBeGreaterThan(10);
               expect(picture.loaded).toBe(true);
-              // A capture in the page's capture language, in the scheme the page stands in.
-              expect(picture.file).toMatch(new RegExp(`-${locale.code === "ko" ? "ko" : "en"}-${scheme}\\.`));
+              // A capture in the page's own language, in the scheme the page stands in.
+              expect(picture.file).toMatch(new RegExp(`-${locale.code}-${scheme}\\.`));
             }
 
             // The contents list stands beside a page on a wide screen and folds above it on a phone; either way each

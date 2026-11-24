@@ -5,10 +5,11 @@
 - **Four languages, one shape.** Every word a page shows lives in `src/i18n/` (`en.ts`, `ko.ts`, `ja.ts`, `zh.ts`),
   which keep the same keys; a section takes its words from there, never inline. English is at `/`, Korean at
   `/ko/`, Japanese at `/ja/`, Simplified Chinese at `/zh/`. Product names stay as they are in every language.
-- **Pictures in the page's language and colour scheme.** `/ko/` shows Korean captures only; `/`, `/ja/` and `/zh/`
-  show English captures only. Every screen is captured dark and light, a source's name ends in
-  `-<en|ko>-<dark|light>`, the page shows the capture of the scheme it stands in, and the browser test holds every
-  page to both.
+- **The same screen in every language, captured in each.** Every place a picture stands names one screen for all
+  four languages (`src/lib/slots.ts`, a guidebook chapter's front matter), and each page shows that screen captured
+  in its own language: a screen not yet captured in a language is captured, never swapped for another. Every screen
+  is captured dark and light, a source's name ends in `-<en|ko|ja|zh>-<dark|light>`, the page shows the capture of
+  the scheme it stands in, and the tests hold every slot, chapter and page to it.
 - **Three reading sections beside the home page.** The guidebook (`/guide/`), the API reference (`/api/`) and the
   release notes (`/releases/`) stand in all four languages under `src/pages/[...locale]/`, their surrounding words in
   `src/i18n/docs.ts`. The guidebook's chapters are Markdown, `src/content/guide/<language>/<chapter>.md`, Korean the

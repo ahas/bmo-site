@@ -1,12 +1,19 @@
 // An archive document on bmo-artifact's own browser host (its tests/browser/screen.ts), answered with a demo
-// document in the locale given, the page's words switched to that locale.
-// Usage: `bun scripts/shots/artifact-shot.ts <en|ko>`.
+// document in the locale given, the page's words switched to that locale's pack: the bundle's own, which the host
+// holds in Korean and English alone, and the console's `common` words.
+// Usage: `bun scripts/shots/artifact-shot.ts <en|ko|ja|zh>`.
+import { readFileSync } from "node:fs";
+
 import { standScreen } from "../../../artifact/client/tests/browser/screen.ts";
 import type { Route } from "playwright-core";
 
-import { REMOUNT_ROUTE, SWITCH_LOCALE, THEMES, commonWords, localeOf } from "./locale";
+import { REMOUNT_ROUTE, SWITCH_LOCALE, THEMES, browserLocale, commonWords, localeOf, packName } from "./locale";
+
+import type { Locale } from "./locale";
 
 const locale = localeOf(process.argv[2]);
+const pack = packName(locale);
+const BUNDLE_WORDS = JSON.parse(readFileSync(new URL(`../../../artifact/client/i18n/${pack}.json`, import.meta.url), "utf8")) as Record<string, unknown>;
 
 const OUT = new URL("../../shots-out/", import.meta.url).pathname;
 const RELAY = "/relay/artifact";
@@ -28,7 +35,18 @@ const DOCS = [
   { id: 25, kind: "page", title: "Console user guide", category: "manual", hours: 30, d: "The console's screens explained one by one." },
   { id: 24, kind: "search", title: "Vector search in PostgreSQL", category: "investigation", hours: 40, d: "pgvector index types and their recall at our sizes." },
 ];
-const CONTENT = `# Small embedding models compared
+/** The demo research document, number 31, in each language: its title, its description and its Markdown. */
+interface Research {
+  title: string;
+  description: string;
+  content: string;
+}
+
+const RESEARCH: Record<Locale, Research> = {
+  en: {
+    title: "Small embedding models compared",
+    description: "Three sub-1B embedding models measured on a week of real recall misses.",
+    content: `# Small embedding models compared
 
 > Three embedding models under one billion parameters, measured on the recall misses of one week.
 
@@ -51,8 +69,12 @@ Model A finds the most of what was missed, and Model B is the fastest at a small
 ## Recommendation
 
 Start with **Model A** for recall, and keep Model B as the fallback when the card is busy.
-`;
-const CONTENT_KO = `# 작은 임베딩 모델 비교
+`,
+  },
+  ko: {
+    title: "작은 임베딩 모델 비교",
+    description: "10억 파라미터 이하 임베딩 모델 세 개를 한 주 동안의 실제 사례로 측정했습니다.",
+    content: `# 작은 임베딩 모델 비교
 
 > 10억 파라미터 이하의 임베딩 모델 세 개를, 한 주 동안 놓친 기억 찾기 사례로 측정했습니다.
 
@@ -75,10 +97,68 @@ const CONTENT_KO = `# 작은 임베딩 모델 비교
 ## 권장
 
 찾기 성능은 **모델 A**로 시작하고, 카드가 바쁠 때는 모델 B를 대신 씁니다.
-`;
-const TITLE_KO = "작은 임베딩 모델 비교";
-const DESCRIPTION_KO = "10억 파라미터 이하 임베딩 모델 세 개를 한 주 동안의 실제 사례로 측정했습니다.";
-const doc = (x: (typeof DOCS)[number]) => ({ id: x.id, kind: x.kind, title: locale === "ko" && x.id === 31 ? TITLE_KO : x.title, scope: null, actorName: "bmo", owner: null, labels: x.category ? { category: x.category } : {}, description: locale === "ko" && x.id === 31 ? DESCRIPTION_KO : x.d, attachmentCount: 0, hasPicture: false, createdAt: NOW - x.hours * HOUR, changedAt: NOW - x.hours * HOUR });
+`,
+  },
+  ja: {
+    title: "小型埋め込みモデルの比較",
+    description: "10億パラメータ未満の埋め込みモデル3つを、1週間分の実際の想起ミスで測定しました。",
+    content: `# 小型埋め込みモデルの比較
+
+> 10億パラメータ未満の埋め込みモデル3つを、1週間分の想起ミスで測定しました。
+
+## 概要
+
+| モデル | サイズ | Recall@10 | レイテンシ (p50) |
+|---|---:|---:|---:|
+| モデル A | 0.6B | **0.82** | 18 ms |
+| モデル B | 0.35B | 0.77 | 9 ms |
+| モデル C | 0.6B | 0.80 | 21 ms |
+
+見つけられなかった記憶を最も多く拾えたのはモデル A で、モデル B はわずかに劣る代わりに最も高速です。3つとも、チャットエンジンと並んで一般向けのグラフィックカード1枚で動きます。
+
+## 方法
+
+1. 1週間分の想起ミスを、本来見つかるべきだった記憶と一緒に集めました。
+2. 各モデルで記憶と質問をそれぞれ1回ずつ埋め込みました。
+3. 正しい記憶が上位10件に入れば、解決したものとして数えました。
+
+## 推奨
+
+想起の精度を重視して **モデル A** から始め、カードが混んでいるときはモデル B を代わりに使います。
+`,
+  },
+  zh: {
+    title: "小型嵌入模型对比",
+    description: "用一周的真实召回失误，测量了三个 10 亿参数以下的嵌入模型。",
+    content: `# 小型嵌入模型对比
+
+> 用一周内没能召回的记忆案例，测量了三个 10 亿参数以下的嵌入模型。
+
+## 摘要
+
+| 模型 | 规模 | Recall@10 | 延迟 (p50) |
+|---|---:|---:|---:|
+| 模型 A | 0.6B | **0.82** | 18 ms |
+| 模型 B | 0.35B | 0.77 | 9 ms |
+| 模型 C | 0.6B | 0.80 | 21 ms |
+
+模型 A 找回的遗漏最多，模型 B 稍逊一些，但速度最快。三个模型都能在一张消费级显卡上与聊天引擎并行运行。
+
+## 方法
+
+1. 收集一周内的每一次召回失误，以及本应找到的那条记忆。
+2. 用每个模型对记忆和问题各做一次嵌入。
+3. 正确的记忆进入前十名，即算作已解决。
+
+## 建议
+
+以召回为先，从 **模型 A** 开始；显卡繁忙时改用模型 B 作为备选。
+`,
+  },
+};
+
+const SHOWN = RESEARCH[locale];
+const doc = (x: (typeof DOCS)[number]) => ({ id: x.id, kind: x.kind, title: x.id === 31 ? SHOWN.title : x.title, scope: null, actorName: "bmo", owner: null, labels: x.category ? { category: x.category } : {}, description: x.id === 31 ? SHOWN.description : x.d, attachmentCount: 0, hasPicture: false, createdAt: NOW - x.hours * HOUR, changedAt: NOW - x.hours * HOUR });
 const json = (r: Route, b: unknown, s = 200) => r.fulfill({ status: s, contentType: "application/json", body: JSON.stringify(b) });
 async function answer(route: Route) {
   const url = new URL(route.request().url());
@@ -94,27 +174,26 @@ async function answer(route: Route) {
     const rest = one[2] ?? "";
     if (!x) return json(route, { code: "not-found" }, 404);
     if (rest === "/reads") return route.fulfill({ status: 204 });
-    if (rest === "/content") return route.fulfill({ contentType: "text/markdown", body: x.id === 31 ? (locale === "ko" ? CONTENT_KO : CONTENT) : `# ${x.title}\n\n${x.d}` });
+    if (rest === "/content") return route.fulfill({ contentType: "text/markdown", body: x.id === 31 ? SHOWN.content : `# ${x.title}\n\n${x.d}` });
     if (rest === "/attachments" || rest === "/references") return json(route, { items: [], more: false });
     if (rest === "") return json(route, doc(x));
   }
   return json(route, { code: "not-found" }, 404);
 }
 
-const words = { common: await commonWords(locale) };
+const words = { ...BUNDLE_WORDS, common: await commonWords(locale) };
 const screen = await standScreen();
 try {
   for (const theme of THEMES) for (const [name, path, options] of [
     ["archive-doc", "/artifact/31", { viewport: { width: 1440, height: 900 }, deviceScaleFactor: 2 }],
-    ["archive-doc-phone", "/artifact/31", { viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true }],
   ] as const) {
-    const context = await screen.browser.newContext({ ...options, locale: locale === "ko" ? "ko-KR" : "en-US", colorScheme: theme, reducedMotion: "reduce" });
+    const context = await screen.browser.newContext({ ...options, locale: browserLocale(locale), colorScheme: theme, reducedMotion: "reduce" });
     await context.addCookies([{ name: "nuxt-color-mode", value: theme, url: screen.origin }]);
     const page = await context.newPage();
     await page.route((u) => u.pathname.startsWith(`${RELAY}/`), answer);
     await page.goto(`${screen.origin}${path}`, { waitUntil: "load", timeout: 180_000 });
-    await page.waitForTimeout(5000);
-    if (!(await page.evaluate(SWITCH_LOCALE, { selector: "#__nuxt", locale, words }))) throw new Error("the page's vue-i18n was not found");
+    // The dev server may still be building the page on a busy machine: the words are switched once its app stands.
+    await page.waitForFunction(SWITCH_LOCALE, { selector: "#__nuxt", locale: pack, words }, { timeout: 180_000 });
     if (!(await page.evaluate(REMOUNT_ROUTE, { selector: "#__nuxt", away: "/artifact" }))) throw new Error("the page's router was not found");
     await page.waitForTimeout(3000);
     await page.screenshot({ path: `${OUT}${name}.${locale}.${theme}.png` });

@@ -1,7 +1,7 @@
 // The theater's library on bmo-theater's own browser host (its tests/browser/host, generated and served as its
 // tests/browser/screens.test.ts does), answered with a demo library in the locale given: fictional shows, films and
 // clips whose posters are drawn here as abstract art, the viewer part way through some of them. Both colour schemes.
-// Usage: `bun scripts/shots/theater-shot.ts <en|ko>`.
+// Usage: `bun scripts/shots/theater-shot.ts <en|ko|ja|zh>`.
 import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -9,7 +9,9 @@ import { chromium } from "playwright-core";
 import sharp from "sharp";
 
 import { progressOf } from "../../../theater/client/tests/browser/fixtures.ts";
-import { SWITCH_LOCALE, THEMES, commonWords, localeOf } from "./locale";
+import { SWITCH_LOCALE, THEMES, browserLocale, commonWords, localeOf, packName } from "./locale";
+
+import type { Locale } from "./locale";
 
 import type { Episode, Playlist, Position, Title, TitleKind } from "../../../theater/client/shared/types";
 import type { Route } from "playwright-core";
@@ -25,10 +27,19 @@ const NOW = Date.now();
 
 // --- The demo library ---
 
-const NAMES = {
-  en: { lighthouse: "The Lighthouse Keeper", aurora: "Northern Lights", ocean: "Ocean Diaries", kitchen: "Kitchen Lab", city: "City Walks", desert: "Desert Roads", garden: "The Night Garden", tide: "Tide Pools", weekend: "Weekend", episode: "Episode", part: "Part" },
-  ko: { lighthouse: "등대지기", aurora: "북극광", ocean: "바다 일기", kitchen: "키친 랩", city: "도시 산책", desert: "사막의 길", garden: "밤의 정원", tide: "조수 웅덩이", weekend: "주말", episode: "에피소드", part: "파트" },
-}[locale];
+type Names = Record<"lighthouse" | "aurora" | "ocean" | "kitchen" | "city" | "desert" | "garden" | "tide" | "weekend", string> & {
+  // A show's episode and a series' part, named by their number as the language puts it.
+  episode: (number: number) => string;
+  part: (number: number) => string;
+};
+
+const LIBRARY: Record<Locale, Names> = {
+  en: { lighthouse: "The Lighthouse Keeper", aurora: "Northern Lights", ocean: "Ocean Diaries", kitchen: "Kitchen Lab", city: "City Walks", desert: "Desert Roads", garden: "The Night Garden", tide: "Tide Pools", weekend: "Weekend", episode: (n) => `Episode ${n}`, part: (n) => `Part ${n}` },
+  ko: { lighthouse: "등대지기", aurora: "북극광", ocean: "바다 일기", kitchen: "키친 랩", city: "도시 산책", desert: "사막의 길", garden: "밤의 정원", tide: "조수 웅덩이", weekend: "주말", episode: (n) => `에피소드 ${n}`, part: (n) => `파트 ${n}` },
+  ja: { lighthouse: "灯台守", aurora: "北極光", ocean: "海の日記", kitchen: "キッチン・ラボ", city: "街歩き", desert: "砂漠の道", garden: "夜の庭", tide: "潮だまり", weekend: "週末", episode: (n) => `第${n}話`, part: (n) => `パート${n}` },
+  zh: { lighthouse: "守灯人", aurora: "北极光", ocean: "海洋日记", kitchen: "厨房实验室", city: "城市漫步", desert: "沙漠之路", garden: "夜之花园", tide: "潮池", weekend: "周末", episode: (n) => `第${n}集`, part: (n) => `第${n}部分` },
+};
+const NAMES = LIBRARY[locale];
 // Each title's poster: two colours of a gradient and a shape drawn over it.
 const ART: Record<number, [string, string, "sun" | "waves" | "hills" | "rings" | "stars"]> = {
   1: ["#0f2027", "#2c5364", "sun"],
@@ -88,9 +99,9 @@ const TITLES: Title[] = [
 ];
 
 episode(1, null, null, NAMES.lighthouse, 104, 30);
-for (let number = 1; number <= 8; number++) episode(2, 1, number, `${NAMES.episode} ${number}`, 48, 12);
-for (let number = 1; number <= 6; number++) episode(3, 1, number, `${NAMES.part} ${number}`, 32, 6);
-for (let number = 1; number <= 10; number++) episode(4, 1, number, `${NAMES.episode} ${number}`, 22, 3);
+for (let number = 1; number <= 8; number++) episode(2, 1, number, NAMES.episode(number), 48, 12);
+for (let number = 1; number <= 6; number++) episode(3, 1, number, NAMES.part(number), 32, 6);
+for (let number = 1; number <= 10; number++) episode(4, 1, number, NAMES.episode(number), 22, 3);
 episode(5, null, null, NAMES.city, 14, 1);
 episode(6, null, null, NAMES.desert, 118, 45);
 episode(7, null, null, NAMES.garden, 96, 20);
@@ -193,7 +204,7 @@ const browser = await chromium.launch();
 
 try {
   for (const theme of THEMES) {
-    const context = await browser.newContext({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 2, locale: locale === "ko" ? "ko-KR" : "en-US", colorScheme: theme, reducedMotion: "reduce" });
+    const context = await browser.newContext({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 2, locale: browserLocale(locale), colorScheme: theme, reducedMotion: "reduce" });
 
     await context.addCookies([{ name: "nuxt-color-mode", value: theme, url: origin }]);
     await context.route("**/relay/theater/**", answer);
@@ -204,7 +215,7 @@ try {
     await page.locator("[data-card-row]").first().waitFor({ timeout: 60_000 });
     // The words are merged with the locale moved away and back, so the screens already drawn read them again.
     if (!(await page.evaluate(SWITCH_LOCALE, { selector: "#__nuxt", locale: locale === "ko" ? "en" : "ko", words: {} }))) throw new Error("the page's vue-i18n was not found");
-    await page.evaluate(SWITCH_LOCALE, { selector: "#__nuxt", locale, words });
+    await page.evaluate(SWITCH_LOCALE, { selector: "#__nuxt", locale: packName(locale), words });
     await page.waitForTimeout(3000);
     await page.screenshot({ path: `${OUT}theater.${locale}.${theme}.png` });
     console.log("saved", `theater.${locale}.${theme}`);

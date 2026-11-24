@@ -3,16 +3,16 @@ import { render } from "astro:content";
 
 import Shot from "../../../components/Shot.astro";
 import Layout from "../../../layouts/Layout.astro";
-import { captureLocale, localePaths, messagesFor } from "../../../i18n";
+import { localePaths, messagesFor } from "../../../i18n";
 import { DOCS } from "../../../i18n/docs";
 import { chapters } from "../../../lib/guide";
-import { shotByName } from "../../../lib/shots";
+import { shot } from "../../../lib/shots";
 
 import type { Locale } from "../../../i18n";
 import type { Chapter } from "../../../lib/guide";
 
-// One chapter of the guidebook: its text, the screenshots it names in the page's capture language (a screen not
-// captured in that language is left out), the chapter list beside it and the way to the chapters around it.
+// One chapter of the guidebook: its text, the screenshots it names captured in the page's own language, the chapter
+// list beside it and the way to the chapters around it.
 export async function getStaticPaths() {
   const paths = await Promise.all(
     localePaths().map(async (entry) => {
@@ -39,11 +39,7 @@ const { locale, chapter, list, index } = Astro.props;
 const t = messagesFor(locale);
 const words = DOCS[locale].guide;
 const { Content } = await render(chapter);
-const shots = chapter.data.shots.flatMap((shot) => {
-  const themed = shotByName(shot.name, captureLocale(locale));
-
-  return themed ? [{ ...shot, themed }] : [];
-});
+const shots = chapter.data.shots.map((one) => ({ ...one, themed: shot(one.name, locale) }));
 const previous = list[index - 1];
 const next = list[index + 1];
 const href = (one: Chapter) => `${t.path}guide/${one.slug}/`;

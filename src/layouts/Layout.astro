@@ -2,9 +2,10 @@
 import { getImage } from "astro:assets";
 
 import Logo from "../components/Logo.astro";
-import { LOCALES, captureLocale, messagesFor } from "../i18n";
+import { LOCALES, messagesFor } from "../i18n";
 import { GITHUB_OWNER_URL, LICENSE_URL, SITE_URL, STRUCTURE_URL, UMBRELLA_URL } from "../lib/site";
-import { HERO_SHOTS } from "../lib/shots";
+import { shot } from "../lib/shots";
+import { SLOTS } from "../lib/slots";
 import "../styles/global.css";
 
 import type { Locale } from "../i18n";
@@ -24,7 +25,7 @@ const languages = LOCALES.map((entry) => ({ ...entry, messages: messagesFor(entr
 const title = Astro.props.title ?? t.meta.title;
 const description = Astro.props.description ?? t.meta.description;
 const canonical = new URL(`${t.path}${path}`, SITE_URL).href;
-const social = await getImage({ src: HERO_SHOTS[captureLocale(locale)].wide.dark, width: 1200, format: "png" });
+const social = await getImage({ src: shot(SLOTS.hero.wide, locale).dark, width: 1200, format: "png" });
 const socialUrl = new URL(social.src, SITE_URL).href;
 const home = t.path;
 // The three reading sections, each marked where the page stands in it.

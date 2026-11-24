@@ -26,7 +26,7 @@ export const en = {
     sub: "BMO is a self-hosted agent platform. A chat supervisor talks with you in Telegram, Discord, the web console and by voice, remembers what matters, and hands real work to coding agents that test it and ship it.",
     download: "Download the desktop app",
     source: "View the source",
-    shotAlt: "The notes screen of the BMO console with demo data: notes filed in folders and bookmarks in the list, beside an open mobile app launch checklist.",
+    shotAlt: "The BMO console with demo data: a personal room where BMO answers a question about the day's schedule and a bug fix request, beside the TODO panel with waiting, running and finished work.",
     shotNote: "Every screen on this page shows demo data.",
   },
   values: [

@@ -3,7 +3,8 @@
 // rooms, TODO board and avatar, in the colour scheme given. Shared by the console's capture scripts.
 import type { Browser, BrowserContext, Page } from "playwright-core";
 
-import { DONE, DONE_EN, MESSAGES, QUEUE, QUEUE_EN, ROOM_TITLES, ROOM_TITLES_EN, TEXT_SWAPS, TEXT_SWAPS_EN } from "./demo";
+import { MESSAGES, ROOM_TITLES, TEXT_SWAPS, doneOf, queueOf } from "./demo";
+import { browserLocale, packName } from "./locale";
 
 import type { Locale, Theme } from "./locale";
 
@@ -31,26 +32,29 @@ export async function signedIn(): Promise<{ name: string; value: string }> {
  * answered. The console speaks the browser's language where the account names none, so the language is the
  * browser's.
  */
-export async function demoContext(browser: Browser, session: { name: string; value: string }, theme: Theme, width = 1440, height = 900, locale: Locale = "ko"): Promise<BrowserContext> {
+export async function demoContext(browser: Browser, session: { name: string; value: string }, theme: Theme, locale: Locale, width = 1440, height = 900): Promise<BrowserContext> {
   const phone = width < 600;
   const context = await browser.newContext({
     viewport: { width, height }, deviceScaleFactor: 2, isMobile: phone, hasTouch: phone, serviceWorkers: "block", reducedMotion: "reduce", colorScheme: theme,
-    locale: locale === "ko" ? "ko-KR" : "en-US",
+    locale: browserLocale(locale),
   });
 
+  // A loaded machine serves the development console slowly; a capture waits for it rather than failing.
+  context.setDefaultNavigationTimeout(120_000);
+  context.setDefaultTimeout(90_000);
   await context.addCookies([{ ...session, url: ORIGIN }, { name: "nuxt-color-mode", value: theme, url: ORIGIN }]);
   await context.route(/\/api\/rooms(\?|$)/, async (route) => {
     if (route.request().method() !== "GET") return route.continue();
     const rooms = (await (await route.fetch()).json()) as any[];
-    const titles = locale === "ko" ? ROOM_TITLES : ROOM_TITLES_EN;
+    const titles = ROOM_TITLES[locale];
     const out = rooms.filter((r) => titles[String(r.chatId)]).map((r) => ({ ...r, title: titles[String(r.chatId)], unread: r.chatId === 42 ? 0 : r.unread }));
     await route.fulfill({ json: out });
   });
-  await context.route(/\/api\/rooms\/42\/messages/, (route) => route.fulfill({ json: { messages: MESSAGES.slice(Number(process.env.SKIP ?? 0)), judgements: [], hasMore: false } }));
+  await context.route(/\/api\/rooms\/42\/messages/, (route) => route.fulfill({ json: { messages: MESSAGES[locale].slice(Number(process.env.SKIP ?? 0)), judgements: [], hasMore: false } }));
   await context.route(/\/api\/todos(\?|$)/, async (route) => {
     if (route.request().method() !== "GET") return route.continue();
     const board = (await (await route.fetch()).json()) as any;
-    const [queue, done] = locale === "ko" ? [QUEUE, DONE] : [QUEUE_EN, DONE_EN];
+    const [queue, done] = [queueOf(locale), doneOf(locale)];
     await route.fulfill({ json: { ...board, queue, done, doneTotal: 128, standing: { ...board.standing, queue: queue.length, running: 1 } } });
   });
 
@@ -65,9 +69,26 @@ export async function demoContext(browser: Browser, session: { name: string; val
   return context;
 }
 
-/** The visible labels the console's stand-ins render themselves, swapped in the page for demo names in the language given. */
-export async function swapTexts(page: Page, swaps: [string, string][] = [], locale: Locale = "ko"): Promise<void> {
-  await page.evaluate((all) => {
+/** Waits until the text given stands on the page, then lets the rest of the screen settle for the time given. */
+export async function shown(page: Page, text: string, wait = 3000): Promise<void> {
+  await page.getByText(text).first().waitFor({ state: "visible" });
+  await page.waitForTimeout(wait);
+}
+
+/** The console's own words for the room's message box, read from its language pack in the language given. */
+async function composerWords(locale: Locale): Promise<{ unreachable: string; messages: string }> {
+  const pack = (await import(`../../../web/client/apps/web/i18n/locales/${packName(locale)}.yaml`)).default;
+
+  return { unreachable: pack.control.error.unreachable, messages: pack.room.label.messages };
+}
+
+/**
+ * The visible labels the console's stand-ins render themselves, swapped in the page for demo names in the language
+ * given. The stand-in bot does not answer, so the room's message box shows the console's line for an unreachable bot
+ * to its administrator; it shows the plain label a reachable bot's room shows instead.
+ */
+export async function swapTexts(page: Page, locale: Locale, swaps: [string, string][] = []): Promise<void> {
+  await page.evaluate(({ all, box }) => {
     const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
     for (let n = walker.nextNode(); n; n = walker.nextNode()) {
       let t = n.nodeValue ?? "";
@@ -75,8 +96,7 @@ export async function swapTexts(page: Page, swaps: [string, string][] = [], loca
       if (t !== n.nodeValue) n.nodeValue = t;
     }
     for (const el of document.querySelectorAll("[placeholder]")) {
-      const p = el.getAttribute("placeholder")!;
-      if (p.includes("실패")) el.setAttribute("placeholder", "BMO에게 말하기");
+      if (el.getAttribute("placeholder") === box.unreachable) el.setAttribute("placeholder", box.messages);
     }
-  }, [...swaps, ...(locale === "ko" ? TEXT_SWAPS : TEXT_SWAPS_EN)]);
+  }, { all: [...swaps, ...TEXT_SWAPS[locale]], box: await composerWords(locale) });
 }

@@ -2,12 +2,13 @@
 import GetStarted from "./GetStarted.astro";
 import Icon from "./Icon.astro";
 import Shot from "./Shot.astro";
-import { captureLocale, messagesFor } from "../i18n";
+import { messagesFor } from "../i18n";
 import { currentRelease, megabytes } from "../lib/release";
 import { REPOSITORY_GROUPS } from "../lib/repositories";
 import { DESKTOP_DOC_URL, UMBRELLA_URL, repositoryUrl } from "../lib/site";
 import { EXAMPLES, KINDS, ROWS } from "../lib/comparison";
-import { HERO_SHOTS, NEW_SHOTS, SCREEN_SHOTS, TOUR_SHOTS } from "../lib/shots";
+import { shot, slotShots } from "../lib/shots";
+import { SLOTS } from "../lib/slots";
 
 import type { Locale } from "../i18n";
 import type { ReleaseApp, ReleaseFile } from "../lib/release";
@@ -32,10 +33,10 @@ const apps = [
 ];
 const versionLine = release ? t.download.version.replace("{version}", release.version).replace("{date}", released) : "";
 const nightlyLine = release?.nightly ? t.download.nightly.replace("{version}", release.nightly.version) : "";
-const capture = captureLocale(locale);
-const SHOTS = SCREEN_SHOTS[capture];
-const TOUR = TOUR_SHOTS[capture];
-const NEW = NEW_SHOTS[capture];
+// Every screenshot is the same screen in every language, captured in the page's own (src/lib/slots.ts).
+const SHOTS = { calendar: shot(SLOTS.screens.calendar, locale), archive: shot(SLOTS.screens.archive, locale), phone: shot(SLOTS.screens.phone, locale) };
+const TOUR = slotShots("tour", locale);
+const NEW = slotShots("whatsNew", locale);
 // The comparison's footnotes, numbered in the order their marks stand in the table.
 const notes = ROWS.flatMap((row) => KINDS.filter((kind) => row.others[kind] === "partial").map((kind) => ({ key: `${row.capability}.${kind}` as keyof typeof t.compare.notes })));
 const noteNumber = (key: string): number => notes.findIndex((note) => note.key === key) + 1;
@@ -66,10 +67,10 @@ const MARK_SIGN = { yes: "✓", partial: "", none: "–" } as const;
       <div class="window">
         <div class="window-bar" aria-hidden="true"><span></span><span></span><span></span></div>
         <Shot
-          shot={HERO_SHOTS[capture].wide}
+          shot={shot(SLOTS.hero.wide, locale)}
           widths={[720, 1080, 1440, 2160, 2880]}
           sizes="(max-width: 1200px) calc(100vw - 48px), 1168px"
-          phone={{ shot: HERO_SHOTS[capture].phone, widths: [390, 780], sizes: "calc(100vw - 32px)" }}
+          phone={{ shot: shot(SLOTS.hero.phone, locale), widths: [390, 780], sizes: "calc(100vw - 32px)" }}
           alt={t.hero.shotAlt}
           eager
         />
