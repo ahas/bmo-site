@@ -31,7 +31,8 @@ bun run build && bun run test
 ```
 
 `bun run check` leaves out the capture scripts under `scripts/shots/`, which import the browser harnesses of the
-units checked out beside this one (「Screenshots」) and so type-check only in that workspace.
+units checked out beside this one (「Screenshots」) and so type-check only in that workspace. A test holds every file
+the check does read to imports inside this repository.
 
 `bun run test` serves the built `dist/` as a static host does and opens all four pages in Chromium at 1440, 1024
 and 390 pixels wide, in the dark colour scheme and the light one: every key section stands with its heading, every

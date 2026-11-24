@@ -40,6 +40,8 @@
   and 390 pixels in both colour schemes and fails on a missing section, a picture without words or in another
   language or scheme, a comparison row or footnote missing, or a horizontal overflow; and holds the reading sections
   to every language, every public unit with a snapshot, the same chapters and release shape in every language, no
-  repository that is not public and no host of the domain but the site's own.
+  repository that is not public and no host of the domain but the site's own. `bun run check` leaves out the capture
+  scripts under `scripts/shots/`, which read the units checked out beside this repository, and a test holds every
+  file it does read to imports inside this repository.
 - **English in code, comments and commits.** Other languages stand only in `src/i18n/`, the role words of
   `src/lib/repositories.ts`, the guidebook's chapters, the release notes' data and the shots' demo data.
