@@ -2,10 +2,13 @@
 // (jake's docs/desktop.md, 「The read the console uses」): the remote controller's files under `files`, the All-in-One's
 // under `allInOne.files`, both of the release's one version, and the builds ahead of it, where one is published: the
 // newest alpha, beta or release candidate under `preview`, and the newest nightly under `nightly`. The remote controller asks each person for their own BMO server's address on its first run, so one
-// release serves every deployment. Until a release is published the address answers 404 and the download section says
-// no release is available yet. The address sends no CORS header, so the page cannot read it in the browser.
+// release serves every deployment. Until a stable release is published that address answers 404 and the newest preview build's
+// read stands in; where neither stands, the download section says no release is available yet. The address sends no CORS header, so the page cannot read it in the browser.
 
 export const RELEASE_URL = "https://github.com/ahas/jake/releases/latest/download/release.json";
+
+/** The preview channel's read, which stands for the release until the first stable one is published. */
+export const PREVIEW_URL = "https://github.com/ahas/jake/releases/download/desktop-preview/release.json";
 
 /** How long the build waits for the release read before it goes on with none. */
 const READ_TIMEOUT_MS = 15_000;
@@ -72,10 +75,14 @@ let cached: Promise<Release | null> | null = null;
 export function currentRelease(): Promise<Release | null> {
   if (process.env.BMO_SITE_OFFLINE === "1") return Promise.resolve(null);
 
-  cached ??= fetch(RELEASE_URL, { signal: AbortSignal.timeout(READ_TIMEOUT_MS) })
-    .then(async (answer) => (answer.ok ? ((await answer.json()) as unknown) : null))
-    .then((read) => (isRelease(read) ? read : null))
-    .catch(() => null);
+  const read = (url: string): Promise<Release | null> =>
+    fetch(url, { signal: AbortSignal.timeout(READ_TIMEOUT_MS) })
+      .then(async (answer) => (answer.ok ? ((await answer.json()) as unknown) : null))
+      .then((value) => (isRelease(value) ? value : null))
+      .catch(() => null);
+
+  // Before the first stable release the newest preview build stands in for it, its version naming it a beta.
+  cached ??= read(RELEASE_URL).then((stable) => stable ?? read(PREVIEW_URL));
 
   return cached;
 }
