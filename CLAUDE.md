@@ -20,9 +20,10 @@
   refreshed snapshot. At build time Swagger Parser resolves each document and the pages render it statically, a page a
   unit; the search reads `/api/search.json`. Descriptions are the units' own English.
 - **Release notes are data.** `src/data/releases.json` holds one entry a stable release or patch, newest first: its
-  version (the whole set shares one), `upcoming` or `released`, its date once released, and its notes in all four
-  languages with the same sections and items. A release adds its entry at the head, and may stand there as `upcoming`
-  before it is released; the page needs no other change. Nightlies, alphas, betas and release candidates have no
+  version (the whole set shares one) and its notes in all four languages with the same sections and items. Whether it
+  is released, and its date, are read off the git tags when the site is built: an entry is released from the first
+  build after its tag `v<version>` stands, dated the day the tag was made in the platform's time zone, and `upcoming`
+  before. A release adds its entry at the head before it is released; the page needs no other change. Nightlies, alphas, betas and release candidates have no
   entry; the page's words state the versioning scheme and the desktop update channels.
 - **Public repositories only.** `src/lib/repositories.ts` lists what the site links to; a repository that is not
   public is never named or linked anywhere on the site.

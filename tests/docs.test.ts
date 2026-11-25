@@ -28,8 +28,11 @@ const LOCALES = [
 
 const PUBLIC = new Set(REPOSITORY_GROUPS.flatMap((group) => group.items.filter((item) => !item.retired).map((item) => item.name)));
 const SNAPSHOT = JSON.parse(readFileSync(join(ROOT, "src/data/openapi/snapshot.json"), "utf8")) as { units: { name: string; operations: number }[] };
+// Whether the release's tag stands, which marks it released on the built page.
+const tagged = (version: string): boolean =>
+  Bun.spawnSync(["git", "rev-parse", "--verify", "--quiet", `refs/tags/v${version}`], { cwd: ROOT }).success;
 const RELEASES = JSON.parse(readFileSync(join(ROOT, "src/data/releases.json"), "utf8")) as {
-  releases: { version: string; status: string; date: string | null; notes: Record<string, { summary: string; sections: { title: string; items: string[] }[] }> }[];
+  releases: { version: string; notes: Record<string, { summary: string; sections: { title: string; items: string[] }[] }> }[];
 };
 
 function built(path: string): string {
@@ -153,8 +156,7 @@ describe("the release notes", () => {
 
     for (const release of RELEASES.releases) {
       expect(release.version).toMatch(/^\d+\.\d+\.\d+$/);
-      expect(["upcoming", "released"]).toContain(release.status);
-      expect(release.status === "released" ? release.date !== null : release.date === null).toBe(true);
+      expect(Object.keys(release).sort()).toEqual(["notes", "version"]);
 
       const shape = (code: string) => release.notes[code]!.sections.map((section) => section.items.length);
 
@@ -171,7 +173,7 @@ describe("the release notes", () => {
 
       for (const release of RELEASES.releases) {
         expect(page).toContain(`id="v${release.version.replace(/\./g, "-")}"`);
-        if (release.status === "upcoming") expect(page).toMatch(new RegExp(`id="v${release.version.replace(/\./g, "-")}"[^]*?release-upcoming`));
+        if (!tagged(release.version)) expect(page).toMatch(new RegExp(`id="v${release.version.replace(/\./g, "-")}"[^]*?release-upcoming`));
       }
     });
   }
