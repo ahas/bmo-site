@@ -181,6 +181,8 @@ export const ja: Messages = {
     cta: "GitHub ではじめる",
   },
   footer: {
+    sponsor: "スポンサー",
+    coffee: "コーヒーをおごる",
     license: "MIT ライセンス",
     copyright: "Copyright © 2026 the BMO authors",
     structure: "構成ドキュメント",

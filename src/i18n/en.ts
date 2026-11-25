@@ -179,6 +179,8 @@ export const en = {
     cta: "Start on GitHub",
   },
   footer: {
+    sponsor: "Sponsor",
+    coffee: "Buy me a coffee",
     license: "MIT License",
     copyright: "Copyright © 2026 the BMO authors",
     structure: "Structure",

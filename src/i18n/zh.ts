@@ -181,6 +181,8 @@ export const zh: Messages = {
     cta: "在 GitHub 上开始",
   },
   footer: {
+    sponsor: "赞助",
+    coffee: "请我喝杯咖啡",
     license: "MIT 许可",
     copyright: "Copyright © 2026 the BMO authors",
     structure: "结构文档",

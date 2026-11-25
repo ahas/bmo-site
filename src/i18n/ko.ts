@@ -182,6 +182,8 @@ export const ko: Messages = {
     cta: "GitHub에서 시작하기",
   },
   footer: {
+    sponsor: "후원하기",
+    coffee: "커피 한 잔 사 주기",
     license: "MIT 라이선스",
     copyright: "Copyright © 2026 the BMO authors",
     structure: "구조 문서",

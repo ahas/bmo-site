@@ -3,7 +3,7 @@ import { getImage } from "astro:assets";
 
 import Logo from "../components/Logo.astro";
 import { LOCALES, messagesFor } from "../i18n";
-import { GITHUB_OWNER_URL, LICENSE_URL, SITE_URL, STRUCTURE_URL, UMBRELLA_URL } from "../lib/site";
+import { COFFEE_URL, GITHUB_OWNER_URL, LICENSE_URL, SITE_URL, SPONSOR_URL, STRUCTURE_URL, UMBRELLA_URL } from "../lib/site";
 import { shot } from "../lib/shots";
 import { SLOTS } from "../lib/slots";
 import "../styles/global.css";
@@ -124,6 +124,8 @@ const sections = [
           <a href={GITHUB_OWNER_URL}>{t.nav.repositories}</a>
           <a href={STRUCTURE_URL}>{t.footer.structure}</a>
           <a href={LICENSE_URL}>{t.footer.licenseLink}</a>
+          <a href={SPONSOR_URL}>{t.footer.sponsor}</a>
+          <a href={COFFEE_URL}>{t.footer.coffee}</a>
           {
             languages
               .filter((entry) => entry.code !== locale)
