@@ -4,10 +4,11 @@ testbed = 0
 name = "bmo-site"
 
 [test]
-# The tests read the built site in dist/, which the static check's build step writes before the suite runs.
+# The tests read the built site in dist/, which the setup builds, since a suite relies on nothing a check step
+# makes: the nightly round runs it with no static check before it.
 languages = ["bun"]
 files = ["tests/**/*.test.ts"]
-setup = ["bun install --frozen-lockfile"]
+setup = ["bun install --frozen-lockfile", "bun run build"]
 
 [check]
 # The sweep that holds every tracked file of a public repository free of personal data.

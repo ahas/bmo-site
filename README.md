@@ -43,7 +43,8 @@ answers with the not-found page. It needs the Chromium build `playwright-core` p
 ## Deploying
 
 The testbed deploys the site by `testbed.toml`, like every other unit, so a commit on main goes live with its
-repository's batch deployment. The gate runs `bun run check`, builds `dist/` and runs the tests against it; the build
+repository's batch deployment. The gate runs `bun run check`, builds `dist/` and runs the tests against it, and the testbed's
+setup builds `dist/` as well in every fresh tree the suite runs in, so the nightly suite finds it; the build
 step then builds the commit into the release, and the release's `dist/` is copied whole onto the host that serves the
 domain with `rsync -a --delete`, before the deploy tree is flipped. Which host and which folder stand in the
 machine's settings, one rsync destination in `env/publish-target` under the site's data root, never in this
